@@ -1,0 +1,94 @@
+body
+{
+    background-image: url("image/Lake02.jpg");
+
+}
+
+a
+{
+    text-decoration: none;
+}
+
+a:hover
+{
+    text-decoration-line: underline;
+    color: #3a8bcc;
+}
+
+.login_icon
+{
+    position: relative;
+    left: 38%;
+    color: #100f0f;
+    padding-top: 100px;
+}
+
+.login_icon i
+{
+    font-size: 30px;
+}
+
+.login_box
+{
+    background-color: #f1f1f1;
+    opacity: 0.8;
+    margin-left: 30%;
+    margin-right: 30%;
+    border-radius: 20px;
+    padding-bottom: 20px;
+    padding-top: 10px;
+}
+
+.login_box h3
+{
+    text-align: center;
+}
+
+.login_box input[type="text"], .login_box input[type="password"] ,  .login_box label, .forget , .login_box input[type="checkbox"]
+{
+    position: relative;
+    left: 20%;
+    right: 30%;
+}
+
+
+.username_input, .password_input
+{
+    width: 50%;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+.username_label, .password_label
+{
+    line-height: 40px;
+    font-size: 17px;
+}
+
+.login_button, .register_button
+{
+    width: 80px;
+    height: 40px;
+    border-radius: 10px;
+    position: relative;
+    left: 30%;
+}
+
+.login_button
+{
+    background-color: #57b2ff;
+    color: #f1f1f1;
+    border-style: none;
+    margin-left: 40px;
+}
+
+.login_button:hover
+{
+    background-color: #3a8bcc;
+}
+
+.register_button:hover
+{
+    background-color: #acacac;
+}

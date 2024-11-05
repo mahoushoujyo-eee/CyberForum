@@ -1,0 +1,114 @@
+body
+{
+    background-image: url("image/Lake02.jpg");
+}
+
+body .top_navigator a
+{
+    float: right;
+    margin: 10px;
+    text-decoration: none;
+}
+
+body .search_input
+{
+    width: 980px;
+    height: 180px;
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+.search_input_i
+{
+    padding-top: 60px;
+    padding-left: 25%;
+}
+
+.search_input_i i
+{
+    font-size: 30px;
+}
+
+.search_input_text
+{
+    width: 50%;
+    height: 40px;
+    border-radius: 10px;
+    border-color: aliceblue;
+    position: relative;
+    left: 15%;
+    top: 20%;
+}
+
+.search_data_button, .search_bar_button
+{
+    width: 10%;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    border-color: cornflowerblue;
+    color: cornflowerblue;
+
+    position: relative;
+    left: 15%;
+    top: 20%;
+}
+
+.main_content_box
+{
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.main_content_box div
+{
+    display: inline-block;
+    vertical-align: top;
+    border-style: solid;
+    border-color: silver;
+    border-width: 1px;
+}
+
+.main_content_navigator
+{
+    width: 30%;
+    background-color: #f1f1f1;
+    padding: 5px;
+}
+
+.main_content_navigator p
+{
+    font-family: "Microsoft YaHei UI", "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: small;
+    color: #3a8bcc;
+}
+
+
+.main_content div
+{
+    display: block;
+}
+
+.forums
+{
+    background-color: #f1f1f1;
+}
+
+.forums p
+{
+    font-family: "Microsoft YaHei UI", "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: large;
+    color: #290c13;
+}
+
+.forum_data div
+{
+    display: inline-block;
+    vertical-align: top;
+    background-color: #f1f1f1;
+}
+
+.leaderboard
+{
+}
+

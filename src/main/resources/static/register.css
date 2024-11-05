@@ -1,0 +1,88 @@
+body
+{
+    background-image: url("image/Lake02.jpg");
+}
+
+p
+{
+    overflow: hidden;
+}
+
+a
+{
+    text-decoration: none;
+}
+
+a:hover
+{
+    text-decoration-line: underline;
+    color: #3a8bcc;
+}
+
+.register_icon
+{
+    position: relative;
+    left: 38%;
+    color: #100f0f;
+    padding-top: 100px;
+}
+
+.register_icon i
+{
+    font-size: 30px;
+}
+
+
+.register_box
+{
+    background-color: #f1f1f1;
+    opacity: 0.8;
+    margin-left: 35%;
+    margin-right: 35%;
+    padding-left: 30px;
+    border-radius: 20px;
+    padding-bottom: 30px;
+    padding-top: 10px;
+}
+
+.register_box h3
+{
+    position: relative;
+    left: 140px;
+}
+
+.register_box form
+{
+}
+
+label:not(.agreement_label)
+{
+    float: left;
+    width: 80px;
+}
+
+.username_input, .password_input, .email_input, .password_again_input
+{
+    float: left;
+    width: 240px;
+    height: 30px;
+    border-radius: 5px;
+}
+
+.register_button
+{
+    width: 80px;
+    height: 40px;
+    background-color: #3a8bcc;
+    color: #f1f1f1;
+    border-style: none;
+    border-radius: 10px;
+    position: relative;
+    left: 35%;
+}
+
+.register_button:hover
+{
+    background-color: #0077aa;
+}
+

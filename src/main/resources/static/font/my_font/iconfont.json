@@ -1,0 +1,191 @@
+{
+  "id": "4735300",
+  "name": "cyber_forum",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "42283035",
+      "name": "j",
+      "font_class": "j",
+      "unicode": "e64c",
+      "unicode_decimal": 58956
+    },
+    {
+      "icon_id": "42283036",
+      "name": "k",
+      "font_class": "k",
+      "unicode": "e64d",
+      "unicode_decimal": 58957
+    },
+    {
+      "icon_id": "42283037",
+      "name": "l",
+      "font_class": "l",
+      "unicode": "e64e",
+      "unicode_decimal": 58958
+    },
+    {
+      "icon_id": "42283038",
+      "name": "u",
+      "font_class": "u",
+      "unicode": "e64f",
+      "unicode_decimal": 58959
+    },
+    {
+      "icon_id": "42283039",
+      "name": "n",
+      "font_class": "n",
+      "unicode": "e650",
+      "unicode_decimal": 58960
+    },
+    {
+      "icon_id": "42283040",
+      "name": "v",
+      "font_class": "v",
+      "unicode": "e651",
+      "unicode_decimal": 58961
+    },
+    {
+      "icon_id": "42283041",
+      "name": "t",
+      "font_class": "t",
+      "unicode": "e652",
+      "unicode_decimal": 58962
+    },
+    {
+      "icon_id": "42283042",
+      "name": "z",
+      "font_class": "z",
+      "unicode": "e653",
+      "unicode_decimal": 58963
+    },
+    {
+      "icon_id": "42283043",
+      "name": "r",
+      "font_class": "r",
+      "unicode": "e654",
+      "unicode_decimal": 58964
+    },
+    {
+      "icon_id": "42283044",
+      "name": "x",
+      "font_class": "x",
+      "unicode": "e655",
+      "unicode_decimal": 58965
+    },
+    {
+      "icon_id": "42283045",
+      "name": "o",
+      "font_class": "o",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    },
+    {
+      "icon_id": "42283046",
+      "name": "y",
+      "font_class": "y",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    },
+    {
+      "icon_id": "42283047",
+      "name": "s",
+      "font_class": "s",
+      "unicode": "e658",
+      "unicode_decimal": 58968
+    },
+    {
+      "icon_id": "42283048",
+      "name": "p",
+      "font_class": "p",
+      "unicode": "e659",
+      "unicode_decimal": 58969
+    },
+    {
+      "icon_id": "42283049",
+      "name": "w",
+      "font_class": "w",
+      "unicode": "e65a",
+      "unicode_decimal": 58970
+    },
+    {
+      "icon_id": "42283050",
+      "name": "m",
+      "font_class": "m",
+      "unicode": "e65b",
+      "unicode_decimal": 58971
+    },
+    {
+      "icon_id": "42283051",
+      "name": "q",
+      "font_class": "q",
+      "unicode": "e65c",
+      "unicode_decimal": 58972
+    },
+    {
+      "icon_id": "42283026",
+      "name": "b",
+      "font_class": "b",
+      "unicode": "e643",
+      "unicode_decimal": 58947
+    },
+    {
+      "icon_id": "42283027",
+      "name": "a",
+      "font_class": "a",
+      "unicode": "e644",
+      "unicode_decimal": 58948
+    },
+    {
+      "icon_id": "42283028",
+      "name": "c",
+      "font_class": "c",
+      "unicode": "e645",
+      "unicode_decimal": 58949
+    },
+    {
+      "icon_id": "42283029",
+      "name": "d",
+      "font_class": "d",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
+      "icon_id": "42283030",
+      "name": "e",
+      "font_class": "e",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "42283031",
+      "name": "f",
+      "font_class": "f",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
+      "icon_id": "42283032",
+      "name": "h",
+      "font_class": "h",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "42283033",
+      "name": "i",
+      "font_class": "i",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
+      "icon_id": "42283034",
+      "name": "g",
+      "font_class": "g",
+      "unicode": "e64b",
+      "unicode_decimal": 58955
+    }
+  ]
+}

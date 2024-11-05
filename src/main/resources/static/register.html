@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <link rel="stylesheet" href="register.css">
+    <link rel="stylesheet" href="font/my_font/iconfont.css">
+</head>
+<body>
+
+<div class="register_icon">
+    <i class="iconfont icon-c"></i>
+    <i class="iconfont icon-y"></i>
+    <i class="iconfont icon-b"></i>
+    <i class="iconfont icon-e"></i>
+    <i class="iconfont icon-r"></i>
+    <i class="iconfont icon-f"></i>
+    <i class="iconfont icon-o"></i>
+    <i class="iconfont icon-r"></i>
+    <i class="iconfont icon-u"></i>
+    <i class="iconfont icon-m"></i>
+</div>
+<div class="register_box">
+    <form action="/register" method="post">
+        <h3>账号注册</h3>
+        <p>
+            <label for="username" class="username_label">用户名</label>
+            <input type="text" placeholder="请输入用户名" name="username" id="username" class="username_input">
+        </p>
+        <p>
+            <label for="password" class="password_label">密码</label>
+            <input type="password" placeholder="请输入密码" name="password" id="password" class="password_input">
+        </p>
+        <p>
+            <label for="password_again" class="password_again_label">确认密码</label>
+            <input type="password" placeholder="请再次输入密码" name="password_again" id="password_again" class="password_again_input">
+        </p>
+        <p>
+            <label for="email" class="email_label">邮箱</label>
+            <input type="text" placeholder="请输入邮箱" name="email" id="email" class="email_input">
+        </p>
+        <p>
+            <input type="checkbox" name="agreement" id="agreement">
+            <label for="agreement" class="agreement_label">我同意<a href="agreement.html">《用户协议》</a></label>
+        </p>
+        <input type="submit" value="注册" class="register_button">
+    </form>
+</div>
+</body>
+</html>
