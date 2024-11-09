@@ -2,9 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>BlogName</title>
+    <script src="blog.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="blog.css">
+    <link rel="stylesheet" href="font/my_font/iconfont.css">
 </head>
 <body>
-
+<div class="top_navigator">
+    <div class="blog_icon">
+        <i class="iconfont icon-c"></i>
+        <i class="iconfont icon-y"></i>
+        <i class="iconfont icon-b"></i>
+        <i class="iconfont icon-e"></i>
+        <i class="iconfont icon-r"></i>
+        <i class="iconfont icon-f"></i>
+        <i class="iconfont icon-o"></i>
+        <i class="iconfont icon-r"></i>
+        <i class="iconfont icon-u"></i>
+        <i class="iconfont icon-m"></i>
+    </div>
+    <a id="username" class="right_top_navigator">username</a>
+    <a href="index.html" class="right_top_navigator">首页</a>
+</div>
+<div class="main_content_box">
+    <div class="blog_data">
+        <h3 class="blog_title">blog_title</h3>
+        <p class="blog_author_and_time">blog_author&nbsp; &nbsp; &nbsp; &nbsp;  blog_time</p>
+        <hr>
+        <p>blog_content</p>
+        <hr>
+    </div>
+    <div class="blog_comment">
+        <h3>评论</h3>
+        <div class="comment_input">
+            <p><textarea name="comment_text" id="comment_text" class="comment_text" cols="30" rows="5"></textarea></p>
+            <input type="button" value="评论" id="comment_button" class="comment_button">
+        </div>
+        <div class="comment_list">
+            <div class="comment_item">
+                <hr>
+                <p>comment_author &nbsp; &nbsp; &nbsp; &nbsp; comment_time</p>
+                <p>comment_content</p>
+            </div>
+            <div class="comment_item">
+                <hr>
+                <p>comment_author &nbsp; &nbsp; &nbsp; &nbsp; comment_time</p>
+                <p>comment_content</p>
+            </div>
+            <div class="comment_item">
+                <hr>
+                <p>comment_author &nbsp; &nbsp; &nbsp; &nbsp; comment_time</p>
+                <p>comment_content</p>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

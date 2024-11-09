@@ -1,0 +1,95 @@
+body
+{
+    background-image: url("image/stream.jpg");
+    background-attachment: fixed;
+}
+
+
+a
+{
+    text-decoration: none;
+}
+
+.put_post_out_icon
+{
+    display: inline-block;
+}
+
+.top_navigator
+{
+    margin: -10px -8px -10px -10px;
+    padding: 10px;
+    border-bottom: silver;
+    background-color: #ededed;
+    border-bottom-style: solid;
+}
+
+.right_top_navigator
+{
+    float: right;
+    margin-left: 20px;
+}
+
+.edit_div
+{
+    width: 900px;
+    height: 500px;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: silver;
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 20px;
+    padding-left: 15px;
+}
+
+.edit_title
+{
+    width: 800px;
+    height: 40px;
+    border-radius: 5px;
+    border-color: aliceblue;
+    font-size: 16px;
+}
+
+.edit_content
+{
+    width: 800px;
+    height: 300px;
+    border-radius: 5px;
+    border-color: aliceblue;
+    font-size: 16px;
+    overflow: scroll;
+    resize: none;
+    padding: 10px;
+}
+
+/*.text_area_div*/
+/*{*/
+/*    vertical-align: top;*/
+/*}*/
+.text_area_div label
+{
+    position: relative;
+    top: -300px;
+}
+
+
+.submit_button
+{
+    width: 100px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    border-color: cornflowerblue;
+    color: cornflowerblue;
+    margin-top: 15px;
+    margin-left: 30px;
+}
+
+.submit_button:hover
+{
+    background-color: #97d1ea;
+    color: #f1f1f1;
+}
