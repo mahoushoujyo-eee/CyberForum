@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.cyberforum.mapper.ForumMapper">
+
+    <resultMap id="ForumMap" type="org.example.cyberforum.bean.Forum">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="master_id" property="masterId"/>
+    </resultMap>
+
+    <insert id="addForum">
+        insert into forum (id, name, master_id) value (#{id}, #{name}, #{masterId})
+    </insert>
+
+    <select id="getForumList" resultMap="ForumMap">
+        select id, name, master_id from forum
+    </select>
+    <select id="getForumById" resultMap="ForumMap">
+        select id, name, master_id from forum where id = #{id}
+    </select>
+
+</mapper>

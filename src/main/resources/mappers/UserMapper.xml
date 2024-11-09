@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.cyberforum.mapper.UserMapper" >
+
+    <resultMap id="UserMap" type="org.example.cyberforum.bean.User">
+        <id column="id" property="id" />
+        <result column="user_name" property="userName" />
+        <result column="encrypted_password" property="password" />
+        <result column="email" property="email" />
+    </resultMap>
+
+    <insert id="addUser">
+        insert into user(user_name,encrypted_password,email) values(#{userName},#{encryptedPassword},#{email})
+    </insert>
+    <update id="updateUser">
+        update user set encrypted_password = #{encryptedPassword}
+        where user_name = #{userName}
+    </update>
+    <select id="getEncryptedPassword" resultType="java.lang.String">
+        select encrypted_password from user where user_name = #{userName}
+    </select>
+    <select id="getUserByUserName" resultType="org.example.cyberforum.bean.User">
+        select id,user_name,encrypted_password,email from user where user_name = #{userName}
+    </select>
+    <select id="getUserList" resultMap="UserMap">
+        select id,user_name,encrypted_password,email from user
+    </select>
+</mapper>

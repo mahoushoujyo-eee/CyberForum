@@ -1,0 +1,105 @@
+a
+{
+    text-decoration: none;
+}
+
+body
+{
+    background-image: url("image/Lake02.jpg");
+    background-attachment: fixed;
+}
+
+.top_navigator
+{
+    margin: -10px -8px -10px -10px;
+    padding: 10px;
+    border-bottom: silver;
+    background-color: #ededed;
+    border-bottom-style: solid;
+}
+
+.search_input
+{
+    margin-top: 30px;
+    margin-left: 550px;
+    padding-bottom: 30px;
+}
+
+.search_input_text
+{
+    width: 400px;
+    height: 40px;
+    border-radius: 10px;
+    border-color: aliceblue;
+    font-size: 16px;
+}
+
+.search_data_button
+{
+    width: 100px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    border-color: cornflowerblue;
+    color: cornflowerblue;
+}
+
+.search_data_button:hover
+{
+    background-color: #97d1ea;
+    color: #f1f1f1;
+}
+
+.main_content_box
+{
+    width: 900px;
+    height: 1000px;
+    background-color: #f1f1f1;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-style: solid;
+    border-color: silver;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.main_content_box h3
+{
+    text-align: center;
+}
+
+
+.forum_icon
+{
+    display: inline-block;
+}
+
+.right_top_navigator
+{
+    float: right;
+    margin-left: 20px;
+}
+
+.right_fix_box
+{
+    width: 50px;
+    height: 100px;
+   background-color: #f4f0f0;
+    position: fixed;
+    right: 0;
+    top: 400px;
+    opacity: 0.8;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    writing-mode: vertical-lr;
+    border-left-style: solid;
+    border-top-style:solid;
+    border-bottom-style: solid;
+    border-color: silver;
+}
+
+.right_fix_box p
+{
+    text-align: center;
+    color: #2b2b2b;
+}

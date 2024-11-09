@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.cyberforum.mapper.CommentMapper">
+    <insert id="addComment">
+        insert into comment(content,user_id,blog_id,create_time) values(#{content},#{userId},#{blogId},#{createTime})
+    </insert>
+    <select id="getCommentList" resultType="org.example.cyberforum.bean.Comment">
+        select id,content,user_id,blog_id,create_time from comment
+    </select>
+    <select id="getComment" resultType="org.example.cyberforum.bean.Comment">
+        select id,content,user_id,blog_id,create_time from comment where id = #{id}
+    </select>
+    <select id="getCommentByBlogId" resultType="org.example.cyberforum.bean.Comment">
+        select id,content,user_id,blog_id,create_time from comment where blog_id = #{blogId}
+    </select>
+</mapper>

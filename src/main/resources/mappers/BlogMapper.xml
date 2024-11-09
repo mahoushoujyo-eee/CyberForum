@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.example.cyberforum.mapper.BlogMapper">
+    <resultMap id="BlogMap" type="org.example.cyberforum.bean.Blog">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="user_id" property="userId"/>
+        <result column="forum_id" property="forumId"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <insert id="addBlog">
+        insert into blog(title,content,user_id,forum_id,create_time) values(#{title},#{content},#{userId},#{forumId},#{createTime})
+    </insert>
+
+    <select id="getBlog" resultMap="BlogMap">
+        select id,title,content,user_id,forum_id,create_time from blog where id = #{id}
+    </select>
+
+    <select id="getBlogByForumId" resultMap="BlogMap">
+        select id,title,content,user_id,forum_id,create_time from blog where forum_id = #{id}
+    </select>
+
+    <select id="getBlogList" resultMap="BlogMap">
+        select id,title,content,user_id,forum_id,create_time from blog
+    </select>
+</mapper>
