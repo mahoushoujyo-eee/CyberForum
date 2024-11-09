@@ -5,8 +5,8 @@ use cyber_forum;
 create table if not exists user
 (
     id bigint primary key auto_increment,
-    username varchar(20) not null unique,
-    encrypted_password varchar(20) not null,
+    user_name varchar(20) not null unique,
+    encrypted_password varchar(200) not null,
     email varchar(50) not null unique
 );
 
@@ -15,6 +15,7 @@ create table if not exists blog
     id          bigint primary key auto_increment,
     title       varchar(50)  not null,
     content     varchar(500) not null,
+    forum_id    bigint          not null,
     user_id     bigint          not null,
     create_time timestamp    not null
 );

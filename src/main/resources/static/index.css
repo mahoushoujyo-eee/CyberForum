@@ -1,20 +1,31 @@
 body
 {
     background-image: url("image/Lake02.jpg");
+    background-attachment: fixed;
 }
 
-body .top_navigator a
+a
+{
+    text-decoration: none;
+}
+
+.top_navigator a
 {
     float: right;
     margin: 10px;
     text-decoration: none;
 }
 
+.forums a
+{
+    margin-left: 5px;
+}
+
 body .search_input
 {
     width: 980px;
     height: 180px;
-    margin-left: 15%;
+    margin-left: 20%;
     margin-right: 15%;
 }
 
@@ -38,6 +49,7 @@ body .search_input
     position: relative;
     left: 15%;
     top: 20%;
+    font-size: 18px;
 }
 
 .search_data_button, .search_bar_button
@@ -58,57 +70,41 @@ body .search_input
 {
     margin-left: 20%;
     margin-right: 20%;
-}
-
-.main_content_box div
-{
-    display: inline-block;
-    vertical-align: top;
+    width: 900px;
+    height: 1000px;
+    background-color: #f1f1f1;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     border-style: solid;
     border-color: silver;
-    border-width: 1px;
 }
 
-.main_content_navigator
+.blogs
 {
-    width: 30%;
-    background-color: #f1f1f1;
-    padding: 5px;
+    float: left;
+    background-color: #ffffff;
+    border-color: silver;
+    border-top-left-radius: 10px;
+    width: 79.5%;
+    height: 1000px;
 }
 
-.main_content_navigator p
-{
-    font-family: "Microsoft YaHei UI", "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: small;
-    color: #3a8bcc;
-}
-
-
-.main_content div
-{
-    display: block;
-}
 
 .forums
 {
+    float: left;
     background-color: #f1f1f1;
+    border-color: silver;
+    border-left-style: solid;
+    border-top-right-radius: 10px;
+    width: 20%;
+    height: 1000px;
 }
 
-.forums p
+.title
 {
-    font-family: "Microsoft YaHei UI", "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: large;
-    color: #290c13;
-}
-
-.forum_data div
-{
-    display: inline-block;
-    vertical-align: top;
-    background-color: #f1f1f1;
-}
-
-.leaderboard
-{
+    text-align: center;
+    font-size: small;
+    color: #555555;
 }
 

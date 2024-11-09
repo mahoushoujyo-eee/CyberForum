@@ -1,6 +1,7 @@
 body
 {
     background-image: url("image/Lake02.jpg");
+    background-attachment: fixed;
 }
 
 p
