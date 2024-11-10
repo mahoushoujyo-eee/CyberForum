@@ -23,10 +23,12 @@ public class UserController
     private UserService userService;
 
     @PostMapping("/register")
-    public void register(@RequestBody User user)
+    @ResponseBody
+    public boolean register(@RequestBody User user)
     {
         logger.info("register user:" + JSON.toJSONString(user));
         userService.addUser(user);
+        return true;
     }
 
     @RequestMapping("/logIn")
@@ -36,8 +38,9 @@ public class UserController
         logger.info("login user:" + JSON.toJSONString(user));
         if (userService.login(user))
         {
-            logger.info("login success");
+            logger.info("login success: " + user.getUserName() + userService.getUserIdByUserName(user.getUserName()));
             response.addCookie(new Cookie("username", user.getUserName()));
+            response.addCookie(new Cookie("userId", userService.getUserIdByUserName(user.getUserName()).toString()));
             return true;
         }
         else

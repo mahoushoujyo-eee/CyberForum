@@ -32,7 +32,7 @@ window.onload = function()
 
 function addToNavigator(element)
 {
-    document.getElementById("username");
+    let username = document.getElementById("username");
     username.innerHTML = element;
 }
 
@@ -60,12 +60,17 @@ function deleteCookie(name)
 function addPostChoice()
 {
     const postChoice = document.getElementById("post_choice");
+    const params = new URLSearchParams(window.location.search);
+    const forumId = params.get('forumId');
     postChoice.innerHTML =
         `
             <div class="right_fix_box">
                 <p>我要发贴</p>
             </div>
         `;
+    postChoice.href = "/put_post_out.html?forumId=" + forumId;
+    console.log("postChoice:")
+    console.log(postChoice)
 }
 
 function logBlogOfForum()
@@ -89,7 +94,7 @@ function logBlogOfForum()
                 const blogDiv = document.createElement("div");
                 blogDiv.className = "blog_div";
                 blogDiv.innerHTML =
-                    `
+                    `<a href="blog.html?blog_id=${data[i].id}" class="blog_a">
                         <div class="blog_title">
                             <h3>${data[i].title}</h3>
                         </div>
@@ -100,9 +105,11 @@ function logBlogOfForum()
                             <p>${data[i].userId}</p>
                         </div>
                         <hr>
+                     </a>
                     `;
                 document.getElementById("blog_content_div").appendChild(blogDiv);
             }
         }
     }
 }
+

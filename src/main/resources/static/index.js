@@ -1,17 +1,21 @@
 window.onload = function ()
 {
-    const cookie = getCookie('username');
-    if (cookie !== null)
+    const username = getCookie('username');
+    const userId = getCookie('userId');
+    if (username !== null)
     {
-        alert(cookie + ', welcome back')
-        addLogInElements(cookie)
+        alert(username + userId + ', welcome back')
+        addLogInElements(username)
     }
     else
     {
         addLogOutElements()
     }
 
+    getLatestBlogs();
     initializeForum();
+
+
 }
 
 
@@ -73,10 +77,7 @@ function initializeForum()
         if (xhr.status === 200)
         {
             let data = xhr.responseText;
-            console.log(data);
             data = JSON.parse(data);
-            console.log(data);
-            console.log(data[0].name);
             for (let i = 0; i < data.length; i++)
             {
                 let forum = data[i];
@@ -93,56 +94,57 @@ function initializeForum()
     }
 }
 
-
-
-class forum
+function getLatestBlogs()
 {
-    forumName;
-    forumId;
-    masterId;
-
-    constructor(forumName, forumId, masterId)
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', '/get_latest_blogs');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send();
+    xhr.onload = function ()
     {
-        this.forumName = forumName;
-        this.forumId = forumId;
-        this.masterId = masterId;
-    }
-
-    getForumName()
-    {
-        return this.forumName;
-    }
-
-    getForumId()
-    {
-        return this.forumId;
-    }
-
-    getMasterId()
-    {
-        return this.masterId;
-    }
-
-    setForumName(forumName)
-    {
-        this.forumName = forumName;
-    }
-
-    setForumId(forumId)
-    {
-        this.forumId = forumId;
-    }
-
-    setMasterId(masterId)
-    {
-        this.masterId = masterId;
-    }
-
-    toString()
-    {
-        return `Forum Name: ${this.forumName}, Forum Id: ${this.forumId}, Master Id: ${this.masterId}`;
+        let blogs = document.getElementById('blogs');
+        if (xhr.status === 200)
+        {
+            let data = JSON.parse(xhr.responseText);
+            console.log(data);
+            for (let i = 0; i < data.length; i++)
+            {
+                let blog = document.createElement('div');
+                blog.innerHTML =
+                    `
+                    <a href="blog.html?blog_id=${data[i].id}" class="blog_a">
+                    <div class="blog_title">
+                        <h3>${data[i].title}</h3>
+                    </div>
+                    <div class="blog_content">
+                        <p>${data[i].content}</p>
+                    </div>
+                    <div class="blog_author">
+                        <p>${data[i].userId}</p>
+                    </div>
+                    <div class="blog_forum">
+                        <p>${data[i].forumId}</p>
+                    </div>
+                    <hr>
+                    </a>
+                    `;
+                blogs.appendChild(blog)
+            }
+        }
+        resizeDivHeight();
     }
 }
+
+
+function resizeDivHeight()
+{
+    const blogs_div = document.getElementById('blogs');
+    const forums_div = document.getElementById('forums');
+    const height = Math.max(blogs_div.offsetHeight, forums_div.offsetHeight);
+    blogs_div.style.height = height + 'px';
+    forums_div.style.height = height + 'px';
+}
+
 
 
 

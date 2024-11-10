@@ -17,4 +17,6 @@ public interface UserMapper
     void updateUser(String userName, String encryptedPassword);
 
     List<User> getUserList();
+
+    Long getUserIdByUserName(String userName);
 }

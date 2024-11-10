@@ -52,4 +52,10 @@ public class UserService
 
         return false;
     }
+
+    public Long getUserIdByUserName(String userName)
+    {
+        logger.info("userName:" + userName);
+        return userMapper.getUserIdByUserName(userName);
+    }
 }

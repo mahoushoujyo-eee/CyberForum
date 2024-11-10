@@ -3,6 +3,17 @@ a
     text-decoration: none;
 }
 
+.blog_a
+{
+    color: #000000;
+}
+
+.blog_a:hover
+{
+    color: #59cbfb;
+    text-decoration: underline;
+}
+
 body
 {
     background-image: url("image/Lake02.jpg");
@@ -53,7 +64,7 @@ body
 .main_content_box
 {
     width: 900px;
-    height: 1000px;
+    height: auto;
     background-color: #f1f1f1;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;

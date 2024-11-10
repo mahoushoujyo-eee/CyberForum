@@ -9,6 +9,17 @@ a
     text-decoration: none;
 }
 
+.blog_a
+{
+    color: #000000;
+}
+
+.blog_a :hover
+{
+    color: #639fec;
+    text-decoration: underline;
+}
+
 .top_navigator a
 {
     float: right;
@@ -71,12 +82,20 @@ body .search_input
     margin-left: 20%;
     margin-right: 20%;
     width: 900px;
-    height: 1000px;
-    background-color: #f1f1f1;
+    height: auto;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    border-style: solid;
-    border-color: silver;
+    border-style: none;
+}
+
+.main_content_box div
+{
+    /*height: auto;*/
+}
+
+.main_content_box h3
+{
+    text-align: center;
 }
 
 .blogs
@@ -86,7 +105,6 @@ body .search_input
     border-color: silver;
     border-top-left-radius: 10px;
     width: 79.5%;
-    height: 1000px;
 }
 
 
@@ -98,7 +116,6 @@ body .search_input
     border-left-style: solid;
     border-top-right-radius: 10px;
     width: 20%;
-    height: 1000px;
 }
 
 .title

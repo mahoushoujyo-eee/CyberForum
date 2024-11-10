@@ -25,4 +25,7 @@
     <select id="getUserList" resultMap="UserMap">
         select id,user_name,encrypted_password,email from user
     </select>
+    <select id="getUserIdByUserName" resultType="java.lang.Long">
+        select id from user where user_name = #{userName}
+    </select>
 </mapper>

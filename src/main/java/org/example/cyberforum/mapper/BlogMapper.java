@@ -10,9 +10,10 @@ public interface BlogMapper
 {
     void addBlog(Blog blog);
 
-    Blog getBlog(Long id);
+    Blog getBlogById(Long id);
 
     List<Blog> getBlogList();
+    List<Blog> getLatestBlogList();
 
     List<Blog> getBlogByForumId(Long id);
 }
