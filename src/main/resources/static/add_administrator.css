@@ -1,0 +1,72 @@
+a
+{
+    text-decoration: none;
+}
+
+ul
+{
+    list-style: none;
+}
+
+body
+{
+    background-image: url("image/stream.jpg");
+    background-attachment: fixed;
+}
+
+.add_administrator_div
+{
+    background-color: #f1f1f1;
+    margin-left: 20%;
+    margin-right: 20%;
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.top_navigator
+{
+    margin: -10px -8px -10px -10px;
+    padding: 10px;
+    border-bottom: silver;
+    background-color: #ededed;
+    border-bottom-style: solid;
+}
+
+.right_top_navigator
+{
+    float: right;
+    margin-left: 20px;
+    margin-top: -18px;
+}
+
+.administrator_name
+{
+    width: 500px;
+    height: 30px;
+    border-radius: 5px;
+    border-color: aliceblue;
+}
+
+.add_administrator_button
+{
+    width: 100px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    border-color: cornflowerblue;
+    color: cornflowerblue;
+}
+
+.add_administrator_button:hover
+{
+    background-color: #97d1ea;
+    color: #f1f1f1;
+}
+
+.delete_administrator_button
+{
+    border-radius: 5px;
+    margin-left: 5px;
+}
