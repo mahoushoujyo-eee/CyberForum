@@ -114,3 +114,28 @@ body
     text-align: center;
     color: #2b2b2b;
 }
+
+.master_fix_box
+{
+    width: 50px;
+    height: 100px;
+    background-color: #f4f0f0;
+    position: fixed;
+    right: 0;
+    top: 300px;
+    opacity: 0.8;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    writing-mode: vertical-lr;
+    border-left-style: solid;
+    border-top-style:solid;
+    border-bottom-style: solid;
+    border-color: silver;
+}
+
+.master_fix_box p
+{
+    text-align: center;
+    color: #2b2b2b;
+}
+

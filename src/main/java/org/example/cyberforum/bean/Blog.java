@@ -11,6 +11,8 @@ public class Blog
     private String content;
     private Long id;
     private Long userId;
+    private String username;
     private Long forumId;
+    private String forumName;
     private Date createTime;
 }

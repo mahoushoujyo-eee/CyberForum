@@ -4,6 +4,7 @@ window.onload = function()
     const forumId = params.get('forumId');
 
     const cookie = getCookie("username");
+    const userId = getCookie("userId");
     if(cookie != null)
     {
         addToNavigator(cookie);
@@ -22,9 +23,15 @@ window.onload = function()
         if(xhr.status === 200)
         {
             let data = JSON.parse(xhr.responseText);
-            let title = document.getElementById("forum_title");
+            let forum_title = document.getElementById("forum_title");
+            let title = document.getElementsByTagName("title")[0];
             console.log(data);
             title.innerHTML = data.name;
+            forum_title.innerHTML = data.name;
+            if (data.masterId == userId)
+            {
+                addMasterChoice();
+            }
         }
     }
     logBlogOfForum();
@@ -73,6 +80,23 @@ function addPostChoice()
     console.log(postChoice)
 }
 
+function addMasterChoice()
+{
+    const params = new URLSearchParams(window.location.search);
+    const forumId = params.get('forumId');
+    alert("masterChoice");
+
+
+    const masterChoice = document.getElementById("master_choice_box");
+    masterChoice.innerHTML =
+        `
+            <div class="master_fix_box">
+                <p>添加管理员</p>
+            </div>
+        `;
+    masterChoice.href = "add_administrator.html?forumId=" + forumId;
+}
+
 function logBlogOfForum()
 {
     const params = new URLSearchParams(window.location.search);
@@ -94,7 +118,7 @@ function logBlogOfForum()
                 const blogDiv = document.createElement("div");
                 blogDiv.className = "blog_div";
                 blogDiv.innerHTML =
-                    `<a href="blog.html?blog_id=${data[i].id}" class="blog_a">
+                    `<a href="blog.html?blog_id=${data[i].id}" class="blog_a" target="_blank">
                         <div class="blog_title">
                             <h3>${data[i].title}</h3>
                         </div>
@@ -102,7 +126,7 @@ function logBlogOfForum()
                             <p>${data[i].content}</p>
                         </div>
                         <div class="blog_author">
-                            <p>${data[i].userId}</p>
+                            <p>${data[i].username}</p>             
                         </div>
                         <hr>
                      </a>

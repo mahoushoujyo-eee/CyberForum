@@ -58,4 +58,9 @@ public class UserService
         logger.info("userName:" + userName);
         return userMapper.getUserIdByUserName(userName);
     }
+
+    public User getUserById(Long userId)
+    {
+        return userMapper.getUserById(userId);
+    }
 }

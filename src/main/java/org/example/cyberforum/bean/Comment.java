@@ -10,6 +10,7 @@ public class Comment
     private Long id;
     private String content;
     private Long userId;
+    private String username;
     private Long blogId;
     private Date createTime;
 }

@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.example.cyberforum.mapper.AdministratorMapper">
+
+    <resultMap id="UserMap" type="org.example.cyberforum.bean.User">
+        <id column="id" property="id" />
+        <result column="user_name" property="userName" />
+        <result column="encrypted_password" property="password" />
+        <result column="email" property="email" />
+    </resultMap>
+    <insert id="addAdministrator">
+        insert into administrator(forum_id,administrator_id) values(#{forumId},#{userId})
+    </insert>
+    <delete id="deleteAdministrator">
+        delete from administrator where administrator_id = #{userId} and forum_id = #{forumId}
+    </delete>
+
+    <select id="getAdministratorByForumId" resultMap="UserMap">
+        select * from user where id in (select administrator_id from administrator where forum_id = #{forumId})
+    </select>
 </mapper>

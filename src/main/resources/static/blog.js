@@ -23,7 +23,13 @@ window.onload = function ()
             const blog = JSON.parse(xhr.responseText);
             console.log(blog);
             const blog_title = document.getElementById("blog_title");
+            const page_title = document.getElementsByTagName("title")[0];
+            page_title.innerHTML = blog.title;
             blog_title.innerHTML = blog.title;
+            const blog_author = document.getElementById("blog_author");
+            blog_author.innerHTML = blog.username;
+            const blog_date = document.getElementById("blog_time");
+            blog_date.innerHTML = getTimeString(blog.createTime);
             const blog_content = document.getElementById("blog_content");
             blog_content.innerHTML = blog.content;
         } else
@@ -62,7 +68,7 @@ function addCommentElements()
                 const comment_element = document.createElement("div");
                 comment_element.innerHTML =
                     `<div class="comment_author">
-                        <p>${comment.userId}</p>
+                        <p>${comment.username}</p>
                      </div>
                      <div class="comment_content">
                         <p>${comment.content}</p>
@@ -112,6 +118,18 @@ function addEventListenerOfComment()
 
         }
     });
+}
+
+function getTimeString(date)
+{
+    date = new Date(date);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    const second = date.getSeconds();
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
 

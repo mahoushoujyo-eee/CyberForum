@@ -41,6 +41,7 @@ public class UserController
             logger.info("login success: " + user.getUserName() + userService.getUserIdByUserName(user.getUserName()));
             response.addCookie(new Cookie("username", user.getUserName()));
             response.addCookie(new Cookie("userId", userService.getUserIdByUserName(user.getUserName()).toString()));
+            logger.info("add cookie user id: " + userService.getUserIdByUserName(user.getUserName()));
             return true;
         }
         else

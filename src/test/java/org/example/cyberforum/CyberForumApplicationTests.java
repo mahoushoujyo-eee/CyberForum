@@ -1,6 +1,7 @@
 package org.example.cyberforum;
 
 import org.example.cyberforum.bean.Blog;
+import org.example.cyberforum.mapper.AdministratorMapper;
 import org.example.cyberforum.mapper.BlogMapper;
 import org.example.cyberforum.mapper.ForumMapper;
 import org.example.cyberforum.mapper.UserMapper;
@@ -22,6 +23,9 @@ class CyberForumApplicationTests {
 
     @Autowired
     BlogMapper blogMapper;
+
+    @Autowired
+    AdministratorMapper administratorMapper;
 
     @Test
     void contextLoads()
@@ -53,6 +57,12 @@ class CyberForumApplicationTests {
     void test02()
     {
         System.out.println(blogMapper.getLatestBlogList());
+    }
+
+    @Test
+    void test03()
+    {
+        System.out.println(administratorMapper.getAdministratorByForumId(1L));
     }
 
 }

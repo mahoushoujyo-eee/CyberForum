@@ -19,6 +19,12 @@ public class BlogService
     @Autowired
     BlogMapper blogMapper;
 
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    ForumService forumService;
+
     public void putOutNewBlog(Blog blog)
     {
         blog.setCreateTime(new Date());
@@ -28,11 +34,22 @@ public class BlogService
 
     public List<Blog> getLatestBlogList()
     {
-        return blogMapper.getLatestBlogList();
+        List<Blog> blogs = blogMapper.getLatestBlogList();
+        for (Blog blog: blogs)
+        {
+            blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
+            blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
+        }
+
+        return blogs;
     }
 
     public Blog getBlogById(Long id)
     {
-        return blogMapper.getBlogById(id);
+        Blog blog =  blogMapper.getBlogById(id);
+        blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
+        blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
+        logger.info("get blog by id: " + id + " blog: " + blog);
+        return blog;
     }
 }

@@ -3,6 +3,7 @@ package org.example.cyberforum.controller;
 import org.example.cyberforum.bean.Blog;
 import org.example.cyberforum.bean.Forum;
 import org.example.cyberforum.service.ForumService;
+import org.example.cyberforum.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class ForumController
 {
     @Autowired
     ForumService forumService;
+    @Autowired
+    UserService userService;
 
     private static final Logger logger = LoggerFactory.getLogger(ForumController.class);
 
@@ -45,6 +48,11 @@ public class ForumController
     {
         List<Blog> blogs = forumService.getBlogList(id);
         logger.info("ForumController getBlogListByForumId: blog list: " + blogs);
+        for (Blog blog: blogs)
+        {
+            blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
+            blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
+        }
         return blogs;
     }
 }

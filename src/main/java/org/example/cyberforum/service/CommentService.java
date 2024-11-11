@@ -16,6 +16,9 @@ public class CommentService
     @Autowired
     CommentMapper commentMapper;
 
+    @Autowired
+    UserService userService;
+
     private static final Logger log = LoggerFactory.getLogger(CommentService.class);
 
     public void addComment(Comment comment)
@@ -27,6 +30,11 @@ public class CommentService
 
     public List<Comment> getCommentByBlogId(Long blogId)
     {
-        return commentMapper.getCommentByBlogId(blogId);
+        List<Comment> comments = commentMapper.getCommentByBlogId(blogId);
+        for (Comment comment: comments)
+        {
+            comment.setUsername(userService.getUserById(comment.getUserId()).getUserName());
+        }
+        return comments;
     }
 }

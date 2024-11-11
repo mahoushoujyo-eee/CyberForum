@@ -87,6 +87,7 @@ function initializeForum()
                 forum_label_p.innerHTML = forum.name;
                 forum_label.appendChild(forum_label_p);
                 forum_label.href = 'forum.html?forumId=' + forum.id;
+                forum_label.target = '_blank';
                 console.log(forum_label);
                 forum_div.appendChild(forum_label);
             }
@@ -112,7 +113,7 @@ function getLatestBlogs()
                 let blog = document.createElement('div');
                 blog.innerHTML =
                     `
-                    <a href="blog.html?blog_id=${data[i].id}" class="blog_a">
+                    <a href="blog.html?blog_id=${data[i].id}" class="blog_a" target="_blank">
                     <div class="blog_title">
                         <h3>${data[i].title}</h3>
                     </div>
@@ -120,10 +121,10 @@ function getLatestBlogs()
                         <p>${data[i].content}</p>
                     </div>
                     <div class="blog_author">
-                        <p>${data[i].userId}</p>
+                        <p>${data[i].username}</p>
                     </div>
                     <div class="blog_forum">
-                        <p>${data[i].forumId}</p>
+                        <p>${data[i].forumName}</p>
                     </div>
                     <hr>
                     </a>

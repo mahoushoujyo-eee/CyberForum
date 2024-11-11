@@ -19,4 +19,6 @@ public interface UserMapper
     List<User> getUserList();
 
     Long getUserIdByUserName(String userName);
+
+    User getUserById(Long userId);
 }

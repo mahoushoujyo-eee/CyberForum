@@ -36,7 +36,7 @@ create table if not exists forum
     master_id bigint not null
 );
 
-create table if not exists administrator_and_forum
+create table if not exists administrator
 (
     administrator_id bigint not null,
     forum_id bigint not null

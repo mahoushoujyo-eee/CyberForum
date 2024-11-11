@@ -3,6 +3,13 @@ window.onload = function()
     const params = new URLSearchParams(window.location.search);
     const forumId = params.get('forumId');
 
+    if(getCookie("username") === null)
+    {
+        alert("please login first");
+        return;
+    }
+    addToNavigator(getCookie("username"));
+
     const put_out_form = document.getElementById("put_out_form");
     put_out_form.addEventListener("submit", function(e)
     {
@@ -75,4 +82,10 @@ function getCookie(name)
 function deleteCookie(name)
 {
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+}
+
+function addToNavigator(element)
+{
+    let username = document.getElementById("username");
+    username.innerHTML = element;
 }
