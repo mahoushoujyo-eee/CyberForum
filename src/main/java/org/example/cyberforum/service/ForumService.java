@@ -4,6 +4,8 @@ import org.example.cyberforum.bean.Blog;
 import org.example.cyberforum.bean.Forum;
 import org.example.cyberforum.mapper.BlogMapper;
 import org.example.cyberforum.mapper.ForumMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,11 @@ public class ForumService
     @Autowired
     BlogMapper blogMapper;
 
+    @Autowired
+    UserService userService;
+
+    private static final Logger logger = LoggerFactory.getLogger(ForumService.class);
+
     public List<Forum> getForumList()
     {
         return forumMapper.getForumList();
@@ -30,6 +37,21 @@ public class ForumService
 
     public List<Blog> getBlogList(Long id)
     {
-        return blogMapper.getBlogByForumId(id);
+        List<Blog> blogs = blogMapper.getBlogsByForumId(id);
+        for (Blog blog: blogs)
+        {
+            blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
+            blog.setForumName(getForumById(blog.getForumId()).getName());
+        }
+
+        blogs.sort((blog1, blog2) -> blog2.isTop() ? 1 : -1);
+        logger.info("get blogs by forum id: " + id + " blogs: " + blogs);
+
+        return blogs;
+    }
+
+    public List<Forum> searchForum(String searchText)
+    {
+        return forumMapper.getForumList().stream().filter(forum -> forum.getName().contains(searchText)).toList();
     }
 }

@@ -17,6 +17,9 @@ public class AdministratorService
     @Autowired
     UserService userService;
 
+    @Autowired
+    BlogService blogService;
+
     public List<User> getAdministratorByForumId(Long forumId)
     {
         List<User> administrators = administratorMapper.getAdministratorByForumId(forumId);
@@ -31,5 +34,28 @@ public class AdministratorService
     public void deleteAdministrator(Long forumId, String userName)
     {
         administratorMapper.deleteAdministrator(forumId, userService.getUserIdByUserName(userName));
+    }
+
+    public boolean judgeAdministrator(Long blogId, Long userId)
+    {
+        Long forumId = blogService.getForumIdByBlogId(blogId);
+        List<User> administrators = administratorMapper.getAdministratorByForumId(forumId);
+        for (User administrator: administrators)
+        {
+            if (administrator.getId().equals(userId))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean isAdministrator(Long userId, Long forumId)
+    {
+        List<User> administrators = administratorMapper.getAdministratorByForumId(forumId);
+        for (User administrator: administrators)
+        {
+            if (administrator.getId().equals(userId))
+                return true;
+        }
+        return false;
     }
 }

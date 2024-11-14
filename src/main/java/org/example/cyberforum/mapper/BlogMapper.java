@@ -15,5 +15,11 @@ public interface BlogMapper
     List<Blog> getBlogList();
     List<Blog> getLatestBlogList();
 
-    List<Blog> getBlogByForumId(Long id);
+    List<Blog> getBlogsByForumId(Long id);
+
+    void deleteBlogById(Long id);
+
+    void deleteTop(Long blogId);
+
+    void putTop(Long blogId);
 }

@@ -3,12 +3,11 @@ package org.example.cyberforum.controller;
 import org.example.cyberforum.bean.Administrator;
 import org.example.cyberforum.bean.User;
 import org.example.cyberforum.service.AdministratorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,6 +17,8 @@ public class  AdministratorController
 
     @Autowired
     AdministratorService administratorService;
+
+    private static final Logger logger = LoggerFactory.getLogger(AdministratorController.class);
 
     @RequestMapping("/get_administrator/{id}")
     public List<User> getAdministrator(@PathVariable("id") Long forumId)
@@ -37,5 +38,25 @@ public class  AdministratorController
     {
         administratorService.deleteAdministrator(forumId, user.getUserName());
     }
+
+    @RequestMapping("/is_administrator/{blog_id}")
+    public boolean judgeAdministrator(@PathVariable("blog_id") Long blogId, @RequestBody User user)
+    {
+        boolean result = administratorService.judgeAdministrator(blogId, user.getId());
+        logger.info("result = " + result);
+        return result;
+    }
+
+
+
+    @PostMapping("/is_administrator_by_forum_id/{forum_id}")
+    public boolean isAdministrator(@RequestBody Administrator administrator)
+    {
+        logger.info("administrator = " + administrator);
+        boolean result = administratorService.isAdministrator(administrator.getUserId(), administrator.getForumId());
+        logger.info("result = " + result);
+        return result;
+    }
+
 
 }

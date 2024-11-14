@@ -1,0 +1,82 @@
+body
+{
+    background-image: url("./image/hill.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+a
+{
+    text-decoration: none;
+}
+
+.top_navigator
+{
+    margin: -10px -8px -10px -10px;
+    padding: 10px;
+    border-bottom: silver;
+    background-color: #ededed;
+    border-bottom-style: solid;
+}
+
+.forum_icon
+{
+    display: inline-block;
+}
+
+.right_top_navigator
+{
+    float: right;
+    margin-left: 20px;
+}
+
+.search_input
+{
+    width: 980px;
+    height: 180px;
+    margin-left: 20%;
+    margin-right: 15%;
+}
+
+.search_input_text
+{
+    width: 50%;
+    height: 40px;
+    border-radius: 10px;
+    border-color: aliceblue;
+    position: relative;
+    left: 15%;
+    top: 20%;
+    font-size: 18px;
+}
+
+.search_data_button, .search_bar_button
+{
+    width: 10%;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    border-color: cornflowerblue;
+    color: cornflowerblue;
+
+    position: relative;
+    left: 15%;
+    top: 20%;
+}
+
+.main_content_box
+{
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: -70px;
+    width: 900px;
+    min-height: 1000px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: #f1f1f1;
+}
+
+.blog_a h3
+{
+    text-align: center;
+}

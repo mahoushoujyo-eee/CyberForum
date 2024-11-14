@@ -13,4 +13,5 @@ public class Comment
     private String username;
     private Long blogId;
     private Date createTime;
+    private boolean isTop;
 }

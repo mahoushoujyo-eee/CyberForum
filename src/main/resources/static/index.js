@@ -1,10 +1,8 @@
 window.onload = function ()
 {
     const username = getCookie('username');
-    const userId = getCookie('userId');
     if (username !== null)
     {
-        alert(username + userId + ', welcome back')
         addLogInElements(username)
     }
     else
@@ -14,8 +12,7 @@ window.onload = function ()
 
     getLatestBlogs();
     initializeForum();
-
-
+    searchEventBind();
 }
 
 
@@ -144,6 +141,36 @@ function resizeDivHeight()
     const height = Math.max(blogs_div.offsetHeight, forums_div.offsetHeight);
     blogs_div.style.height = height + 'px';
     forums_div.style.height = height + 'px';
+}
+
+function searchEventBind()
+{
+    const search_input_text = document.getElementById('search_input_text');
+    const search_blog_button = document.getElementById('search_blog_button');
+    const search_forum_button = document.getElementById('search_forum_button');
+
+
+    search_blog_button.addEventListener('click', function (e)
+    {
+        const search_text = search_input_text.value.trim();
+        if (search_text === '')
+        {
+            alert('请输入搜索内容');
+            return;
+        }
+        window.location.href = '/search_result.html?searchText=' + search_text + '&searchType=blog';
+    })
+
+    search_forum_button.addEventListener('click', function (e)
+    {
+        const search_text = search_input_text.value.trim();
+        if (search_text === '')
+        {
+            alert('请输入搜索内容');
+            return;
+        }
+        window.location.href = '/search_result.html?searchText=' + search_text + '&searchType=forum';
+    })
 }
 
 

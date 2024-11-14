@@ -37,4 +37,31 @@ public class CommentService
         }
         return comments;
     }
+
+    public List<Comment> getCommentsByBlogIdWithTop(Long blogId)
+    {
+        List<Comment> comments = getCommentByBlogId(blogId);
+        comments.sort((comment1, comment2) -> comment2.isTop() ? 1 : -1);
+        return comments;
+    }
+
+    public void deleteCommentById(Long commentId)
+    {
+        commentMapper.deleteCommentById(commentId);
+    }
+
+    public void deleteCommentByBlogIdAndUserId(Comment comment)
+    {
+        commentMapper.deleteCommentByBlogIdAndUserId(comment.getUserId(), comment.getBlogId());
+    }
+
+    public void putTop(Long commentId)
+    {
+        commentMapper.putTop(commentId);
+    }
+
+    public void cancelTop(Long commentId)
+    {
+        commentMapper.cancelTop(commentId);
+    }
 }

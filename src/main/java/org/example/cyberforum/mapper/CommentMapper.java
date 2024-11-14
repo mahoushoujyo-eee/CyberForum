@@ -12,4 +12,11 @@ public interface CommentMapper
     Comment getComment(Long id);
     List<Comment> getCommentByBlogId(Long id);
     List<Comment> getCommentList();
+    void deleteCommentById(Long id);
+
+    void deleteCommentByBlogIdAndUserId(Long userId, Long blogId);
+
+    void putTop(Long commentId);
+
+    void cancelTop(Long commentId);
 }

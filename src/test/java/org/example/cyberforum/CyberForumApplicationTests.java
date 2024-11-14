@@ -1,15 +1,14 @@
 package org.example.cyberforum;
 
 import org.example.cyberforum.bean.Blog;
-import org.example.cyberforum.mapper.AdministratorMapper;
-import org.example.cyberforum.mapper.BlogMapper;
-import org.example.cyberforum.mapper.ForumMapper;
-import org.example.cyberforum.mapper.UserMapper;
+import org.example.cyberforum.mapper.*;
+import org.example.cyberforum.service.BlogService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 @SpringBootTest
@@ -25,7 +24,12 @@ class CyberForumApplicationTests {
     BlogMapper blogMapper;
 
     @Autowired
+    CommentMapper commentMapper;
+
+    @Autowired
     AdministratorMapper administratorMapper;
+    @Autowired
+    private BlogService blogService;
 
     @Test
     void contextLoads()
@@ -63,6 +67,22 @@ class CyberForumApplicationTests {
     void test03()
     {
         System.out.println(administratorMapper.getAdministratorByForumId(1L));
+    }
+
+    @Test
+    void test04()
+    {
+        System.out.println(commentMapper.getCommentByBlogId(1L));
+    }
+
+    @Test
+    void test05()
+    {
+        List<Blog> blogList = blogService.getBlogsByForumIdWithTop(2L);
+        for (Blog blog: blogList)
+        {
+            System.out.println(blog.getId());
+        }
     }
 
 }

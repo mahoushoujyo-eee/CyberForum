@@ -5,10 +5,7 @@ import org.example.cyberforum.bean.Blog;
 import org.example.cyberforum.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,4 +40,36 @@ public class BlogController
         log.info("blog: " + blogService.getBlogById(id));
         return blogService.getBlogById(id);
     }
+
+    @DeleteMapping("/delete_blog/{blog_id}")
+    @ResponseBody
+    public boolean deleteBlog(@PathVariable("blog_id") Long blogId)
+    {
+        blogService.deleteBlogById(blogId);
+        return true;
+    }
+
+    @PutMapping("/delete_top/{blog_id}")
+    @ResponseBody
+    public boolean deleteTop(@PathVariable("blog_id") Long blogId)
+    {
+        blogService.deleteTop(blogId);
+        return true;
+    }
+
+    @PutMapping("/put_top/{blog_id}")
+    @ResponseBody
+    public boolean putTop(@PathVariable("blog_id") Long blogId)
+    {
+        blogService.putTop(blogId);
+        return true;
+    }
+
+    @GetMapping("/search_blog/{searchText}")
+    @ResponseBody
+    public List<Blog> searchBlog(@PathVariable("searchText") String searchText)
+    {
+        return blogService.searchBlog(searchText);
+    }
+
 }

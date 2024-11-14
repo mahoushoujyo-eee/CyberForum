@@ -52,4 +52,53 @@ public class BlogService
         logger.info("get blog by id: " + id + " blog: " + blog);
         return blog;
     }
+
+    public void deleteBlogById(Long id)
+    {
+        blogMapper.deleteBlogById(id);
+    }
+
+    public Long getForumIdByBlogId(Long blogId)
+    {
+        return blogMapper.getBlogById(blogId).getForumId();
+    }
+
+    public List<Blog> getBlogsByForumIdWithTop(Long forumId)
+    {
+        List<Blog> blogs = blogMapper.getBlogsByForumId(forumId);
+        for (Blog blog: blogs)
+        {
+            blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
+            blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
+        }
+
+        blogs.sort((blog1, blog2) -> blog2.isTop() ? 1 : -1);
+        logger.info("get blogs by forum id: " + forumId + " blogs: " + blogs);
+
+        return blogs;
+    }
+
+    public boolean deleteTop(Long blogId)
+    {
+        blogMapper.deleteTop(blogId);
+        return true;
+    }
+
+    public boolean putTop(Long blogId)
+    {
+        blogMapper.putTop(blogId);
+        return true;
+    }
+
+    public List<Blog> searchBlog(String searchText)
+    {
+        List<Blog> blogs = blogMapper.getBlogList().stream().filter(blog -> blog.getTitle().contains(searchText)).toList();
+        for (Blog blog: blogs)
+        {
+            blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
+            blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
+        }
+        logger.info("search blog: " + searchText + " blogs: " + blogs);
+        return blogs;
+    }
 }

@@ -7,18 +7,33 @@
         <result column="user_id" property="userId"/>
         <result column="blog_id" property="blogId"/>
         <result column="create_time" property="createTime"/>
+        <result column="is_top" property="isTop"/>
     </resultMap>
 
     <insert id="addComment">
         insert into comment(content,user_id,blog_id,create_time) values(#{content},#{userId},#{blogId},#{createTime})
     </insert>
+    <update id="putTop">
+        update comment set is_top = 1 where id = #{commentId}
+    </update>
+
+    <update id="cancelTop">
+        update comment set is_top = 0 where id = #{commentId}
+    </update>
+
+    <delete id="deleteCommentById">
+        delete from comment where id = #{id}
+    </delete>
+    <delete id="deleteCommentByBlogIdAndUserId">
+        delete from comment where blog_id = #{blogId} and user_id = #{userId}
+    </delete>
     <select id="getCommentList" resultMap="commentMap">
-        select id,content,user_id,blog_id,create_time from comment
+        select id,content,user_id,blog_id,create_time, is_top from comment
     </select>
     <select id="getComment" resultMap="commentMap">
-        select id,content,user_id,blog_id,create_time from comment where id = #{id}
+        select id,content,user_id,blog_id,create_time, is_top from comment where id = #{id}
     </select>
     <select id="getCommentByBlogId" resultMap="commentMap">
-        select id,content,user_id,blog_id,create_time from comment where blog_id = #{blogId} order by create_time desc
+        select id,content,user_id,blog_id,create_time, is_top from comment where blog_id = #{blogId} order by create_time
     </select>
 </mapper>

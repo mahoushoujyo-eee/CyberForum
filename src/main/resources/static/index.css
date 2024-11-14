@@ -20,6 +20,11 @@ a
     text-decoration: underline;
 }
 
+.blog_a div
+{
+    padding-left: 10px;
+}
+
 .top_navigator a
 {
     float: right;

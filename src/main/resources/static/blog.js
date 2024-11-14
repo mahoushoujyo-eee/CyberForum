@@ -1,7 +1,10 @@
+let isAuthor = false;
+
+
 window.onload = function ()
 {
     const username = getCookie('username');
-    const userId = getCookie('userId');
+
     if (username !== null)
     {
         addToNavigator(username)
@@ -32,15 +35,26 @@ window.onload = function ()
             blog_date.innerHTML = getTimeString(blog.createTime);
             const blog_content = document.getElementById("blog_content");
             blog_content.innerHTML = blog.content;
-        } else
+            const userId = getCookie("userId");
+            if (userId !== null)
+            {
+                if (userId === blog.userId.toString())
+                {
+                    isAuthor = true;
+                }
+                addDeleteBlogChoice(isAuthor)
+                addCommentElements();
+            }
+        }
+        else
         {
-            alert("error")
+            alert("The blog now is null, please return to main page");
+            location.href = "/";
         }
 
     }
 
     addEventListenerOfComment();
-    addCommentElements();
 }
 
 function addToNavigator(element)
@@ -69,12 +83,28 @@ function addCommentElements()
                 comment_element.innerHTML =
                     `<div class="comment_author">
                         <p>${comment.username}</p>
+                        <p id="comment_id" style="display:none">${comment.id}</p>
                      </div>
                      <div class="comment_content">
                         <p>${comment.content}</p>
                      </div>
-                     <hr>`;
+                     `;
+                if (isAuthorOfComment(comment.username))
+                {
+                    const delete_div = document.createElement("div");
+                    delete_div.innerHTML = `<a href="#">删除评论</a>`;
+                    comment_element.append(delete_div)
+                    delete_div.addEventListener("click", deleteComment)
+                }
+                comment_element.append(document.createElement("hr"))
                 comment_list.appendChild(comment_element);
+
+                const topOption = getTopOptions(comment)
+
+                if (topOption !== null)
+                {
+                    comment_element.children[0].children[0].append(topOption)
+                }
             }
         }
     }
@@ -87,7 +117,7 @@ function addEventListenerOfComment()
     {
         if (getCookie("username") === null)
         {
-            alert("please login first");
+            alert("请先登录");
             return;
         }
         const params = new URLSearchParams(window.location.search);
@@ -108,16 +138,203 @@ function addEventListenerOfComment()
         {
             if (xhr.status === 200)
             {
-                alert("comment successfully");
                 location.reload();
-            }
-            else
+            } else
             {
                 alert("error")
             }
 
         }
     });
+}
+
+function addDeleteBlogChoice(isAuthor)
+{
+    const params = new URLSearchParams(window.location.search);
+    const blogId = params.get('blog_id');
+    let isAdded = false;
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/is_administrator/" + blogId);
+
+    const data =
+        {
+            id: getCookie("userId")
+        }
+
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(data));
+
+
+
+    xhr.onload = function ()
+    {
+        if (xhr.status === 200)
+        {
+            const data = JSON.parse(xhr.responseText);
+            if (data === true)
+            {
+                const delete_blog = document.getElementById("delete_blog");
+                delete_blog.innerHTML =
+                    `<div class="right_fix_box">
+                        <p>删除帖子</p>
+                     </div>`;
+
+                delete_blog.addEventListener("click", deleteBlogByFetchAPI)
+            }
+            isAdded = true;
+        }
+    }
+
+    if (!isAdded)
+    {
+        if (isAuthor)
+        {
+            const delete_blog = document.getElementById("delete_blog");
+            delete_blog.innerHTML =
+                `<div class="right_fix_box">
+                    <p>删除帖子</p>
+                 </div>`;
+
+            delete_blog.addEventListener("click", deleteBlog)
+        }
+    }
+}
+
+function getTopOptions(comment)
+{
+    if (!isAuthor)
+        return null;
+
+    const topOption = document.createElement("button");
+
+    if (comment.top)
+    {
+         topOption.innerHTML = "取消置顶";
+         topOption.addEventListener("click", cancelTop)
+    }
+    else
+    {
+         topOption.innerHTML = "置顶";
+         topOption.addEventListener("click", putTop)
+    }
+
+    return topOption;
+}
+
+function deleteBlogByFetchAPI()
+{
+    const params = new URLSearchParams(window.location.search);
+    const blogId = params.get('blog_id');
+    fetch("/delete_blog/" + blogId,
+        {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).
+    then(response =>
+    {
+        if (response.ok)
+        {
+            alert("delete successfully");
+            location.href = "/";
+        }
+        else
+        {
+            alert("delete error");
+       }
+    }
+    )
+}
+
+function deleteBlog()
+{
+    if (confirm("确定要删除帖子吗?") === false)
+    {
+        return;
+    }
+    const params = new URLSearchParams(window.location.search);
+    const blogId = params.get('blog_id');
+    const xhr = new XMLHttpRequest();
+    xhr.open("DELETE", "/delete_blog/" + blogId);
+    xhr.send();
+
+    xhr.onload = function ()
+    {
+        if (xhr.status === 200)
+        {
+            alert("delete successfully");
+            location.href = "/";
+        }
+        else
+        {
+            alert("delete error");
+        }
+    }
+}
+
+function deleteComment()
+{
+    const commentId = this.parentNode.querySelector("#comment_id").innerText;
+    const xhr = new XMLHttpRequest();
+    xhr.open("DELETE", "/delete_comment/" + commentId);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.send();
+    xhr.onload = function ()
+    {
+        if (xhr.status === 200)
+        {
+            location.reload();
+        }
+        else
+        {
+            alert("delete error");
+        }
+    }
+}
+
+function putTop()
+{
+    const commentId = this.parentNode.parentNode.querySelector("#comment_id").innerText;
+    const xhr = new XMLHttpRequest();
+    xhr.open("PUT", "/put_comment_top/" + commentId);
+    xhr.send();
+    xhr.onload = function ()
+    {
+        if (xhr.status === 200)
+        {
+            location.reload();
+        }
+        else
+        {
+            alert("置顶失败");
+        }
+    }
+}
+
+function cancelTop()
+{
+    const commentId = this.parentNode.parentNode.querySelector("#comment_id").innerText;
+    const xhr = new XMLHttpRequest()
+    xhr.open("PUT", "/cancel_comment_top/" + commentId);
+    xhr.send();
+    xhr.onload = function ()
+    {
+        if (xhr.status === 200)
+        {
+            location.reload();
+        }
+        else
+        {
+            alert("取消置顶失败");
+        }
+    }
+}
+
+function isAuthorOfComment(comment_user_name)
+{
+    return (getCookie("username") === comment_user_name)
 }
 
 function getTimeString(date)

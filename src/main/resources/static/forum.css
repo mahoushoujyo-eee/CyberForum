@@ -21,13 +21,13 @@ body
 }
 
 .top_navigator
-{
-    margin: -10px -8px -10px -10px;
-    padding: 10px;
-    border-bottom: silver;
-    background-color: #ededed;
-    border-bottom-style: solid;
-}
+ {
+     margin: -10px -8px -10px -10px;
+     padding: 10px;
+     border-bottom: silver;
+     background-color: #ededed;
+     border-bottom-style: solid;
+ }
 
 .search_input
 {

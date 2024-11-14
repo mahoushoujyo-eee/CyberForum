@@ -41,3 +41,6 @@ create table if not exists administrator
     administrator_id bigint not null,
     forum_id bigint not null
 );
+
+alter table blog add is_top boolean default false;
+alter table comment add is_top boolean default false;
