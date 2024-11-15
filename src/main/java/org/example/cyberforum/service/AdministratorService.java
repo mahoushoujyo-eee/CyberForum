@@ -4,6 +4,7 @@ import org.example.cyberforum.bean.User;
 import org.example.cyberforum.mapper.AdministratorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class AdministratorService
         return administrators;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void addAdministrator(Long forumId, String userName)
     {
         administratorMapper.addAdministrator(forumId, userService.getUserIdByUserName(userName));
@@ -36,7 +38,7 @@ public class AdministratorService
         administratorMapper.deleteAdministrator(forumId, userService.getUserIdByUserName(userName));
     }
 
-    public boolean judgeAdministrator(Long blogId, Long userId)
+    public boolean ifAdministrator(Long blogId, Long userId)
     {
         Long forumId = blogService.getForumIdByBlogId(blogId);
         List<User> administrators = administratorMapper.getAdministratorByForumId(forumId);

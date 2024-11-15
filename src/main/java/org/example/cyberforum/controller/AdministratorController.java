@@ -6,7 +6,6 @@ import org.example.cyberforum.service.AdministratorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,7 +41,7 @@ public class  AdministratorController
     @RequestMapping("/is_administrator/{blog_id}")
     public boolean judgeAdministrator(@PathVariable("blog_id") Long blogId, @RequestBody User user)
     {
-        boolean result = administratorService.judgeAdministrator(blogId, user.getId());
+        boolean result = administratorService.ifAdministrator(blogId, user.getId());
         logger.info("result = " + result);
         return result;
     }

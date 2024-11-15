@@ -13,6 +13,17 @@ window.onload = function()
     searchInput.value = searchText;
     searchInput.focus();
 
+    const username = getCookie("username");
+
+    if (username !== null)
+    {
+        document.getElementById("username").innerHTML = username;
+    }
+    else
+    {
+        document.getElementById("username").innerHTML = "游客";
+    }
+
     const xhr = new XMLHttpRequest();
 
     if (searchType === 'forum')
@@ -23,6 +34,12 @@ window.onload = function()
     else if (searchType === 'blog')
     {
         xhr.open("GET", "/search_blog/" + searchText);
+        xhr.send();
+    }
+    else if (searchType === 'blogOfForum')
+    {
+        const forumId = params.get('forumId');
+        xhr.open("GET", "/search_blog_of_forum?searchText=" + searchText + "&" + "forumId=" + forumId);
         xhr.send();
     }
     else
@@ -44,6 +61,8 @@ window.onload = function()
             alert("搜索失败");
         }
     }
+
+    searchEventBind();
 }
 
 function showSearchResult(searchType, results)
@@ -58,6 +77,8 @@ function showSearchResult(searchType, results)
         if (searchType === 'forum')
             searchDataDiv.innerHTML = getForumHTML(result)
         else if (searchType === 'blog')
+            searchDataDiv.innerHTML = getBlogHTML(result)
+        else if (searchType === 'blogOfForum')
             searchDataDiv.innerHTML = getBlogHTML(result)
 
         mainContentBox.appendChild(searchDataDiv);
@@ -93,10 +114,47 @@ function getForumHTML(forum)
     const html = `
     <div class="forum_a">
         <div class="forum_title_div">
-            <a href="/forum.html?forumId=${forum.id}" target="_blank">${forum.name}</a>
+            <a href="/forum.html?forumId=${forum.id}" target="_blank">
+            <h3>${forum.name}</h3>
+            </a>
         </div>
     </div>
     <hr>
     `
     return html;
+}
+
+function searchEventBind()
+{
+    const searchForumButton = document.getElementById("search_forum_button");
+    searchForumButton.addEventListener("click", function ()
+    {
+        const searchText = document.getElementById("search_input").value;
+        location.href = "/search_result.html?searchText=" + searchText + "&searchType=forum";
+    });
+    const searchBlogButton = document.getElementById("search_blog_button");
+    searchBlogButton.addEventListener("click", function ()
+    {
+        const searchText = document.getElementById("search_input").value;
+        location.href = "/search_result.html?searchText=" + searchText + "&searchType=blog";
+    });
+}
+
+function getCookie(name)
+{
+    const cookies = document.cookie.split('; ');
+    for (const cookie of cookies)
+    {
+        const [cookieName, cookieValue] = cookie.split('=');
+        if (cookieName === name)
+        {
+            return decodeURIComponent(cookieValue);
+        }
+    }
+    return null; // 如果找不到指定的Cookie，返回null
+}
+
+function deleteCookie(name)
+{
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }

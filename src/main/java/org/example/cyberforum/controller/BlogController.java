@@ -72,4 +72,11 @@ public class BlogController
         return blogService.searchBlog(searchText);
     }
 
+    @GetMapping("/search_blog_of_forum")
+    @ResponseBody
+    public List<Blog> searchBlogOfForum(@RequestParam("searchText") String searchText, @RequestParam("forumId") Long forumId)
+    {
+        return blogService.searchBlogOfForum(searchText, forumId);
+    }
+
 }

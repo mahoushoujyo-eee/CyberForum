@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,7 @@ public class BlogService
     @Autowired
     ForumService forumService;
 
+    @Transactional(rollbackFor = Exception.class)
     public void putOutNewBlog(Blog blog)
     {
         blog.setCreateTime(new Date());
@@ -99,6 +101,19 @@ public class BlogService
             blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
         }
         logger.info("search blog: " + searchText + " blogs: " + blogs);
+        return blogs;
+    }
+
+    public List<Blog> searchBlogOfForum(String searchText, Long forumId)
+    {
+        List<Blog> blogs = blogMapper.getBlogsByForumId(forumId).stream().filter(blog -> blog.getTitle().contains(searchText)).toList();
+        for (Blog blog: blogs)
+        {
+            blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
+            blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
+        }
+
+        logger.info("search blog of forum: " + searchText + " blogs: " + blogs);
         return blogs;
     }
 }

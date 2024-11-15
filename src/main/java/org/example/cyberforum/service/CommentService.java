@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,8 @@ public class CommentService
 
     private static final Logger log = LoggerFactory.getLogger(CommentService.class);
 
+
+    @Transactional(rollbackFor = Exception.class)
     public void addComment(Comment comment)
     {
         comment.setCreateTime(new Date());
@@ -48,11 +51,6 @@ public class CommentService
     public void deleteCommentById(Long commentId)
     {
         commentMapper.deleteCommentById(commentId);
-    }
-
-    public void deleteCommentByBlogIdAndUserId(Comment comment)
-    {
-        commentMapper.deleteCommentByBlogIdAndUserId(comment.getUserId(), comment.getBlogId());
     }
 
     public void putTop(Long commentId)

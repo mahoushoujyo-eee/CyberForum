@@ -2,6 +2,8 @@ let isAdministrator = false;
 
 window.onload = function()
 {
+    searchButtonBundle()
+
     const params = new URLSearchParams(window.location.search);
     const forumId = params.get('forumId');
 
@@ -251,3 +253,17 @@ function deleteToTop()
     }
 }
 
+function searchButtonBundle()
+{
+    const searchButton = document.getElementById("search_button");
+    searchButton.addEventListener("click", searchBlogs);
+}
+
+function searchBlogs()
+{
+    const searchInput = document.getElementById("search_input").value;
+    const params = new URLSearchParams(window.location.search);
+    const forumId = params.get('forumId');
+    const searchText = searchInput.trim();
+    location.href = "/search_result.html?searchText=" + searchText + "&searchType=blogOfForum&" + "forumId=" + forumId;
+}
