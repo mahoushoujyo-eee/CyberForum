@@ -1,9 +1,8 @@
 package org.example.cyberforum.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.cyberforum.bean.Blog;
 import org.example.cyberforum.mapper.BlogMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,11 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Service
 public class BlogService
 {
-
-    private static final Logger logger = LoggerFactory.getLogger(BlogService.class);
 
     @Autowired
     BlogMapper blogMapper;
@@ -30,7 +28,7 @@ public class BlogService
     public void putOutNewBlog(Blog blog)
     {
         blog.setCreateTime(new Date());
-        logger.info("BlogService putOutNewBlog: put out new blog: " + blog);
+        log.info("BlogService putOutNewBlog: put out new blog: " + blog);
         blogMapper.addBlog(blog);
     }
 
@@ -49,12 +47,20 @@ public class BlogService
     public Blog getBlogById(Long id)
     {
         Blog blog =  blogMapper.getBlogById(id);
+
+        if (blog == null)
+        {
+            return null;
+        }
+
         blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
         blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
-        logger.info("get blog by id: " + id + " blog: " + blog);
+        log.info("get blog by id: " + id + " blog: " + blog);
         return blog;
     }
 
+
+    @Transactional(rollbackFor = Exception.class)
     public void deleteBlogById(Long id)
     {
         blogMapper.deleteBlogById(id);
@@ -75,21 +81,23 @@ public class BlogService
         }
 
         blogs.sort((blog1, blog2) -> blog2.isTop() ? 1 : -1);
-        logger.info("get blogs by forum id: " + forumId + " blogs: " + blogs);
+        log.info("get blogs by forum id: " + forumId + " blogs: " + blogs);
 
         return blogs;
     }
 
-    public boolean deleteTop(Long blogId)
+
+    @Transactional(rollbackFor = Exception.class)
+    public void cancelTop(Long blogId)
     {
-        blogMapper.deleteTop(blogId);
-        return true;
+        blogMapper.cancelTop(blogId);
     }
 
-    public boolean putTop(Long blogId)
+
+    @Transactional(rollbackFor = Exception.class)
+    public void putTop(Long blogId)
     {
         blogMapper.putTop(blogId);
-        return true;
     }
 
     public List<Blog> searchBlog(String searchText)
@@ -100,7 +108,7 @@ public class BlogService
             blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
             blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
         }
-        logger.info("search blog: " + searchText + " blogs: " + blogs);
+        log.info("search blog: " + searchText + " blogs: " + blogs);
         return blogs;
     }
 
@@ -113,7 +121,21 @@ public class BlogService
             blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
         }
 
-        logger.info("search blog of forum: " + searchText + " blogs: " + blogs);
+        log.info("search blog of forum: " + searchText + " blogs: " + blogs);
         return blogs;
+    }
+
+
+    public boolean ifContainsBlog(Blog blog)
+    {
+        List<Blog> blogs = blogMapper.getBlogList();
+
+        for (Blog blog1: blogs)
+        {
+            if (blog1.getTitle().equals(blog.getTitle())
+                    && blog1.getContent().equals(blog.getContent()))
+                return true;
+        }
+        return false;
     }
 }

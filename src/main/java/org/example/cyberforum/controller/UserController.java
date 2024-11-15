@@ -14,7 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
-@Controller
+@RestController
 public class UserController
 {
     public static Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -23,16 +23,13 @@ public class UserController
     private UserService userService;
 
     @PostMapping("/register")
-    @ResponseBody
-    public boolean register(@RequestBody User user)
+    public void register(@RequestBody User user)
     {
         logger.info("register user:" + JSON.toJSONString(user));
         userService.addUser(user);
-        return true;
     }
 
-    @RequestMapping("/logIn")
-    @ResponseBody
+    @PostMapping("/logIn")
     public boolean login(@RequestBody User user, HttpServletResponse response)
     {
         logger.info("login user:" + JSON.toJSONString(user));
@@ -51,11 +48,10 @@ public class UserController
         }
     }
 
-    @RequestMapping("/find_password")
-    @ResponseBody
-    public boolean findPassword(@RequestBody User user)
+    @PostMapping("/find_password")
+    public void findPassword(@RequestBody User user)
     {
         logger.info("find password user:" + JSON.toJSONString(user));
-        return userService.findPassword(user);
+        userService.findPassword(user);
     }
 }

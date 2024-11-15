@@ -13,27 +13,21 @@ public class CommentController
     @Autowired
     CommentService commentService;
 
-    public String getComment()
-    {
-        return "comment";
-    }
-
-    @RequestMapping("add_comment/{id}")
+    @PostMapping("add_comment/{id}")
     public void addComment(@RequestBody Comment comment)
     {
         commentService.addComment(comment);
     }
 
-    @RequestMapping("comment/{id}")
-    public List<Comment> getComment(@PathVariable("id") Long blogId)
+    @GetMapping("comment/{id}")
+    public List<Comment> getComments(@PathVariable("id") Long blogId)
     {
         return commentService.getCommentsByBlogIdWithTop(blogId);
     }
 
-    @RequestMapping("delete_comment/{comment_id}")
-    public void deleteComment(@PathVariable("comment_id") Long commentId)
+    @DeleteMapping("delete_comment/{comment_id}")
+    public void deleteCommentById(@PathVariable("comment_id") Long commentId)
     {
-
         commentService.deleteCommentById(commentId);
     }
 

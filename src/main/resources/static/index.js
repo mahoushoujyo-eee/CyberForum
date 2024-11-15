@@ -114,6 +114,7 @@ function getLatestBlogs()
                     <div class="blog_title">
                         <h3>${data[i].title}</h3>
                     </div>
+                    </a>
                     <div class="blog_content">
                         <p>${data[i].content}</p>
                     </div>
@@ -124,7 +125,6 @@ function getLatestBlogs()
                         <p>${data[i].forumName}</p>
                     </div>
                     <hr>
-                    </a>
                     `;
                 blogs.appendChild(blog)
             }

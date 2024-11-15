@@ -33,7 +33,7 @@
     <select id="getComment" resultMap="commentMap">
         select id,content,user_id,blog_id,create_time, is_top from comment where id = #{id}
     </select>
-    <select id="getCommentByBlogId" resultMap="commentMap">
+    <select id="getCommentsByBlogId" resultMap="commentMap">
         select id,content,user_id,blog_id,create_time, is_top from comment where blog_id = #{blogId} order by create_time
     </select>
 </mapper>

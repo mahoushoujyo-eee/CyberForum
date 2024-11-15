@@ -1,5 +1,6 @@
 package org.example.cyberforum.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.cyberforum.bean.User;
 import org.example.cyberforum.mapper.UserMapper;
 import org.example.cyberforum.utils.MD5;
@@ -10,35 +11,30 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class UserService
 {
     @Autowired
     UserMapper userMapper;
 
-    Logger logger = LoggerFactory.getLogger(UserService.class);
-
-
     @Transactional(rollbackFor = Exception.class)
-    public boolean addUser(User user)
+    public void addUser(User user)
     {
         String encryptedPassword = MD5.hash(user.getPassword());
-        logger.info("encryptedPassword:" + encryptedPassword);
+        log.info("encryptedPassword:" + encryptedPassword);
         userMapper.addUser(user.getUserName(), encryptedPassword, user.getEmail());
-        return true;
     }
 
     public boolean login(User user)
     {
         String encryptedPassword = MD5.hash(user.getPassword());
-        logger.info("encryptedPassword:" + encryptedPassword);
+        log.info("encryptedPassword:" + encryptedPassword);
         String dbPassword = userMapper.getEncryptedPassword(user.getUserName());
-        if (dbPassword.equals(encryptedPassword))
-            return true;
-        return false;
+        return dbPassword.equals(encryptedPassword);
     }
 
-    public boolean findPassword(User user)
+    public void findPassword(User user)
     {
         User sqlUser = userMapper.getUserByUserName(user.getUserName());
         if (sqlUser != null)
@@ -48,17 +44,14 @@ public class UserService
             {
                 String encryptedPassword = MD5.hash(user.getPassword());
                 userMapper.updateUser(user.getUserName(), encryptedPassword);
-                return true;
             }
-            logger.info("email:" + email);
+            log.info("email:" + email);
         }
-
-        return false;
     }
 
     public Long getUserIdByUserName(String userName)
     {
-        logger.info("userName:" + userName);
+        log.info("userName:" + userName);
         return userMapper.getUserIdByUserName(userName);
     }
 

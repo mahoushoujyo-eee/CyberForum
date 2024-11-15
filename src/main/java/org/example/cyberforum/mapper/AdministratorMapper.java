@@ -1,6 +1,7 @@
 package org.example.cyberforum.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.example.cyberforum.bean.Administrator;
 import org.example.cyberforum.bean.User;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface AdministratorMapper
     void addAdministrator(Long forumId, Long userId);
 
     void deleteAdministrator(Long forumId, Long userId);
+
+    List<Administrator> getAdministrators();
 }

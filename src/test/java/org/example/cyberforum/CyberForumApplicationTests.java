@@ -72,7 +72,7 @@ class CyberForumApplicationTests {
     @Test
     void test04()
     {
-        System.out.println(commentMapper.getCommentByBlogId(1L));
+        System.out.println(commentMapper.getCommentsByBlogId(1L));
     }
 
     @Test

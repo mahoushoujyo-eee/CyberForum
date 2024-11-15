@@ -1,5 +1,10 @@
+let administratorCount = 0;
+let isAdministrator = false;
+
 window.onload = function()
 {
+    ifAdministrator()
+
     if (getCookie("userId") === null)
     {
         window.location.href = "/login.html";
@@ -25,6 +30,7 @@ window.onload = function()
             const data = JSON.parse(xhr.responseText);
             const administrator_name = document.getElementById("administrator_list");
 
+            administratorCount = data.length;
             for (let i = 0; i < data.length; i++)
             {
                 console.log(data[i]);
@@ -32,6 +38,12 @@ window.onload = function()
 
                 const label = document.createElement("label");
                 label.innerHTML = data[i].userName;
+
+                const hiddenSpan = document.createElement("span");
+                hiddenSpan.innerHTML = data[i].id;
+                hiddenSpan.style.display = "none";
+
+                label.appendChild(hiddenSpan)
 
                 const delete_administrator_button = document.createElement("input");
                 delete_administrator_button.type = "button";
@@ -65,9 +77,21 @@ function BundleAddAdministratorButton()
     const add_administrator_button = document.getElementById("add_administrator_button");
     add_administrator_button.addEventListener("click", function ()
     {
+        const add_administrator_name = document.getElementById("administrator_name").value;
+
+        if (administratorCount >= 3)
+        {
+            alert("最多只能添加三个管理员");
+            return;
+        }
+        if (add_administrator_name.value === "")
+        {
+            alert("请输入管理员用户名");
+            return;
+        }
+
         const params = new URLSearchParams(window.location.search);
         const forumId = params.get('forumId');
-        const administrator_name = add_administrator_button.parentNode.children[0].children[0].value;
         console.log(add_administrator_button.parentNode.children[0].children[0].value);
 
         const xhr = new XMLHttpRequest();
@@ -75,19 +99,31 @@ function BundleAddAdministratorButton()
         xhr.setRequestHeader("Content-Type", "application/json");
         const data =
             {
-                userName: administrator_name
+                userName: add_administrator_name,
+                forumId: forumId
             }
         xhr.send(JSON.stringify(data));
         xhr.onload = function ()
         {
             if (xhr.status === 200)
             {
-                alert("添加管理员成功");
-                location.reload();
+                if (xhr.responseText === 'true')
+                {
+                    alert("添加管理员成功");
+                    location.reload();
+                }
+                else if (xhr.responseText === 'false')
+                {
+                    alert("管理员已存在了");
+                }
+                else if (xhr.responseText === 'null')
+                {
+                    alert("确认输入了正确的管理员用户名");
+                }
             }
             else
             {
-                alert("添加管理员失败");
+                alert("请确认输入了正确的管理员用户名");
             }
         }
     })
@@ -100,13 +136,14 @@ function deleteAdministrator()
         const params = new URLSearchParams(window.location.search);
         const forumId = params.get('forumId');
 
-        const administrator_name = this.parentNode.children[0].innerHTML;
+        const userId = this.parentNode.children[0].children[0].innerHTML;
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/delete_administrator/" + forumId);
+        xhr.open("DELETE", "/delete_administrator/" + forumId);
         xhr.setRequestHeader("Content-Type", "application/json");
         const data =
             {
-                userName: administrator_name
+                userId: userId,
+                forumId: forumId
             }
         xhr.send(JSON.stringify(data));
         xhr.onload = function ()
@@ -163,6 +200,42 @@ function BundleDeleteAdministratorButton()
                 }
             }
         })
+    }
+}
+
+function ifAdministrator()
+{
+    const userId = getCookie("userId");
+    const params = new URLSearchParams(window.location.search);
+    const forumId = params.get('forumId');
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/is_administrator_by_forum_id/" + forumId);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    const data =
+        {
+            userId: userId,
+            forumId: forumId
+        }
+    xhr.send(JSON.stringify(data));
+    xhr.onload = function()
+    {
+        if (xhr.status === 200)
+        {
+            if(xhr.responseText === "true")
+            {
+
+            }
+            else
+            {
+                alert("您不是管理员，无法进行操作");
+                window.location.href = '/';
+            }
+        }
+        else
+        {
+            alert("error");
+            return false;
+        }
     }
 }
 

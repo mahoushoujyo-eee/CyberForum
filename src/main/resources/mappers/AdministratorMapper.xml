@@ -8,6 +8,11 @@
         <result column="encrypted_password" property="password" />
         <result column="email" property="email" />
     </resultMap>
+
+    <resultMap id="AdministratorMap" type="org.example.cyberforum.bean.Administrator">
+        <result column="forum_id" property="forumId" />
+        <result column="administrator_id" property="userId" />
+    </resultMap>
     <insert id="addAdministrator">
         insert into administrator(forum_id,administrator_id) values(#{forumId},#{userId})
     </insert>
@@ -17,5 +22,8 @@
 
     <select id="getAdministratorByForumId" resultMap="UserMap">
         select * from user where id in (select administrator_id from administrator where forum_id = #{forumId})
+    </select>
+    <select id="getAdministrators" resultMap="AdministratorMap">
+        select * from administrator
     </select>
 </mapper>

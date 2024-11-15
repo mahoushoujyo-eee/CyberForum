@@ -23,8 +23,13 @@ window.onload = function ()
     {
         if (xhr.status === 200)
         {
+            if (xhr.responseText === '')
+            {
+                alert("帖子已被删除");
+                location.href = "/";
+            }
             const blog = JSON.parse(xhr.responseText);
-            console.log(blog);
+
             const blog_title = document.getElementById("blog_title");
             const page_title = document.getElementsByTagName("title")[0];
             page_title.innerHTML = blog.title;
@@ -48,7 +53,7 @@ window.onload = function ()
         }
         else
         {
-            alert("The blog now is null, please return to main page");
+            alert("页面请求失败");
             location.href = "/";
         }
 

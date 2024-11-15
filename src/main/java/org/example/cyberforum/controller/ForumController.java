@@ -3,6 +3,7 @@ package org.example.cyberforum.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.example.cyberforum.bean.Blog;
 import org.example.cyberforum.bean.Forum;
 import org.example.cyberforum.service.AdministratorService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 public class ForumController
 {
@@ -30,35 +32,30 @@ public class ForumController
     @Autowired
     AdministratorService administratorService;
 
-
-    private static final Logger logger = LoggerFactory.getLogger(ForumController.class);
-    @Autowired
-    private JdbcRepositoriesAutoConfiguration jdbcRepositoriesAutoConfiguration;
-
-    @RequestMapping("/initialize_forum")
-    public List<Forum> getForumList(HttpServletRequest request, HttpServletResponse response)
+    @GetMapping("/initialize_forum")
+    public List<Forum> getForumList()
     {
         List<Forum> forums = forumService.getForumList();
-        logger.info("forum list: " + forums);
+        log.info("forum list: " + forums);
 
         return forums;
     }
 
 
-    @RequestMapping("/forum/{id}")
+    @GetMapping("/forum/{id}")
     public Forum getForumById(@PathVariable Long id)
     {
         Forum forum = forumService.getForumById(id);
-        logger.info("forum: " + forum);
+        log.info("forum: " + forum);
 
         return forum;
     }
 
-    @RequestMapping("/forum/{id}/blog")
-    public List<Blog> getBlogList(@PathVariable Long id)
+    @GetMapping("/forum/{id}/blog")
+    public List<Blog> getBlogList(@PathVariable("id") Long forumId)
     {
-        List<Blog> blogs = forumService.getBlogList(id);
-        logger.info("ForumController getBlogListByForumId: blog list: " + blogs);
+        List<Blog> blogs = forumService.getBlogList(forumId);
+        log.info("ForumController getBlogListByForumId: blog list: " + blogs);
         for (Blog blog: blogs)
         {
             blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
@@ -71,7 +68,7 @@ public class ForumController
     public List<Forum> searchForum(@PathVariable("searchText") String searchText)
     {
         List<Forum> forums = forumService.searchForum(searchText);
-        logger.info("searchForum: " + forums);
+        log.info("searchForum: " + forums);
 
         return forums;
     }

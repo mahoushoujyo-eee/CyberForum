@@ -1,5 +1,6 @@
 package org.example.cyberforum.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.cyberforum.bean.Blog;
 import org.example.cyberforum.bean.Forum;
 import org.example.cyberforum.mapper.BlogMapper;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class ForumService
 {
@@ -22,8 +24,6 @@ public class ForumService
 
     @Autowired
     UserService userService;
-
-    private static final Logger logger = LoggerFactory.getLogger(ForumService.class);
 
     public List<Forum> getForumList()
     {
@@ -45,7 +45,7 @@ public class ForumService
         }
 
         blogs.sort((blog1, blog2) -> blog2.isTop() ? 1 : -1);
-        logger.info("get blogs by forum id: " + id + " blogs: " + blogs);
+        log.info("get blogs by forum id: " + id + " blogs: " + blogs);
 
         return blogs;
     }

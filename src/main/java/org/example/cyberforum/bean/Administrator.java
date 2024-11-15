@@ -7,4 +7,6 @@ public class Administrator
 {
     private Long userId;
     private Long forumId;
+
+    private String userName;
 }

@@ -1,5 +1,6 @@
 package org.example.cyberforum.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.cyberforum.bean.Comment;
 import org.example.cyberforum.mapper.CommentMapper;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Service
 public class CommentService
 {
@@ -19,8 +21,6 @@ public class CommentService
 
     @Autowired
     UserService userService;
-
-    private static final Logger log = LoggerFactory.getLogger(CommentService.class);
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -31,9 +31,9 @@ public class CommentService
         commentMapper.addComment(comment);
     }
 
-    public List<Comment> getCommentByBlogId(Long blogId)
+    public List<Comment> getCommentsByBlogId(Long blogId)
     {
-        List<Comment> comments = commentMapper.getCommentByBlogId(blogId);
+        List<Comment> comments = commentMapper.getCommentsByBlogId(blogId);
         for (Comment comment: comments)
         {
             comment.setUsername(userService.getUserById(comment.getUserId()).getUserName());
@@ -43,21 +43,24 @@ public class CommentService
 
     public List<Comment> getCommentsByBlogIdWithTop(Long blogId)
     {
-        List<Comment> comments = getCommentByBlogId(blogId);
+        List<Comment> comments = getCommentsByBlogId(blogId);
         comments.sort((comment1, comment2) -> comment2.isTop() ? 1 : -1);
         return comments;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void deleteCommentById(Long commentId)
     {
         commentMapper.deleteCommentById(commentId);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void putTop(Long commentId)
     {
         commentMapper.putTop(commentId);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void cancelTop(Long commentId)
     {
         commentMapper.cancelTop(commentId);

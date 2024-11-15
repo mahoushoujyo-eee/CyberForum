@@ -10,7 +10,7 @@ public interface CommentMapper
 {
     void addComment(Comment comment);
     Comment getComment(Long id);
-    List<Comment> getCommentByBlogId(Long id);
+    List<Comment> getCommentsByBlogId(Long id);
     List<Comment> getCommentList();
     void deleteCommentById(Long id);
 

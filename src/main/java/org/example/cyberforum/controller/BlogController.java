@@ -4,61 +4,56 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.cyberforum.bean.Blog;
 import org.example.cyberforum.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 public class BlogController
 {
 
     @Autowired
     BlogService blogService;
 
-    @RequestMapping("/put_blog")
-    @ResponseBody
+    @PostMapping("/put_blog")
     public boolean putOutNewBlog(@RequestBody Blog blog)
     {
         blogService.putOutNewBlog(blog);
         return true;
     }
 
-    @RequestMapping("/get_latest_blogs")
-    @ResponseBody
+    @GetMapping("/get_latest_blogs")
     public List<Blog> getLatestBlog()
     {
         return blogService.getLatestBlogList();
     }
 
-    @RequestMapping("/blog/{id}")
-    @ResponseBody
+    @GetMapping("/blog/{id}")
     public Blog getBlogById(@PathVariable Long id)
     {
+        Blog blog = blogService.getBlogById(id);
         log.info("get blog by id: " + id);
-        log.info("blog: " + blogService.getBlogById(id));
+        log.info("blog: " + blog);
+
         return blogService.getBlogById(id);
     }
 
     @DeleteMapping("/delete_blog/{blog_id}")
-    @ResponseBody
-    public boolean deleteBlog(@PathVariable("blog_id") Long blogId)
+    public boolean deleteBlogById(@PathVariable("blog_id") Long blogId)
     {
         blogService.deleteBlogById(blogId);
         return true;
     }
 
     @PutMapping("/delete_top/{blog_id}")
-    @ResponseBody
     public boolean deleteTop(@PathVariable("blog_id") Long blogId)
     {
-        blogService.deleteTop(blogId);
+        blogService.cancelTop(blogId);
         return true;
     }
 
     @PutMapping("/put_top/{blog_id}")
-    @ResponseBody
     public boolean putTop(@PathVariable("blog_id") Long blogId)
     {
         blogService.putTop(blogId);
@@ -66,14 +61,12 @@ public class BlogController
     }
 
     @GetMapping("/search_blog/{searchText}")
-    @ResponseBody
     public List<Blog> searchBlog(@PathVariable("searchText") String searchText)
     {
         return blogService.searchBlog(searchText);
     }
 
     @GetMapping("/search_blog_of_forum")
-    @ResponseBody
     public List<Blog> searchBlogOfForum(@RequestParam("searchText") String searchText, @RequestParam("forumId") Long forumId)
     {
         return blogService.searchBlogOfForum(searchText, forumId);

@@ -19,7 +19,7 @@ public interface BlogMapper
 
     void deleteBlogById(Long id);
 
-    void deleteTop(Long blogId);
+    void cancelTop(Long blogId);
 
     void putTop(Long blogId);
 }
