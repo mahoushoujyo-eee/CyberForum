@@ -110,6 +110,7 @@ body .search_input
     border-color: silver;
     border-top-left-radius: 10px;
     width: 79.5%;
+    border-style: solid;
 }
 
 
@@ -118,9 +119,9 @@ body .search_input
     float: left;
     background-color: #f1f1f1;
     border-color: silver;
-    border-left-style: solid;
+    border-style: solid;
     border-top-right-radius: 10px;
-    width: 20%;
+    width: 18%;
 }
 
 .title

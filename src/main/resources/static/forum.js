@@ -80,7 +80,7 @@ function addPostChoice()
                 <p>我要发贴</p>
             </div>
         `;
-    postChoice.href = "/put_post_out.html?forumId=" + forumId;
+    postChoice.href = "/put_post_out.html?forum_id=" + forumId;
     console.log("postChoice:")
     console.log(postChoice)
 }
@@ -124,7 +124,7 @@ function logBlogOfForum()
                     `
                         <div class="blog_title" id="blog_title">
                         <h3>
-                            <a href="blog.html?blog_id=${data[i].id}" class="blog_a" target="_blank">
+                            <a href="blog.html?blog_id=${data[i].id}&forum_id=${data[i].forumId}" class="blog_a" target="_blank">
                                 ${data[i].title}
                             </a>
                         </h3>
@@ -184,7 +184,7 @@ function ifAdministrator()
         }
         else
         {
-            alert("error");
+            alert("出现故障");
         }
     }
 }

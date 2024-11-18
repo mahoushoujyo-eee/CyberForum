@@ -110,7 +110,7 @@ function getLatestBlogs()
                 let blog = document.createElement('div');
                 blog.innerHTML =
                     `
-                    <a href="blog.html?blog_id=${data[i].id}" class="blog_a" target="_blank">
+                    <a href="blog.html?blog_id=${data[i].id}&forum_id=${data[i].forumId}" class="blog_a" target="_blank">
                     <div class="blog_title">
                         <h3>${data[i].title}</h3>
                     </div>

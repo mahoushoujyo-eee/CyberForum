@@ -1,12 +1,13 @@
 window.onload = function()
 {
     const params = new URLSearchParams(window.location.search);
-    const forumId = params.get('forumId');
+    const forumId = params.get('forum_id');
 
     if(getCookie("username") === null)
     {
-        alert("please login first");
-        return;
+        alert("请先登录");
+
+        location.href = "/login.html";
     }
     addToNavigator(getCookie("username"));
 
@@ -17,24 +18,24 @@ window.onload = function()
         let title = document.getElementById("edit_title").value;
         if(title.length > 30)
         {
-            alert("title too long");
+            alert("请保持标题在三十字以内");
             return;
         }
         if(title.length === 0)
         {
-            alert("title can not be empty");
+            alert("标题不能为空");
             return;
         }
 
         let content = document.getElementById("edit_text").value;
         if(content.length > 500)
         {
-            alert("content too long");
+            alert("请保持帖子信息在五百字以内");
             return;
         }
         if(content.length === 0)
         {
-            alert("content can not be empty");
+            alert("帖子内容不能为空");
             return;
         }
         let data =
@@ -52,16 +53,19 @@ window.onload = function()
         {
             if(xhr.status === 200)
             {
-                alert("put out success");
+                if (xhr.responseText === "false")
+                {
+
+                }
+                alert("发帖成功");
                 window.location.href = "/forum.html?forumId=" + forumId;
             }
             else
             {
-                alert("error");
+                alert("系统故障");
             }
         }
     })
-
 }
 
 

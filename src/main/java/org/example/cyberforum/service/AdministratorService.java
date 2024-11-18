@@ -1,5 +1,6 @@
 package org.example.cyberforum.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.cyberforum.bean.Administrator;
 import org.example.cyberforum.bean.User;
 import org.example.cyberforum.mapper.AdministratorMapper;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class AdministratorService
 {
@@ -22,8 +24,17 @@ public class AdministratorService
     @Autowired
     BlogService blogService;
 
+    @Autowired
+    ForumService forumService;
+
     public List<User> getAdministratorByForumId(Long forumId)
     {
+        if (forumId == null || !forumService.ifContainsForum(forumId))
+        {
+            log.info("forum id" + forumId + " is null or not exists");
+            return null;
+        }
+
         List<User> administrators = administratorMapper.getAdministratorByForumId(forumId);
         return administrators;
     }
@@ -33,7 +44,7 @@ public class AdministratorService
     {
         Long userId = userService.getUserIdByUserName(username);
 
-        if (userId == null)
+        if (userId == null || !forumService.ifContainsForum(forumId))
         {
             return "null";
         }
@@ -53,13 +64,23 @@ public class AdministratorService
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void deleteAdministrator(Long forumId, Long userId)
+    public boolean deleteAdministrator(Long forumId, Long userId)
     {
+        if (!forumService.ifContainsForum(forumId) || !userService.ifContainsUser(userId))
+        {
+            return false;
+        }
+
         administratorMapper.deleteAdministrator(forumId, userId);
+        return true;
     }
 
     public boolean ifAdministratorFromBlog(Long blogId, Long userId)
     {
+        if (!blogService.ifContainsBlogOfInfo(blogService.getBlogById(blogId)) || !userService.ifContainsUser(userId))
+            return false;
+
+
         Long forumId = blogService.getForumIdByBlogId(blogId);
         List<User> administrators = administratorMapper.getAdministratorByForumId(forumId);
         for (User administrator: administrators)

@@ -54,4 +54,9 @@ public class ForumService
     {
         return forumMapper.getForumList().stream().filter(forum -> forum.getName().contains(searchText)).toList();
     }
+
+    public boolean ifContainsForum(Long forumId)
+    {
+        return forumMapper.getForumById(forumId) != null;
+    }
 }

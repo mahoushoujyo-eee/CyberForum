@@ -64,11 +64,6 @@ window.onload = function()
             alert("获取管理员信息失败");
         }
     }
-    initialize();
-}
-
-function initialize()
-{
     BundleAddAdministratorButton();
 }
 
@@ -150,6 +145,11 @@ function deleteAdministrator()
         {
             if (xhr.status === 200)
             {
+                if (xhr.responseText === 'false')
+                {
+                    alert("该用户或论坛不存在");
+                    return;
+                }
                 alert("删除管理员成功");
                 location.reload();
             }
@@ -158,48 +158,6 @@ function deleteAdministrator()
                 alert("删除管理员失败");
             }
         }
-    }
-}
-
-function BundleDeleteAdministratorButton()
-{
-    const delete_administrator_buttons = document.getElementById("delete_administrator_button");
-
-    console.log(delete_administrator_buttons);
-
-
-
-    alert("length :" + delete_administrator_buttons.length)
-    for (let i = 0; i < delete_administrator_buttons.length; i++)
-    {
-        alert("add :" + i)
-        delete_administrator_buttons[i].addEventListener("click", function ()
-        {
-            const params = new URLSearchParams(window.location.search);
-            const forumId = params.get('forumId');
-
-            const administrator_name = delete_administrator_buttons[i].parentNode.children[0].children[0].value;
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/delete_administrator/" + forumId);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            const data =
-                {
-                    userName: administrator_name
-                }
-                xhr.send(JSON.stringify(data));
-            xhr.onload = function ()
-            {
-                if (xhr.status === 200)
-                {
-                    alert("删除管理员成功");
-                    location.reload();
-                }
-                else
-                {
-                    alert("删除管理员失败");
-                }
-            }
-        })
     }
 }
 
@@ -263,4 +221,46 @@ function addToNavigator(element)
 {
     let username = document.getElementById("username");
     username.innerHTML = element;
+}
+
+function BundleDeleteAdministratorButton()
+{
+    const delete_administrator_buttons = document.getElementById("delete_administrator_button");
+
+    console.log(delete_administrator_buttons);
+
+
+
+    alert("length :" + delete_administrator_buttons.length)
+    for (let i = 0; i < delete_administrator_buttons.length; i++)
+    {
+        alert("add :" + i)
+        delete_administrator_buttons[i].addEventListener("click", function ()
+        {
+            const params = new URLSearchParams(window.location.search);
+            const forumId = params.get('forumId');
+
+            const administrator_name = delete_administrator_buttons[i].parentNode.children[0].children[0].value;
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/delete_administrator/" + forumId);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            const data =
+                {
+                    userName: administrator_name
+                }
+                xhr.send(JSON.stringify(data));
+            xhr.onload = function ()
+            {
+                if (xhr.status === 200)
+                {
+                    alert("删除管理员成功");
+                    location.reload();
+                }
+                else
+                {
+                    alert("删除管理员失败");
+                }
+            }
+        })
+    }
 }

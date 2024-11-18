@@ -23,10 +23,10 @@ public class UserController
     private UserService userService;
 
     @PostMapping("/register")
-    public void register(@RequestBody User user)
+    public String register(@RequestBody User user)
     {
         logger.info("register user:" + JSON.toJSONString(user));
-        userService.addUser(user);
+        return userService.addUser(user);
     }
 
     @PostMapping("/logIn")
@@ -49,9 +49,9 @@ public class UserController
     }
 
     @PostMapping("/find_password")
-    public void findPassword(@RequestBody User user)
+    public boolean findPassword(@RequestBody User user)
     {
         logger.info("find password user:" + JSON.toJSONString(user));
-        userService.findPassword(user);
+        return userService.findPassword(user);
     }
 }

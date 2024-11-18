@@ -22,13 +22,21 @@ public class CommentService
     @Autowired
     UserService userService;
 
+    @Autowired
+    BlogService blogService;
+
+
 
     @Transactional(rollbackFor = Exception.class)
-    public void addComment(Comment comment)
+    public boolean addComment(Comment comment)
     {
+        if (comment.getContent().isBlank() || !userService.ifContainsUser(comment.getUserId()) || !blogService.ifContainsBlogOfId(comment.getBlogId()))
+            return false;
+
         comment.setCreateTime(new Date());
         log.info("CommentService addComment: add comment: " + comment);
         commentMapper.addComment(comment);
+        return true;
     }
 
     public List<Comment> getCommentsByBlogId(Long blogId)

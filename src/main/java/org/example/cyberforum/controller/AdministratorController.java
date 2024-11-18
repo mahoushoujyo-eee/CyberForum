@@ -35,9 +35,9 @@ public class  AdministratorController
     }
 
     @DeleteMapping("/delete_administrator/{forum_id}")
-    public void deleteAdministrator(@RequestBody Administrator administrator)
+    public boolean deleteAdministrator(@RequestBody Administrator administrator)
     {
-        administratorService.deleteAdministrator(administrator.getForumId(), administrator.getUserId());
+        return administratorService.deleteAdministrator(administrator.getForumId(), administrator.getUserId());
     }
 
     @RequestMapping("/is_administrator/{blog_id}")

@@ -42,8 +42,7 @@ public class BlogController
     @DeleteMapping("/delete_blog/{blog_id}")
     public boolean deleteBlogById(@PathVariable("blog_id") Long blogId)
     {
-        blogService.deleteBlogById(blogId);
-        return true;
+        return blogService.deleteBlogById(blogId);
     }
 
     @PutMapping("/delete_top/{blog_id}")
@@ -56,12 +55,11 @@ public class BlogController
     @PutMapping("/put_top/{blog_id}")
     public boolean putTop(@PathVariable("blog_id") Long blogId)
     {
-        blogService.putTop(blogId);
-        return true;
+        return blogService.putTop(blogId);
     }
 
-    @GetMapping("/search_blog/{searchText}")
-    public List<Blog> searchBlog(@PathVariable("searchText") String searchText)
+    @GetMapping("/search_blog/{search_text}")
+    public List<Blog> searchBlog(@PathVariable("search_text") String searchText)
     {
         return blogService.searchBlog(searchText);
     }

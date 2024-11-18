@@ -2,7 +2,6 @@
 window.onload = function ()
 {
     let find_password_form = document.getElementById("find_password_form");
-    console.log("find_password.js loaded");
     console.log(find_password_form);
     find_password_form.onsubmit = function (e)
     {
@@ -10,6 +9,12 @@ window.onload = function ()
         let username = document.getElementById("username").value;
         let email = document.getElementById("email").value;
         let new_password = document.getElementById("new_password").value;
+
+        if (ifPasswordValid(new_password) !== 'valid')
+        {
+            alert("密码不合法，请重新输入");
+            return;
+        }
 
         let data =
             {
@@ -27,14 +32,32 @@ window.onload = function ()
             {
                 if (xhr.responseText === "true")
                 {
-                    alert("Password changed successfully");
+                    alert("修改密码成功");
                     window.location.href = "/logIn.html";
                 }
                 else
-                    alert("Invalid username or email");
+                    alert("请检查填写的邮箱和用户名正确，同时保证密码不为空！");
             }
             else
-                alert("Invalid username or email");
+                alert("系统故障");
         }
     }
+}
+
+
+function ifPasswordValid(password)
+{
+    for (let i = 0; i < password.length; i++)
+        if (password[i] === ' ')
+            return 'space';
+
+    if (password.length < 8)
+        return 'short';
+    else if (password.length > 16)
+        return 'long';
+    else if ( /^[a-zA-Z0-9]+$/.test(password))
+        return 'valid';
+    else
+        return 'invalid';
+
 }

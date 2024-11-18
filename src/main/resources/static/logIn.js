@@ -32,13 +32,13 @@ window.onload = function()
                 }
                 else
                 {
-                    alert('Invalid username or password');
+                    alert('用户名与密码不匹配');
                 }
 
             }
             else
             {
-                alert('Invalid username or password');
+                alert('出现故障');
             }
         }
     });

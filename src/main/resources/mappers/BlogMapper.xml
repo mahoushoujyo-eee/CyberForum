@@ -31,7 +31,7 @@
     </select>
 
     <select id="getBlogsByForumId" resultMap="BlogMap">
-        select id,title,content,user_id,forum_id,create_time, is_top from blog where forum_id = #{id} order by create_time desc
+        select id,title,content,user_id,forum_id,create_time, is_top from blog where forum_id = #{id} order by create_time
     </select>
 
     <select id="getBlogList" resultMap="BlogMap">

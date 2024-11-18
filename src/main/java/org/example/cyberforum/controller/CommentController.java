@@ -14,9 +14,9 @@ public class CommentController
     CommentService commentService;
 
     @PostMapping("add_comment/{id}")
-    public void addComment(@RequestBody Comment comment)
+    public boolean addComment(@RequestBody Comment comment)
     {
-        commentService.addComment(comment);
+        return commentService.addComment(comment);
     }
 
     @GetMapping("comment/{id}")

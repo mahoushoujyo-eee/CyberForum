@@ -27,6 +27,7 @@ public class BlogService
     @Transactional(rollbackFor = Exception.class)
     public void putOutNewBlog(Blog blog)
     {
+
         blog.setCreateTime(new Date());
         log.info("BlogService putOutNewBlog: put out new blog: " + blog);
         blogMapper.addBlog(blog);
@@ -61,9 +62,15 @@ public class BlogService
 
 
     @Transactional(rollbackFor = Exception.class)
-    public void deleteBlogById(Long id)
+    public boolean deleteBlogById(Long id)
     {
+        if (!ifContainsBlogOfId(id))
+        {
+            return false;
+        }
+
         blogMapper.deleteBlogById(id);
+        return true;
     }
 
     public Long getForumIdByBlogId(Long blogId)
@@ -73,6 +80,9 @@ public class BlogService
 
     public List<Blog> getBlogsByForumIdWithTop(Long forumId)
     {
+        if (!forumService.ifContainsForum(forumId))
+            return null;
+
         List<Blog> blogs = blogMapper.getBlogsByForumId(forumId);
         for (Blog blog: blogs)
         {
@@ -90,14 +100,19 @@ public class BlogService
     @Transactional(rollbackFor = Exception.class)
     public void cancelTop(Long blogId)
     {
+
         blogMapper.cancelTop(blogId);
     }
 
 
     @Transactional(rollbackFor = Exception.class)
-    public void putTop(Long blogId)
+    public boolean putTop(Long blogId)
     {
+        if (!ifContainsBlogOfId(blogId))
+            return false;
+
         blogMapper.putTop(blogId);
+        return true;
     }
 
     public List<Blog> searchBlog(String searchText)
@@ -114,6 +129,9 @@ public class BlogService
 
     public List<Blog> searchBlogOfForum(String searchText, Long forumId)
     {
+        if (!forumService.ifContainsForum(forumId))
+            return null;
+
         List<Blog> blogs = blogMapper.getBlogsByForumId(forumId).stream().filter(blog -> blog.getTitle().contains(searchText)).toList();
         for (Blog blog: blogs)
         {
@@ -126,7 +144,7 @@ public class BlogService
     }
 
 
-    public boolean ifContainsBlog(Blog blog)
+    public boolean ifContainsBlogOfInfo(Blog blog)
     {
         List<Blog> blogs = blogMapper.getBlogList();
 
@@ -137,5 +155,10 @@ public class BlogService
                 return true;
         }
         return false;
+    }
+
+    public boolean ifContainsBlogOfId(Long blogId)
+    {
+        return blogMapper.getBlogById(blogId) != null;
     }
 }

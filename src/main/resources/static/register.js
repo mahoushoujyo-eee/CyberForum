@@ -3,7 +3,7 @@ let register_form;
 
 window.onload = function()
 {
-    turnToPageBind();
+    bindTurnToPage();
 
 
     register_form = document.getElementById('register_form');
@@ -20,19 +20,37 @@ window.onload = function()
 
         if(!agree)
         {
-            alert('You must agree to the terms and conditions');
+            alert('请同意用户协议');
             return;
         }
 
         if(password !== confirm_password)
         {
-            alert('Passwords do not match');
+            alert('请确认两次密码相同');
             return;
         }
 
-        if (password === '')
+        const result = ifPasswordValid(password);
+
+        switch (result)
         {
-            alert('Password cannot be empty');
+            case 'space':
+                alert('密码中不能包含空格');
+                return;
+            case 'short':
+                alert('密码长度不能小于8');
+                return;
+            case 'long':
+                alert('密码长度不能大于16');
+                return;
+            case 'invalid':
+                alert('密码中只能包含字母和数字');
+                return;
+        }
+
+        if (!email.includes('@'))
+        {
+            alert('邮箱格式不正确');
             return;
         }
 
@@ -51,12 +69,25 @@ window.onload = function()
         {
             if(xhr.status === 200)
             {
-                alert('User registered successfully');
+                if (xhr.responseText === "false")
+                {
+                    alert('注册出错！用户名已存在');
+                    return;
+                }
+                else if (xhr.responseText !== "true")
+                {
+                    alert('注册出错！');
+                    return;
+                }
+
+
+
+                alert('注册成功！请前往登录');
                 window.location.href = '/logIn.html';
             }
             else
             {
-                alert('Error registering user');
+                alert('注册出现故障');
             }
         }
     })
@@ -67,7 +98,7 @@ window.onload = function()
     })
 }
 
-function turnToPageBind()
+function bindTurnToPage()
 {
     let register_icon = document.getElementById('register_icon');
     register_icon.addEventListener('click', function()
@@ -75,5 +106,24 @@ function turnToPageBind()
         window.location.href = '/';
     })
 }
+
+function ifPasswordValid(password)
+{
+    for (let i = 0; i < password.length; i++)
+        if (password[i] === ' ')
+            return 'space';
+
+    if (password.length < 8)
+        return 'short';
+    else if (password.length > 16)
+        return 'long';
+    else if ( /^[a-zA-Z0-9]+$/.test(password))
+        return 'valid';
+    else
+        return 'invalid';
+
+}
+
+
 
 

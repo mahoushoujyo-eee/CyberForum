@@ -16,6 +16,7 @@ window.onload = function ()
 
     const params = new URLSearchParams(window.location.search);
     const blogId = params.get('blog_id');
+    const forumId = params.get('forum_id');
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "/blog/" + blogId);
     xhr.send();
@@ -26,7 +27,7 @@ window.onload = function ()
             if (xhr.responseText === '')
             {
                 alert("帖子已被删除");
-                location.href = "/";
+                location.href = "/forum.html?forumId=" + forumId;
             }
             const blog = JSON.parse(xhr.responseText);
 
@@ -125,6 +126,7 @@ function addEventListenerOfComment()
             alert("请先登录");
             return;
         }
+
         const params = new URLSearchParams(window.location.search);
         const blogId = params.get('blog_id');
 
@@ -132,6 +134,18 @@ function addEventListenerOfComment()
         xhr.open("POST", "/add_comment/" + blogId);
         xhr.setRequestHeader("Content-Type", "application/json");
         const commentContent = document.getElementById("comment_text").value;
+
+        if (commentContent.length > 500)
+        {
+            alert("评论内容过长");
+            return;
+        }
+        if (commentContent.length === 0)
+        {
+            alert("评论内容不能为空");
+            return;
+        }
+
         const data =
             {
                 userId: getCookie("userId"),
@@ -143,6 +157,10 @@ function addEventListenerOfComment()
         {
             if (xhr.status === 200)
             {
+                if (xhr.responseText === 'true')
+                    alert("评论成功");
+                else
+                    alert("评论失败");
                 location.reload();
             } else
             {
@@ -184,7 +202,7 @@ function addDeleteBlogChoice(isAuthor)
                         <p>删除帖子</p>
                      </div>`;
 
-                delete_blog.addEventListener("click", deleteBlogByFetchAPI)
+                delete_blog.addEventListener("click", deleteBlog)
             }
             isAdded = true;
         }
@@ -226,32 +244,6 @@ function getTopOptions(comment)
     return topOption;
 }
 
-function deleteBlogByFetchAPI()
-{
-    const params = new URLSearchParams(window.location.search);
-    const blogId = params.get('blog_id');
-    fetch("/delete_blog/" + blogId,
-        {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    }).
-    then(response =>
-    {
-        if (response.ok)
-        {
-            alert("delete successfully");
-            location.href = "/";
-        }
-        else
-        {
-            alert("delete error");
-       }
-    }
-    )
-}
-
 function deleteBlog()
 {
     if (confirm("确定要删除帖子吗?") === false)
@@ -260,6 +252,7 @@ function deleteBlog()
     }
     const params = new URLSearchParams(window.location.search);
     const blogId = params.get('blog_id');
+    const forumId = params.get('forum_id');
     const xhr = new XMLHttpRequest();
     xhr.open("DELETE", "/delete_blog/" + blogId);
     xhr.send();
@@ -268,12 +261,17 @@ function deleteBlog()
     {
         if (xhr.status === 200)
         {
-            alert("delete successfully");
-            location.href = "/";
+            if (xhr.responseText === "false")
+            {
+                alert("删除失败");
+                return;
+            }
+            alert("删除成功");
+            location.href = "/forum.html?forumId=" + forumId;
         }
         else
         {
-            alert("delete error");
+            alert("出现故障");
         }
     }
 }
@@ -294,7 +292,7 @@ function deleteComment()
         }
         else
         {
-            alert("delete error");
+            alert("出现故障");
         }
     }
 }
