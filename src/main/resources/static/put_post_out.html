@@ -28,14 +28,15 @@
     <form action="" method="post" id="put_out_form">
         <p>
             <label for="edit_title">标题:</label>
-            <input type="text" name="edit_title" id="edit_title" class="edit_title" placeholder="请输入标题">
+            <input type="text" name="edit_title" id="edit_title" class="edit_title" placeholder="请输入标题（30字以内）">
         </p>
         <div class="text_area_div">
             <label for="edit_text">正文:</label>
-            <textarea name="edit_text" id="edit_text" cols="30" rows="10" class="edit_content"></textarea>
+            <textarea name="edit_text" id="edit_text" cols="30" rows="10" class="edit_content" placeholder="请输入正文（500字以内）"></textarea>
         </div>
         <p>
             <input type="submit" value="发布" id="submit_button" class="submit_button">
+            <span class="input_count"><span id="input_num">0</span>/500</span>
         </p>
     </form>
 </div>

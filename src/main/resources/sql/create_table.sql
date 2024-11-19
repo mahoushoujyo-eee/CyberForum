@@ -44,3 +44,5 @@ create table if not exists administrator
 
 alter table blog add is_top boolean default false;
 alter table comment add is_top boolean default false;
+
+alter table forum change master_id owner_id bigint not null;

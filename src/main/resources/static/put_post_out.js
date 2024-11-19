@@ -11,6 +11,15 @@ window.onload = function()
     }
     addToNavigator(getCookie("username"));
 
+    const edit_text = document.getElementById("edit_text");
+    edit_text.addEventListener("input", function()
+    {
+        const text_length = edit_text.value.length;
+        const text_length_span = document.getElementById("input_num");
+        text_length_span.innerHTML = text_length;
+    })
+
+
     const put_out_form = document.getElementById("put_out_form");
     put_out_form.addEventListener("submit", function(e)
     {

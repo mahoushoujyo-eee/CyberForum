@@ -54,6 +54,7 @@ window.onload = function()
         if (xhr.status === 200)
         {
             const results = JSON.parse(xhr.responseText);
+            document.getElementById("search_result_num").innerHTML = results.length;
             showSearchResult(searchType, results);
         }
         else

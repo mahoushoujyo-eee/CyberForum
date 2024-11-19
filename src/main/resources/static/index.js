@@ -124,6 +124,9 @@ function getLatestBlogs()
                     <div class="blog_forum">
                         <p>${data[i].forumName}</p>
                     </div>
+                    <div>
+                        <p>${getTimeString(data[i].createTime)}</p>
+                    </div>
                     <hr>
                     `;
                 blogs.appendChild(blog)
@@ -171,6 +174,18 @@ function searchEventBind()
         }
         window.location.href = '/search_result.html?searchText=' + search_text + '&searchType=forum';
     })
+}
+
+function getTimeString(date)
+{
+    date = new Date(date);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    const second = date.getSeconds();
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
 

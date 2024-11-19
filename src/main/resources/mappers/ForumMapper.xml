@@ -5,18 +5,18 @@
     <resultMap id="ForumMap" type="org.example.cyberforum.bean.Forum">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
-        <result column="master_id" property="masterId"/>
+        <result column="owner_id" property="ownerId"/>
     </resultMap>
 
     <insert id="addForum">
-        insert into forum (id, name, master_id) value (#{id}, #{name}, #{masterId})
+        insert into forum (id, name, owner_id) value (#{id}, #{name}, #{ownerId})
     </insert>
 
     <select id="getForumList" resultMap="ForumMap">
-        select id, name, master_id from forum
+        select id, name, owner_id from forum
     </select>
     <select id="getForumById" resultMap="ForumMap">
-        select id, name, master_id from forum where id = #{id}
+        select id, name, owner_id from forum where id = #{id}
     </select>
 
 </mapper>

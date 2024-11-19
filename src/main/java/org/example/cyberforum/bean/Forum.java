@@ -8,5 +8,5 @@ public class Forum
 {
     private String name;
     private Long id;
-    private Long masterId;
+    private Long ownerId;
 }

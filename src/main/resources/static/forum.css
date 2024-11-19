@@ -115,7 +115,7 @@ body
     color: #2b2b2b;
 }
 
-.master_fix_box
+.owner_fix_box
 {
     width: 50px;
     height: 100px;
@@ -133,7 +133,7 @@ body
     border-color: silver;
 }
 
-.master_fix_box p
+.owner_fix_box p
 {
     text-align: center;
     color: #2b2b2b;

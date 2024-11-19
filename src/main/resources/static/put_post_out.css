@@ -93,3 +93,9 @@ a
     background-color: #97d1ea;
     color: #f1f1f1;
 }
+
+.input_count
+{
+    position: relative;
+    left: 70%;
+}

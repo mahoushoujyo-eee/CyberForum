@@ -33,9 +33,9 @@ window.onload = function()
             console.log(data);
             title.innerHTML = data.name;
             forum_title.innerHTML = data.name;
-            if (data.masterId.toString() === userId)
+            if (data.ownerId.toString() === userId)
             {
-                addMasterChoice();
+                addOwnerChoice();
             }
         }
     }
@@ -85,20 +85,22 @@ function addPostChoice()
     console.log(postChoice)
 }
 
-function addMasterChoice()
+function addOwnerChoice()
 {
     const params = new URLSearchParams(window.location.search);
     const forumId = params.get('forumId');
 
-    const masterChoice = document.getElementById("master_choice_box");
-    masterChoice.innerHTML =
+    const ownerChoice = document.getElementById("owner_choice_box");
+    ownerChoice.innerHTML =
         `
-            <div class="master_fix_box">
+            <div class="owner_fix_box">
                 <p>添加管理员</p>
             </div>
         `;
-    masterChoice.href = "add_administrator.html?forumId=" + forumId;
+    ownerChoice.href = "add_administrator.html?forumId=" + forumId;
 }
+
+
 
 function logBlogOfForum()
 {
@@ -135,6 +137,9 @@ function logBlogOfForum()
                         <div class="blog_author">
                             <p>${data[i].username}</p>             
                         </div>
+                        <div>
+                            <p>${getTimeString(data[i].createTime)}</p>
+                        </div>
                         <hr>
                     `;
                 document.getElementById("blog_content_div").appendChild(blogDiv);
@@ -150,6 +155,10 @@ function logBlogOfForum()
                         blogDiv.children[0].children[0].children[1].addEventListener("click",turnToTop)
                     }
 
+                }
+                else
+                {
+                    addTopData(blogDiv.children[0].children[0], data[i])
                 }
             }
         }
@@ -211,6 +220,18 @@ function addToTopElement(blog, blogData)
 
 }
 
+function addTopData(blog, blogData)
+{
+    if (blogData.top)
+    {
+        const button = document.createElement("button");
+        button.innerHTML = "置顶";
+        button.disabled = true;
+        button.style.backgroundColor = "silver";
+        blog.innerHTML += button.outerHTML;
+    }
+}
+
 function turnToTop()
 {
     const param = new URL(this.parentNode.children[0].href).searchParams;
@@ -266,4 +287,16 @@ function searchBlogs()
     const forumId = params.get('forumId');
     const searchText = searchInput.trim();
     location.href = "/search_result.html?searchText=" + searchText + "&searchType=blogOfForum&" + "forumId=" + forumId;
+}
+
+function getTimeString(date)
+{
+    date = new Date(date);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    const second = date.getSeconds();
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
