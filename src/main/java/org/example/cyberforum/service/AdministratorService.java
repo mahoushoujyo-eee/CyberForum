@@ -1,8 +1,8 @@
 package org.example.cyberforum.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.cyberforum.bean.Administrator;
-import org.example.cyberforum.bean.User;
+import org.example.cyberforum.entities.Administrator;
+import org.example.cyberforum.entities.User;
 import org.example.cyberforum.mapper.AdministratorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,6 +70,8 @@ public class AdministratorService
         {
             return false;
         }
+
+        // 检查是否是该论坛的管理员
 
         administratorMapper.deleteAdministrator(forumId, userId);
         return true;

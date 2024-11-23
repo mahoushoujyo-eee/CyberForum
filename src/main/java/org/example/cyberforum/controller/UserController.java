@@ -2,15 +2,13 @@ package org.example.cyberforum.controller;
 
 import com.alibaba.fastjson2.JSON;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import org.example.cyberforum.bean.User;
+import org.example.cyberforum.dto.ResetPasswordRequest;
+import org.example.cyberforum.entities.User;
 import org.example.cyberforum.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -49,9 +47,9 @@ public class UserController
     }
 
     @PostMapping("/find_password")
-    public boolean findPassword(@RequestBody User user)
+    public boolean findPassword(@RequestBody ResetPasswordRequest user)
     {
         logger.info("find password user:" + JSON.toJSONString(user));
-        return userService.findPassword(user);
+        return userService.resetPassword(user);
     }
 }

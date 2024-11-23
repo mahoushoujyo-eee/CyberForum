@@ -1,14 +1,10 @@
 package org.example.cyberforum.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.cyberforum.bean.Administrator;
-import org.example.cyberforum.bean.User;
+import org.example.cyberforum.entities.Administrator;
+import org.example.cyberforum.entities.User;
 import org.example.cyberforum.service.AdministratorService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +17,8 @@ public class  AdministratorController
     @Autowired
     AdministratorService administratorService;
 
+    // region functions for ...
+
     @GetMapping("/get_administrator/{forum_id}")
     public List<User> getAdministrator(@PathVariable("forum_id") Long forumId)
     {
@@ -28,11 +26,13 @@ public class  AdministratorController
         return administrators;
     }
 
-    @PostMapping("/add_administrator/{forum_id}")
+    @PostMapping("/add_administrator")
     public String addAdministrator(@RequestBody Administrator administrator)
     {
         return administratorService.addAdministrator(administrator.getForumId(), administrator.getUserName());
     }
+
+    // endregion functions for ...
 
     @DeleteMapping("/delete_administrator/{forum_id}")
     public boolean deleteAdministrator(@RequestBody Administrator administrator)
@@ -48,8 +48,6 @@ public class  AdministratorController
         return result;
     }
 
-
-
     @PostMapping("/is_administrator_by_forum_id/{forum_id}")
     public boolean ifAdministratorFromForum(@RequestBody Administrator administrator)
     {
@@ -58,6 +56,4 @@ public class  AdministratorController
         log.info("result = " + result);
         return result;
     }
-
-
 }

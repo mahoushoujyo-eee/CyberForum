@@ -1,12 +1,10 @@
 package org.example.cyberforum.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.cyberforum.bean.Blog;
-import org.example.cyberforum.bean.Forum;
+import org.example.cyberforum.entities.Blog;
+import org.example.cyberforum.entities.Forum;
 import org.example.cyberforum.mapper.BlogMapper;
 import org.example.cyberforum.mapper.ForumMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +15,8 @@ import java.util.List;
 public class ForumService
 {
 
+    // 论坛的创建
+
     @Autowired
     ForumMapper forumMapper;
     @Autowired
@@ -25,6 +25,7 @@ public class ForumService
     @Autowired
     UserService userService;
 
+    // 分页
     public List<Forum> getForumList()
     {
         return forumMapper.getForumList();
@@ -35,6 +36,7 @@ public class ForumService
         return forumMapper.getForumById(id);
     }
 
+    // 分页
     public List<Blog> getBlogList(Long id)
     {
         List<Blog> blogs = blogMapper.getBlogsByForumId(id);

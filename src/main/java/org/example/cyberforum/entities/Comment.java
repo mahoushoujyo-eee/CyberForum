@@ -1,4 +1,4 @@
-package org.example.cyberforum.bean;
+package org.example.cyberforum.entities;
 
 
 import lombok.Data;

@@ -1,22 +1,14 @@
 package org.example.cyberforum.controller;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.example.cyberforum.bean.Blog;
-import org.example.cyberforum.bean.Forum;
+import org.example.cyberforum.entities.Blog;
+import org.example.cyberforum.entities.Forum;
 import org.example.cyberforum.service.AdministratorService;
 import org.example.cyberforum.service.ForumService;
 import org.example.cyberforum.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.jdbc.JdbcRepositoriesAutoConfiguration;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;

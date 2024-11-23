@@ -1,4 +1,4 @@
-package org.example.cyberforum.bean;
+package org.example.cyberforum.entities;
 
 import lombok.Data;
 
@@ -11,9 +11,9 @@ public class Blog
     private String content;
     private Long id;
     private Long userId;
-    private String username;
+    private String username;//
     private Long forumId;
-    private String forumName;
+    private String forumName;//
     private Date createTime;
     private boolean isTop;
 }

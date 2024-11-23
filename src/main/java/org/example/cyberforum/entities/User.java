@@ -1,8 +1,6 @@
-package org.example.cyberforum.bean;
+package org.example.cyberforum.entities;
 
 import lombok.Data;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 
 @Data
 public class User

@@ -1,11 +1,12 @@
 package org.example.cyberforum;
 
-import org.example.cyberforum.bean.Blog;
+import org.example.cyberforum.entities.Blog;
 import org.example.cyberforum.mapper.*;
 import org.example.cyberforum.service.BlogService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import stark.dataworks.basic.data.json.JsonSerializer;
 
 import java.util.Date;
 import java.util.List;
@@ -83,6 +84,8 @@ class CyberForumApplicationTests {
         {
             System.out.println(blog.getId());
         }
+
+        System.out.println(JsonSerializer.serialize(blogList));
     }
 
 }

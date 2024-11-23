@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.example.cyberforum.mapper.BlogMapper">
-    <resultMap id="BlogMap" type="org.example.cyberforum.bean.Blog">
+    <resultMap id="BlogMap" type="org.example.cyberforum.entities.Blog">
         <id column="id" property="id"/>
         <result column="title" property="title"/>
         <result column="content" property="content"/>
@@ -38,6 +38,9 @@
         select id,title,content,user_id,forum_id,create_time, is_top from blog
     </select>
     <select id="getLatestBlogList" resultMap="BlogMap">
-        select id,title,content,user_id,forum_id,create_time, is_top from blog order by create_time desc limit 10
+        select id, title, content, user_id, forum_id, create_time, is_top
+        from blog
+        order by create_time desc
+        limit 10
     </select>
 </mapper>

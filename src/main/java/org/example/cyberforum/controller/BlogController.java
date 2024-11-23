@@ -1,7 +1,7 @@
 package org.example.cyberforum.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.cyberforum.bean.Blog;
+import org.example.cyberforum.entities.Blog;
 import org.example.cyberforum.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

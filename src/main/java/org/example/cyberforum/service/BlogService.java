@@ -1,7 +1,7 @@
 package org.example.cyberforum.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.cyberforum.bean.Blog;
+import org.example.cyberforum.entities.Blog;
 import org.example.cyberforum.mapper.BlogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class BlogService
     @Transactional(rollbackFor = Exception.class)
     public void putOutNewBlog(Blog blog)
     {
-
+        // creation time.
         blog.setCreateTime(new Date());
         log.info("BlogService putOutNewBlog: put out new blog: " + blog);
         blogMapper.addBlog(blog);
@@ -36,7 +36,7 @@ public class BlogService
     public List<Blog> getLatestBlogList()
     {
         List<Blog> blogs = blogMapper.getLatestBlogList();
-        for (Blog blog: blogs)
+        for (Blog blog : blogs)
         {
             blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
             blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
@@ -47,12 +47,14 @@ public class BlogService
 
     public Blog getBlogById(Long id)
     {
-        Blog blog =  blogMapper.getBlogById(id);
+        Blog blog = blogMapper.getBlogById(id);
 
         if (blog == null)
         {
             return null;
         }
+
+        // SELECT FROM blog LEFT JOIN user ON ... LEFT JOIN forum ON ...
 
         blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
         blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
@@ -96,14 +98,11 @@ public class BlogService
         return blogs;
     }
 
-
     @Transactional(rollbackFor = Exception.class)
     public void cancelTop(Long blogId)
     {
-
         blogMapper.cancelTop(blogId);
     }
-
 
     @Transactional(rollbackFor = Exception.class)
     public boolean putTop(Long blogId)
@@ -115,18 +114,20 @@ public class BlogService
         return true;
     }
 
-    public List<Blog> searchBlog(String searchText)
+    // 分页
+    public List<Blog> searchBlog(String keyword)
     {
-        List<Blog> blogs = blogMapper.getBlogList().stream().filter(blog -> blog.getTitle().contains(searchText)).toList();
+        List<Blog> blogs = blogMapper.getBlogList().stream().filter(blog -> blog.getTitle().contains(keyword)).toList();
         for (Blog blog: blogs)
         {
             blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
             blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
         }
-        log.info("search blog: " + searchText + " blogs: " + blogs);
+        log.info("search blog: " + keyword + " blogs: " + blogs);
         return blogs;
     }
 
+    // 分页
     public List<Blog> searchBlogOfForum(String searchText, Long forumId)
     {
         if (!forumService.ifContainsForum(forumId))

@@ -3,8 +3,10 @@ package org.example.cyberforum.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class MD5
+public final class MD5
 {
+    private MD5() {}
+
     public static String hash(String password)
     {
         // 获取MD5 MessageDigest实例

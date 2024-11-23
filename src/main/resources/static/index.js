@@ -187,9 +187,3 @@ function getTimeString(date)
     const second = date.getSeconds();
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
-
-
-
-
-
-

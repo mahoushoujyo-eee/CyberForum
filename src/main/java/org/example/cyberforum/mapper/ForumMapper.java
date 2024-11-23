@@ -1,8 +1,7 @@
 package org.example.cyberforum.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.example.cyberforum.bean.Blog;
-import org.example.cyberforum.bean.Forum;
+import org.example.cyberforum.entities.Forum;
 
 import java.util.List;
 

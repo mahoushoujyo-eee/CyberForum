@@ -1,6 +1,6 @@
 package org.example.cyberforum.controller;
 
-import org.example.cyberforum.bean.Comment;
+import org.example.cyberforum.entities.Comment;
 import org.example.cyberforum.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

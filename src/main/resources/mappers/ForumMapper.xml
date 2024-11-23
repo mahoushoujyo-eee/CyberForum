@@ -2,21 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.example.cyberforum.mapper.ForumMapper">
 
-    <resultMap id="ForumMap" type="org.example.cyberforum.bean.Forum">
+    <resultMap id="ForumMap" type="org.example.cyberforum.entities.Forum">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="owner_id" property="ownerId"/>
     </resultMap>
 
     <insert id="addForum">
-        insert into forum (id, name, owner_id) value (#{id}, #{name}, #{ownerId})
+        insert into forum
+        (id, name, owner_id)
+        value
+        (#{id}, #{name}, #{ownerId})
     </insert>
 
     <select id="getForumList" resultMap="ForumMap">
         select id, name, owner_id from forum
     </select>
     <select id="getForumById" resultMap="ForumMap">
-        select id, name, owner_id from forum where id = #{id}
+        select id, name, owner_id
+        from forum
+        where id = #{id}
     </select>
 
 </mapper>

@@ -1,10 +1,8 @@
 package org.example.cyberforum.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.cyberforum.bean.Comment;
+import org.example.cyberforum.entities.Comment;
 import org.example.cyberforum.mapper.CommentMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +47,7 @@ public class CommentService
         return comments;
     }
 
+    // 分页
     public List<Comment> getCommentsByBlogIdWithTop(Long blogId)
     {
         List<Comment> comments = getCommentsByBlogId(blogId);
