@@ -13,17 +13,33 @@
         <result column="forum_id" property="forumId" />
         <result column="administrator_id" property="userId" />
     </resultMap>
+
     <insert id="addAdministrator">
-        insert into administrator(forum_id,administrator_id) values(#{forumId},#{userId})
+        insert into administrator(forum_id,administrator_id)
+        values(#{forumId},#{userId})
     </insert>
+
     <delete id="deleteAdministrator">
-        delete from administrator where administrator_id = #{userId} and forum_id = #{forumId}
+        delete from administrator
+        where administrator_id = #{userId}
+        and forum_id = #{forumId}
     </delete>
 
     <select id="getAdministratorByForumId" resultMap="UserMap">
-        select * from user where id in (select administrator_id from administrator where forum_id = #{forumId})
+        SELECT * FROM user
+        WHERE id
+        IN (SELECT administrator_id FROM administrator WHERE forum_id = #{forumId})
     </select>
+
     <select id="getAdministrators" resultMap="AdministratorMap">
-        select * from administrator
+        SELECT *
+        FROM administrator
+    </select>
+
+    <select id="ifContainsAdministrator" resultType="java.lang.Boolean">
+        SELECT COUNT(1) > 0
+        FROM administrator
+        WHERE forum_id = #{forumId}
+        AND administrator_id = #{userId}
     </select>
 </mapper>

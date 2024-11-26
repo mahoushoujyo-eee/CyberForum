@@ -10,30 +10,79 @@
         <result column="is_top" property="isTop"/>
     </resultMap>
 
+    <resultMap id="CommentInfoMap" type="org.example.cyberforum.dto.CommentInfo">
+        <id column="id" property="id"/>
+        <result column="content" property="content"/>
+        <result column="user_id" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="blog_id" property="blogId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="is_top" property="isTop"/>
+    </resultMap>
+
     <insert id="addComment">
-        insert into comment(content,user_id,blog_id,create_time) values(#{content},#{userId},#{blogId},#{createTime})
+        insert into comment(content,user_id,blog_id,create_time)
+        values(#{content},#{userId},#{blogId},#{createTime})
     </insert>
     <update id="putTop">
-        update comment set is_top = 1 where id = #{commentId}
+        update comment
+        set is_top = 1
+        where id = #{commentId}
     </update>
 
     <update id="cancelTop">
-        update comment set is_top = 0 where id = #{commentId}
+        update comment
+        set is_top = 0
+        where id = #{commentId}
     </update>
 
     <delete id="deleteCommentById">
-        delete from comment where id = #{id}
+        delete from comment
+        where id = #{id}
     </delete>
+
     <delete id="deleteCommentByBlogIdAndUserId">
-        delete from comment where blog_id = #{blogId} and user_id = #{userId}
+        delete from comment
+        where blog_id = #{blogId}
+        and user_id = #{userId}
     </delete>
+
     <select id="getCommentList" resultMap="commentMap">
-        select id,content,user_id,blog_id,create_time, is_top from comment
+        select id,content,user_id,blog_id,create_time, is_top
+        from comment
     </select>
+
     <select id="getComment" resultMap="commentMap">
-        select id,content,user_id,blog_id,create_time, is_top from comment where id = #{id}
+        select id,content,user_id,blog_id,create_time, is_top
+        from comment
+        where id = #{id}
     </select>
+
     <select id="getCommentsByBlogId" resultMap="commentMap">
-        select id,content,user_id,blog_id,create_time, is_top from comment where blog_id = #{blogId} order by create_time
+        SELECT id,content,user_id,blog_id,create_time, is_top
+        FROM comment
+        WHERE blog_id = #{blogId}
+        ORDER BY create_time
+    </select>
+
+    <select id="ifContainsComment" resultType="java.lang.Boolean">
+        SELECT COUNT(1) > 0
+        FROM comment
+        WHERE id = #{commentId}
+    </select>
+
+    <select id="getCommentInfoList" resultMap="commentMap">
+        SELECT c.id,c.content,c.user_id,c.blog_id,c.create_time,c.is_top,u.user_name
+        FROM comment c
+        LEFT JOIN user u
+        ON c.user_id = u.id
+    </select>
+
+    <select id="getCommentInfoListByBlogId" resultMap="CommentInfoMap">
+        SELECT c.id,c.content,c.user_id,c.blog_id,c.create_time,c.is_top,u.user_name
+        FROM comment c
+        LEFT JOIN user u
+        ON c.user_id = u.id
+        WHERE c.blog_id = #{blogId}
     </select>
 </mapper>

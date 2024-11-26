@@ -1,11 +1,13 @@
 package org.example.cyberforum.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.cyberforum.dto.AdministratorInfo;
 import org.example.cyberforum.entities.Administrator;
 import org.example.cyberforum.entities.User;
 import org.example.cyberforum.service.AdministratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import stark.dataworks.boot.web.ServiceResponse;
 
 import java.util.List;
 
@@ -15,19 +17,18 @@ public class  AdministratorController
 {
 
     @Autowired
-    AdministratorService administratorService;
+    private AdministratorService administratorService;
 
     // region functions for ...
 
     @GetMapping("/get_administrator/{forum_id}")
-    public List<User> getAdministrator(@PathVariable("forum_id") Long forumId)
+    public ServiceResponse<List<User>> getAdministrator(@PathVariable("forum_id") Long forumId)
     {
-        List<User> administrators = administratorService.getAdministratorByForumId(forumId);
-        return administrators;
+        return administratorService.getAdministratorByForumId(forumId);
     }
 
     @PostMapping("/add_administrator")
-    public String addAdministrator(@RequestBody Administrator administrator)
+    public ServiceResponse<String> addAdministrator(@RequestBody AdministratorInfo administrator)
     {
         return administratorService.addAdministrator(administrator.getForumId(), administrator.getUserName());
     }
@@ -35,25 +36,25 @@ public class  AdministratorController
     // endregion functions for ...
 
     @DeleteMapping("/delete_administrator/{forum_id}")
-    public boolean deleteAdministrator(@RequestBody Administrator administrator)
+    public ServiceResponse<Boolean> deleteAdministrator(@RequestBody AdministratorInfo administrator, @CookieValue("user_id") Long adminId)
     {
-        return administratorService.deleteAdministrator(administrator.getForumId(), administrator.getUserId());
+        return administratorService.deleteAdministrator(administrator.getForumId(), administrator.getUserId(), adminId);
     }
 
     @RequestMapping("/is_administrator/{blog_id}")
-    public boolean ifAdministratorFromBlog(@PathVariable("blog_id") Long blogId, @RequestBody User user)
+    public ServiceResponse<Boolean> ifAdministratorFromBlog(@PathVariable("blog_id") Long blogId, @RequestBody User user)
     {
-        boolean result = administratorService.ifAdministratorFromBlog(blogId, user.getId());
-        log.info("result = " + result);
+        ServiceResponse<Boolean> result = administratorService.ifAdministratorFromBlog(blogId, user.getId());
+        log.info("result = {}", result);
         return result;
     }
 
     @PostMapping("/is_administrator_by_forum_id/{forum_id}")
-    public boolean ifAdministratorFromForum(@RequestBody Administrator administrator)
+    public ServiceResponse<Boolean> ifAdministratorFromForum(@RequestBody AdministratorInfo administrator)
     {
-        log.info("administrator = " + administrator);
-        boolean result = administratorService.ifAdministratorFromForum(administrator.getUserId(), administrator.getForumId());
-        log.info("result = " + result);
+        log.info("administrator = {}", administrator);
+        ServiceResponse<Boolean> result = administratorService.ifAdministratorFromForum(administrator.getUserId(), administrator.getForumId());
+        log.info("result = {}", result);
         return result;
     }
 }

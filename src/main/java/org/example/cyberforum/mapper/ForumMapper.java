@@ -13,4 +13,6 @@ public interface ForumMapper
     List<Forum> getForumList();
 
     Forum getForumById(Long id);
+
+    boolean ifContainsForum(Long id);
 }

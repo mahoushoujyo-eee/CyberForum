@@ -1,6 +1,7 @@
 package org.example.cyberforum.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.cyberforum.dto.BlogInfo;
 import org.example.cyberforum.entities.Blog;
 import org.example.cyberforum.entities.Forum;
 import org.example.cyberforum.service.AdministratorService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import stark.dataworks.boot.web.ServiceResponse;
 
 import java.util.List;
 
@@ -18,50 +20,32 @@ import java.util.List;
 public class ForumController
 {
     @Autowired
-    ForumService forumService;
+    private ForumService forumService;
     @Autowired
-    UserService userService;
-    @Autowired
-    AdministratorService administratorService;
+    private UserService userService;
 
     @GetMapping("/initialize_forum")
-    public List<Forum> getForumList()
+    public ServiceResponse<List<Forum>> getForumList()
     {
-        List<Forum> forums = forumService.getForumList();
-        log.info("forum list: " + forums);
-
-        return forums;
+        return forumService.getForumList();
     }
 
 
     @GetMapping("/forum/{id}")
-    public Forum getForumById(@PathVariable Long id)
+    public ServiceResponse<Forum> getForumById(@PathVariable Long id)
     {
-        Forum forum = forumService.getForumById(id);
-        log.info("forum: " + forum);
-
-        return forum;
+        return forumService.getForumById(id);
     }
 
     @GetMapping("/forum/{id}/blog")
-    public List<Blog> getBlogList(@PathVariable("id") Long forumId)
+    public ServiceResponse<List<BlogInfo>> getBlogList(@PathVariable("id") Long forumId)
     {
-        List<Blog> blogs = forumService.getBlogList(forumId);
-        log.info("ForumController getBlogListByForumId: blog list: " + blogs);
-        for (Blog blog: blogs)
-        {
-            blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
-            blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
-        }
-        return blogs;
+        return forumService.getBlogList(forumId);
     }
 
     @GetMapping("search/forum/{searchText}")
-    public List<Forum> searchForum(@PathVariable("searchText") String searchText)
+    public ServiceResponse<List<Forum>> searchForum(@PathVariable("searchText") String searchText)
     {
-        List<Forum> forums = forumService.searchForum(searchText);
-        log.info("searchForum: " + forums);
-
-        return forums;
+        return forumService.searchForum(searchText);
     }
 }

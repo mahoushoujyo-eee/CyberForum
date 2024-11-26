@@ -8,83 +8,83 @@ import org.example.cyberforum.utils.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import stark.dataworks.boot.autoconfig.web.LogArgumentsAndResponse;
+import stark.dataworks.boot.web.ServiceResponse;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
 @Service
+@LogArgumentsAndResponse
 public class UserService
 {
     @Autowired
     private UserMapper userMapper;
+    private static final Pattern pattern = Pattern.compile("^[a-zA-Z0-9]+$");
+
 
     @Transactional(rollbackFor = Exception.class)
-    public String addUser(User user)
+    public ServiceResponse<Boolean> addUser(User user)
     {
         String userName = user.getUserName();
         String password = user.getPassword();
         String userEmail = user.getEmail();
 
         if (ifContainsUserName(userName))
-            return "false";
+            return ServiceResponse.buildErrorResponse(-100, "username exists");
 
         String result = passwordValidMessageOf(password);
         if (!result.equals("true"))
-            return result;
+            return ServiceResponse.buildErrorResponse(-100, result);
 
         if (!isEmailValid(userEmail))
-            return "invalid_email";
+            return ServiceResponse.buildErrorResponse(-100, "invalid email");
 
         String encryptedPassword = MD5.hash(password);
-        log.info("encryptedPassword: %s".formatted(encryptedPassword));
         userMapper.addUser(userName, encryptedPassword, userEmail);
 
-        return "true";
+        return ServiceResponse.buildSuccessResponse(true);
     }
 
-    public boolean login(User user)
+    public ServiceResponse<Boolean> login(User user)
     {
+        if (ifContainsUserName(user.getUserName()))
+            return ServiceResponse.buildErrorResponse(-100, "username not exists");
         // SELECT COUNT(*) FROM user WHERE password = #{} AND username = #{}
         String encryptedPassword = MD5.hash(user.getPassword());
-        log.info("encryptedPassword: " + encryptedPassword);
-        String dbPassword = userMapper.getEncryptedPassword(user.getUserName());
-        return dbPassword.equals(encryptedPassword);
+
+        return ServiceResponse.buildSuccessResponse(userMapper.ifUserNameAndEncryptedPasswordMatch(user.getUserName(), encryptedPassword));
     }
 
     @Transactional(rollbackFor = Exception.class)
     // ResetPasswordRequest
-    public boolean resetPassword(ResetPasswordRequest request)
+    public ServiceResponse<Boolean> resetPassword(ResetPasswordRequest request)
     {
-        if(!passwordValidMessageOf(request.getPassword()).equals("true"))
-            return false;
+        String result = passwordValidMessageOf(request.getPassword());
+        if(!result.equals("true"))
+            return ServiceResponse.buildErrorResponse(-100, result);
 
-        User user = userMapper.getUserByUserName(request.getUserName());
-        if (user != null)
-        {
-            String email = user.getEmail();
-            if (email.equals(request.getEmail()))
-            {
-                String encryptedPassword = MD5.hash(request.getPassword());
-                userMapper.updateUser(request.getUserName(), encryptedPassword);
-            }
-            log.info("email:" + email);
+        if (!userMapper.ifUserNameANdEmailMatch(request.getUserName(), request.getEmail()))
+            return ServiceResponse.buildErrorResponse(-100, "username and email not match");
 
-            return true;
-        }
-
-        return false;
+        String encryptedPassword = MD5.hash(request.getPassword());
+        userMapper.updateUser(request.getUserName(), encryptedPassword);
+        return ServiceResponse.buildSuccessResponse(true);
     }
 
-    public Long getUserIdByUserName(String userName)
+    public ServiceResponse<Long> getUserIdByUserName(String userName)
     {
-        log.info("userName:" + userName);
-        return userMapper.getUserIdByUserName(userName);
+        if (!ifContainsUserName(userName))
+            return ServiceResponse.buildErrorResponse(-100, "username not exists");
+        return ServiceResponse.buildSuccessResponse(userMapper.getUserIdByUserName(userName));
     }
 
-    public User getUserById(Long userId)
+    public ServiceResponse<User> getUserById(Long userId)
     {
-        return userMapper.getUserById(userId);
+        if (!ifContainsUser(userId))
+            return ServiceResponse.buildErrorResponse(-100, "user not exists");
+        return ServiceResponse.buildSuccessResponse(userMapper.getUserById(userId));
     }
 
     public boolean ifContainsUser(Long userId)
@@ -95,7 +95,7 @@ public class UserService
     public boolean ifContainsUserName(String userName)
     {
         // SELECT COUNT(*) FROM user WHERE username = #{userName}
-        return userMapper.getUserByUserName(userName) != null;
+        return userMapper.ifContainsUserByUserName(userName);
     }
 
     public String passwordValidMessageOf(String password)
@@ -116,16 +116,8 @@ public class UserService
 
     public boolean isValidPassword(String password)
     {
-        // 作为类的静态常量
-
-        String regex = "^[a-zA-Z0-9]+$";
-
-        // 创建 Pattern 对象
-        Pattern pattern = Pattern.compile(regex);
-
         // 创建 Matcher 对象
         Matcher matcher = pattern.matcher(password);
-
         // 使用 Matcher 的 matches 方法检查整个区域
         return matcher.matches();
     }

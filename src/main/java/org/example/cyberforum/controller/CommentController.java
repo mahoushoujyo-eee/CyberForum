@@ -1,9 +1,11 @@
 package org.example.cyberforum.controller;
 
+import org.example.cyberforum.dto.CommentInfo;
 import org.example.cyberforum.entities.Comment;
 import org.example.cyberforum.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import stark.dataworks.boot.web.ServiceResponse;
 
 import java.util.List;
 
@@ -11,7 +13,7 @@ import java.util.List;
 public class CommentController
 {
     @Autowired
-    CommentService commentService;
+    private CommentService commentService;
 
     @PostMapping("add_comment/{id}")
     public boolean addComment(@RequestBody Comment comment)
@@ -20,26 +22,26 @@ public class CommentController
     }
 
     @GetMapping("comment/{id}")
-    public List<Comment> getComments(@PathVariable("id") Long blogId)
+    public ServiceResponse<List<CommentInfo>> getComments(@PathVariable("id") Long blogId)
     {
         return commentService.getCommentsByBlogIdWithTop(blogId);
     }
 
     @DeleteMapping("delete_comment/{comment_id}")
-    public void deleteCommentById(@PathVariable("comment_id") Long commentId)
+    public ServiceResponse<Boolean> deleteCommentById(@PathVariable("comment_id") Long commentId)
     {
-        commentService.deleteCommentById(commentId);
+        return commentService.deleteCommentById(commentId);
     }
 
     @PutMapping("put_comment_top/{comment_id}")
-    public void putTop(@PathVariable("comment_id") Long commentId)
+    public ServiceResponse<Boolean> putTop(@PathVariable("comment_id") Long commentId)
     {
-        commentService.putTop(commentId);
+        return commentService.putTop(commentId);
     }
 
     @PutMapping("cancel_comment_top/{comment_id}")
-    public void cancelTop(@PathVariable("comment_id") Long commentId)
+    public ServiceResponse<Boolean> cancelTop(@PathVariable("comment_id") Long commentId)
     {
-        commentService.cancelTop(commentId);
+        return commentService.cancelTop(commentId);
     }
 }

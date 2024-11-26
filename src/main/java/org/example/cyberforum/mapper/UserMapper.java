@@ -21,4 +21,9 @@ public interface UserMapper
     Long getUserIdByUserName(String userName);
 
     User getUserById(Long userId);
+
+    boolean ifContainsUser(User user);
+    boolean ifContainsUserByUserName(String userName);
+    boolean ifUserNameAndEncryptedPasswordMatch(String userName, String encryptedPassword);
+    boolean ifUserNameANdEmailMatch(String userName, String email);
 }

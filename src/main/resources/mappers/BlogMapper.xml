@@ -11,36 +11,107 @@
         <result column="is_top" property="isTop"/>
     </resultMap>
 
+    <resultMap id="BlogInfoMap" type="org.example.cyberforum.dto.BlogInfo">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="forum_id" property="forumId"/>
+        <result column="forum_name" property="forumName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="is_top" property="isTop"/>
+    </resultMap>
+
     <insert id="addBlog">
-        insert into blog(title,content,user_id,forum_id,create_time) values(#{title},#{content},#{userId},#{forumId},#{createTime})
+        insert into blog(title,content,user_id,forum_id,create_time)
+        values(#{title},#{content},#{userId},#{forumId},#{createTime})
     </insert>
+
     <delete id="deleteBlogById">
-        delete from blog where id = #{id}
+        delete from blog
+        where id = #{id}
     </delete>
 
     <update id="cancelTop">
-        update blog set is_top = 0 where id = #{id}
+        update blog
+        set is_top = 0
+        where id = #{id}
     </update>
 
     <update id="putTop">
-        update blog set is_top = 1 where id = #{id}
+        update blog
+        set is_top = 1
+        where id = #{id}
     </update>
 
     <select id="getBlogById" resultMap="BlogMap">
-        select id,title,content,user_id,forum_id,create_time, is_top from blog where id = #{id}
+        select id,title,content,user_id,forum_id,create_time, is_top
+        from blog
+        where id = #{id}
     </select>
 
     <select id="getBlogsByForumId" resultMap="BlogMap">
-        select id,title,content,user_id,forum_id,create_time, is_top from blog where forum_id = #{id} order by create_time
+        select id,title,content,user_id,forum_id,create_time, is_top
+        from blog
+        where forum_id = #{id}
+        order by create_time
     </select>
 
     <select id="getBlogList" resultMap="BlogMap">
-        select id,title,content,user_id,forum_id,create_time, is_top from blog
+        SELECT id,title,content,user_id,forum_id,create_time, is_top
+        FROM blog
     </select>
+
     <select id="getLatestBlogList" resultMap="BlogMap">
-        select id, title, content, user_id, forum_id, create_time, is_top
-        from blog
-        order by create_time desc
-        limit 10
+        SELECT id, title, content, user_id, forum_id, create_time, is_top
+        FROM blog
+        ORDER BY create_time DESC
+        LIMIT 10
+    </select>
+
+    <select id="ifContainsBlog" resultType="java.lang.Boolean">
+        SELECT count(1) > 0
+        FROM blog
+        WHERE id = #{id}
+    </select>
+
+    <select id="getBlogInfoById" resultMap="BlogInfoMap">
+        SELECT b.id, b.title, b.content, b.user_id, u.user_name, b.forum_id, f.name forum_name, b.create_time, b.is_top
+        FROM blog b
+        LEFT JOIN forum f
+        ON b.forum_id = f.id
+        LEFT JOIN user u
+        ON b.user_id = u.id
+    </select>
+    <select id="getLatestBlogInfoList" resultMap="BlogInfoMap">
+        SELECT b.id, b.title, b.content, b.user_id, u.user_name, b.forum_id, f.name forum_name, b.create_time, b.is_top
+        FROM blog b
+        LEFT JOIN forum f
+        ON b.forum_id = f.id
+        LEFT JOIN user u
+        ON b.user_id = u.id
+        ORDER BY b.create_time DESC
+        LIMIT 10
+    </select>
+
+    <select id="getBlogInfoByForumId" resultMap="BlogInfoMap">
+        SELECT b.id, b.title, b.content, b.user_id, u.user_name, b.forum_id, f.name forum_name, b.create_time, b.is_top
+        FROM blog b
+        LEFT JOIN forum f
+        ON b.forum_id = f.id
+        LEFT JOIN user u
+        ON b.user_id = u.id
+        WHERE b.forum_id = #{id}
+    </select>
+
+    <select id="getBlogInfoList" resultMap="BlogInfoMap">
+        SELECT b.id, b.title, b.content, b.user_id, u.user_name, b.forum_id, f.name forum_name, b.create_time, b.is_top
+        FROM blog b
+        LEFT JOIN forum f
+        ON b.forum_id = f.id
+        LEFT JOIN user u
+        ON b.user_id = u.id
     </select>
 </mapper>

@@ -9,7 +9,6 @@ import java.util.List;
 @Mapper
 public interface AdministratorMapper
 {
-
     List<User> getAdministratorByForumId(Long forumId);
 
     void addAdministrator(Long forumId, Long userId);
@@ -17,4 +16,6 @@ public interface AdministratorMapper
     void deleteAdministrator(Long forumId, Long userId);
 
     List<Administrator> getAdministrators();
+
+    boolean ifContainsAdministrator(Administrator administrator);
 }

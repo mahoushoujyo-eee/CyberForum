@@ -1,15 +1,16 @@
-package org.example.cyberforum.entities;
-
+package org.example.cyberforum.dto;
 
 import lombok.Data;
 
 import java.util.Date;
+
 @Data
-public class Comment
+public class CommentInfo
 {
     private Long id;
     private String content;
     private Long userId;
+    private String username;
     private Long blogId;
     private Date createTime;
     private boolean isTop;

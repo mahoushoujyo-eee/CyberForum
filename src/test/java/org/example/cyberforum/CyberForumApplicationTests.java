@@ -6,7 +6,10 @@ import org.example.cyberforum.service.BlogService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.servlet.function.ServerResponse;
 import stark.dataworks.basic.data.json.JsonSerializer;
+import stark.dataworks.boot.web.PaginatedData;
+import stark.dataworks.boot.web.ServiceResponse;
 
 import java.util.Date;
 import java.util.List;
@@ -86,6 +89,13 @@ class CyberForumApplicationTests {
         }
 
         System.out.println(JsonSerializer.serialize(blogList));
+    }
+
+    @Test
+    void serviceResponseTest()
+    {
+//        ServiceResponse<String> serviceResponse =;
+//        PaginatedData<String> paginatedData =;
     }
 
 }

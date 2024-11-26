@@ -1,64 +1,70 @@
 package org.example.cyberforum.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.cyberforum.dto.BlogInfo;
 import org.example.cyberforum.entities.Blog;
 import org.example.cyberforum.entities.Forum;
 import org.example.cyberforum.mapper.BlogMapper;
 import org.example.cyberforum.mapper.ForumMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import stark.dataworks.boot.autoconfig.web.LogArgumentsAndResponse;
+import stark.dataworks.boot.web.ServiceResponse;
 
 import java.util.List;
 
 @Slf4j
 @Service
+@LogArgumentsAndResponse
 public class ForumService
 {
 
     // 论坛的创建
 
     @Autowired
-    ForumMapper forumMapper;
+    private ForumMapper forumMapper;
     @Autowired
-    BlogMapper blogMapper;
-
+    private BlogService blogService;
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     // 分页
-    public List<Forum> getForumList()
+    public ServiceResponse<List<Forum>> getForumList()
     {
-        return forumMapper.getForumList();
+        return ServiceResponse.buildSuccessResponse(forumMapper.getForumList());
     }
 
-    public Forum getForumById(Long id)
+    public ServiceResponse<Forum> getForumById(Long id)
     {
-        return forumMapper.getForumById(id);
+        if (!ifContainsForum(id))
+            return ServiceResponse.buildErrorResponse(-100, "forum not found");
+        return ServiceResponse.buildSuccessResponse(forumMapper.getForumById(id));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public ServiceResponse<Boolean> addForum(Forum forum)
+    {
+        forumMapper.addForum(forum);
+        return ServiceResponse.buildSuccessResponse(true);
     }
 
     // 分页
-    public List<Blog> getBlogList(Long id)
+    public ServiceResponse<List<BlogInfo>> getBlogList(Long forumId)
     {
-        List<Blog> blogs = blogMapper.getBlogsByForumId(id);
-        for (Blog blog: blogs)
-        {
-            blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
-            blog.setForumName(getForumById(blog.getForumId()).getName());
-        }
+        if (!blogService.ifContainsBlogOfId(forumId))
+            return ServiceResponse.buildErrorResponse(-100, "forum not found");
 
-        blogs.sort((blog1, blog2) -> blog2.isTop() ? 1 : -1);
-        log.info("get blogs by forum id: " + id + " blogs: " + blogs);
-
-        return blogs;
+        return blogService.getBlogsByForumIdWithTop(forumId);
     }
 
-    public List<Forum> searchForum(String searchText)
+    public ServiceResponse<List<Forum>> searchForum(String searchText)
     {
-        return forumMapper.getForumList().stream().filter(forum -> forum.getName().contains(searchText)).toList();
+        return ServiceResponse.buildSuccessResponse(forumMapper.getForumList().stream().filter(forum -> forum.getName().contains(searchText)).toList());
     }
 
     public boolean ifContainsForum(Long forumId)
     {
-        return forumMapper.getForumById(forumId) != null;
+        return forumMapper.ifContainsForum(forumId);
     }
 }

@@ -1,78 +1,65 @@
 package org.example.cyberforum.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.cyberforum.dto.BlogInfo;
 import org.example.cyberforum.entities.Blog;
 import org.example.cyberforum.mapper.BlogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import stark.dataworks.boot.autoconfig.web.LogArgumentsAndResponse;
+import stark.dataworks.boot.web.ServiceResponse;
 
 import java.util.Date;
 import java.util.List;
 
 @Slf4j
 @Service
+@LogArgumentsAndResponse
 public class BlogService
 {
 
     @Autowired
-    BlogMapper blogMapper;
-
+    private BlogMapper blogMapper;
     @Autowired
-    UserService userService;
-
+    private UserService userService;
     @Autowired
-    ForumService forumService;
+    private ForumService forumService;
+    @Autowired
+    private AdministratorService administratorService;
 
     @Transactional(rollbackFor = Exception.class)
     public void putOutNewBlog(Blog blog)
     {
         // creation time.
         blog.setCreateTime(new Date());
-        log.info("BlogService putOutNewBlog: put out new blog: " + blog);
+        log.info("BlogService putOutNewBlog: put out new blog: {}", blog);
         blogMapper.addBlog(blog);
     }
 
-    public List<Blog> getLatestBlogList()
+    public ServiceResponse<List<BlogInfo>> getLatestBlogList()
     {
-        List<Blog> blogs = blogMapper.getLatestBlogList();
-        for (Blog blog : blogs)
-        {
-            blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
-            blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
-        }
-
-        return blogs;
+        return ServiceResponse.buildSuccessResponse(blogMapper.getLatestBlogInfoList());
     }
 
-    public Blog getBlogById(Long id)
+    public ServiceResponse<BlogInfo> getBlogById(Long id)
     {
-        Blog blog = blogMapper.getBlogById(id);
-
-        if (blog == null)
-        {
-            return null;
-        }
-
+        if (!ifContainsBlogOfId(id))
+            return ServiceResponse.buildErrorResponse(-100,"blog not found");
         // SELECT FROM blog LEFT JOIN user ON ... LEFT JOIN forum ON ...
 
-        blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
-        blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
-        log.info("get blog by id: " + id + " blog: " + blog);
-        return blog;
+        return ServiceResponse.buildSuccessResponse(blogMapper.getBlogInfoById(id));
     }
 
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean deleteBlogById(Long id)
+    public ServiceResponse<Boolean> deleteBlogById(Long id)
     {
         if (!ifContainsBlogOfId(id))
-        {
-            return false;
-        }
+            return ServiceResponse.buildErrorResponse(-100,"blog not found");
 
         blogMapper.deleteBlogById(id);
-        return true;
+        return ServiceResponse.buildSuccessResponse(true);
     }
 
     public Long getForumIdByBlogId(Long blogId)
@@ -80,82 +67,73 @@ public class BlogService
         return blogMapper.getBlogById(blogId).getForumId();
     }
 
-    public List<Blog> getBlogsByForumIdWithTop(Long forumId)
+    public ServiceResponse<List<BlogInfo>> getBlogsByForumIdWithTop(Long forumId)
     {
         if (!forumService.ifContainsForum(forumId))
-            return null;
+            return ServiceResponse.buildErrorResponse(-100, "forum don't exist");
 
-        List<Blog> blogs = blogMapper.getBlogsByForumId(forumId);
-        for (Blog blog: blogs)
-        {
-            blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
-            blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
-        }
+        List<BlogInfo> blogs = blogMapper.getBlogInfoByForumId(forumId);
 
         blogs.sort((blog1, blog2) -> blog2.isTop() ? 1 : -1);
-        log.info("get blogs by forum id: " + forumId + " blogs: " + blogs);
+        log.info("get blogs by forum id: {} blogs: {}", forumId, blogs);
 
-        return blogs;
+        return ServiceResponse.buildSuccessResponse(blogs);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void cancelTop(Long blogId)
+    public ServiceResponse<Boolean> cancelTop(Long blogId, Long userId)
     {
+        if (!administratorService.ifAdministratorFromBlog(blogId, userId).getData())
+            return ServiceResponse.buildErrorResponse(-100, "you are not an administrator");
         blogMapper.cancelTop(blogId);
+        return ServiceResponse.buildSuccessResponse(true);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean putTop(Long blogId)
+    public ServiceResponse<Boolean> putTop(Long blogId)
     {
         if (!ifContainsBlogOfId(blogId))
-            return false;
+            return ServiceResponse.buildErrorResponse(-100, "blog not found");
 
         blogMapper.putTop(blogId);
-        return true;
+        return ServiceResponse.buildSuccessResponse(true);
     }
 
     // 分页
-    public List<Blog> searchBlog(String keyword)
+    public List<BlogInfo> searchBlog(String keyword)
     {
-        List<Blog> blogs = blogMapper.getBlogList().stream().filter(blog -> blog.getTitle().contains(keyword)).toList();
-        for (Blog blog: blogs)
-        {
-            blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
-            blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
-        }
-        log.info("search blog: " + keyword + " blogs: " + blogs);
+        List<BlogInfo> blogs = blogMapper.getBlogInfoList().stream().filter(blog -> blog.getTitle().contains(keyword)).toList();
+
+        log.info("search blog: {} blogs: {}", keyword, blogs);
         return blogs;
     }
 
     // 分页
-    public List<Blog> searchBlogOfForum(String searchText, Long forumId)
+    public List<BlogInfo> searchBlogOfForum(String searchText, Long forumId)
     {
         if (!forumService.ifContainsForum(forumId))
             return null;
 
-        List<Blog> blogs = blogMapper.getBlogsByForumId(forumId).stream().filter(blog -> blog.getTitle().contains(searchText)).toList();
-        for (Blog blog: blogs)
-        {
-            blog.setUsername(userService.getUserById(blog.getUserId()).getUserName());
-            blog.setForumName(forumService.getForumById(blog.getForumId()).getName());
-        }
+        List<BlogInfo> blogs = blogMapper.getBlogInfoByForumId(forumId).stream().filter(blog -> blog.getTitle().contains(searchText)).toList();
 
-        log.info("search blog of forum: " + searchText + " blogs: " + blogs);
+        log.info("search blog of forum: {} blogs: {}", searchText, blogs);
         return blogs;
     }
 
 
-    public boolean ifContainsBlogOfInfo(Blog blog)
+    public boolean ifContainsBlog(Blog blog)
     {
-        List<Blog> blogs = blogMapper.getBlogList();
+        return blogMapper.ifContainsBlog(blog);
+    }
 
-        for (Blog blog1: blogs)
-        {
-            if (blog1.getTitle().equals(blog.getTitle())
-                    && blog1.getContent().equals(blog.getContent()))
-                return true;
-        }
-        return false;
+    public boolean ifContainsBlog(BlogInfo blogInfo)
+    {
+        Blog blog = new Blog();
+        blog.setTitle(blogInfo.getTitle());
+        blog.setContent(blogInfo.getContent());
+        blog.setUserId(blogInfo.getUserId());
+        blog.setForumId(blogInfo.getForumId());
+        return blogMapper.ifContainsBlog(blog);
     }
 
     public boolean ifContainsBlogOfId(Long blogId)
