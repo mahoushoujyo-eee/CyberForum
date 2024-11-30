@@ -8,7 +8,7 @@
         <result column="owner_id" property="ownerId"/>
     </resultMap>
 
-    <insert id="addForum">
+    <insert id="addForum" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO forum
         (name, owner_id)
         VALUE
@@ -30,6 +30,12 @@
         SELECT COUNT(1) > 0
         FROM forum
         WHERE id = #{id}
+    </select>
+
+    <select id="ifContainsForumByName" resultType="java.lang.Boolean">
+        SELECT COUNT(1) > 0
+        FROM forum
+        WHERE name = #{forumName}
     </select>
 
 </mapper>

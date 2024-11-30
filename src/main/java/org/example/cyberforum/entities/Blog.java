@@ -12,6 +12,6 @@ public class Blog
     private String content;
     private Long userId;
     private Long forumId;
-    private Date createTime;
+    private Date creationTime;
     private boolean isTop;
 }

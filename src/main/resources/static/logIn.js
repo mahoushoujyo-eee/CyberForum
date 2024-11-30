@@ -25,16 +25,22 @@ window.onload = function()
         {
             if(xhr.status === 200)
             {
-                let data = xhr.responseText;
-                if (data === 'true')
+                let response = JSON.parse(xhr.responseText);
+                if (response.success === 'false')
                 {
-                    window.location.href = '/';
+                    alert('用户名与密码不匹配');
+                    return;
                 }
                 else
                 {
-                    alert('用户名与密码不匹配');
+                    if (response.data === 'false')
+                    {
+                        alert('用户名和密码不匹配');
+                        return;
+                    }
+                    alert('登录成功');
+                    window.location.href = '/';
                 }
-
             }
             else
             {

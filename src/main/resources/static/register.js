@@ -69,21 +69,21 @@ window.onload = function()
         {
             if(xhr.status === 200)
             {
-                if (xhr.responseText === "false")
+                const response = JSON.parse(xhr.responseText);
+                if (response.success === true)
                 {
-                    alert('注册出错！用户名已存在');
-                    return;
+                    alert('注册成功！请前往登录');
+                    window.location.href = '/logIn.html';
                 }
-                else if (xhr.responseText !== "true")
+                else
                 {
-                    alert('注册出错！');
-                    return;
+                    if (response.message === 'username_exist')
+                        alert('用户名已存在');
+                    else if (response.message === 'invalid email')
+                        alert('邮箱格式不正确');
+                    else
+                        alert('注册出现故障');
                 }
-
-
-
-                alert('注册成功！请前往登录');
-                window.location.href = '/logIn.html';
             }
             else
             {

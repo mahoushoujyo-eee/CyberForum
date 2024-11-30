@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.cyberforum.dto.ResetPasswordRequest;
 import org.example.cyberforum.entities.User;
 import org.example.cyberforum.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import stark.dataworks.boot.web.ServiceResponse;
@@ -28,22 +26,17 @@ public class UserController
     }
 
     @PostMapping("/logIn")
-    public boolean login(@RequestBody User user, HttpServletResponse response)
+    public ServiceResponse<Boolean> login(@RequestBody User user, HttpServletResponse response)
     {
-        log.info("login user:{}", JSON.toJSONString(user));
-        if (userService.login(user).getData())
+        ServiceResponse<Boolean> result = userService.login(user);
+        if (result.isSuccess() && result.getData())
         {
             log.info("login success: {}{}", user.getUserName(), userService.getUserIdByUserName(user.getUserName()));
             response.addCookie(new Cookie("username", user.getUserName()));
-            response.addCookie(new Cookie("userId", userService.getUserIdByUserName(user.getUserName()).toString()));
-            log.info("add cookie user id: {}", userService.getUserIdByUserName(user.getUserName()));
-            return true;
+            response.addCookie(new Cookie("userId", userService.getUserIdByUserName(user.getUserName()).getData().toString()));
+            log.info("add cookie user id: {}", userService.getUserIdByUserName(user.getUserName()).getData());
         }
-        else
-        {
-            log.info("login fail");
-            return false;
-        }
+        return result;
     }
 
     @PostMapping("/find_password")

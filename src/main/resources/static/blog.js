@@ -17,6 +17,11 @@ window.onload = function ()
     const params = new URLSearchParams(window.location.search);
     const blogId = params.get('blog_id');
     const forumId = params.get('forum_id');
+    let pageIndex = params.get('page_index');
+
+    if (pageIndex === null || pageIndex === '')
+        pageIndex = 1;
+
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "/blog/" + blogId);
     xhr.send();
@@ -24,12 +29,13 @@ window.onload = function ()
     {
         if (xhr.status === 200)
         {
-            if (xhr.responseText === '')
+            const response = JSON.parse(xhr.responseText);
+            if (response.success === false && response.message === 'blog not found')
             {
                 alert("帖子已被删除");
                 location.href = "/forum.html?forumId=" + forumId;
             }
-            const blog = JSON.parse(xhr.responseText);
+            const blog = response.data;
 
             const blog_title = document.getElementById("blog_title");
             const page_title = document.getElementsByTagName("title")[0];
@@ -49,7 +55,7 @@ window.onload = function ()
                     isAuthor = true;
                 }
                 addDeleteBlogChoice(isAuthor)
-                addCommentElements();
+                addCommentElements(pageIndex);
             }
         }
         else
@@ -57,7 +63,6 @@ window.onload = function ()
             alert("页面请求失败");
             location.href = "/";
         }
-
     }
 
     addEventListenerOfComment();
@@ -69,20 +74,32 @@ function addToNavigator(element)
     username.innerHTML = element;
 }
 
-function addCommentElements()
+function addCommentElements(pageIndex)
 {
     const params = new URLSearchParams(window.location.search);
     const blogId = params.get('blog_id');
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/comment/" + blogId);
+    xhr.open("GET", "/comment/" + blogId + '/' + pageIndex);
     xhr.send();
     xhr.onload = function ()
     {
         if (xhr.status === 200)
         {
+            const response = JSON.parse(xhr.responseText);
+            if (response.success === 'false' && response.message === 'blog not found')
+            {
+                alert("帖子不存在");
+                location.href = "/";
+            }
+
             const comment_list = document.getElementById("comment_list");
-            const comments = JSON.parse(xhr.responseText);
-            for (let i = 0; i < comments.length; i++)
+            const comments = response.data.data;
+            const pageSize = response.data.pageSize;
+            console.log(response)
+
+            addTurnPageElement(response.data.pageCount, params.get('forum_id'), blogId, pageIndex)
+
+            for (let i = pageSize * (pageIndex - 1); i < Math.min(comments.length, pageSize * pageIndex); i++)
             {
                 const comment = comments[i];
                 const comment_element = document.createElement("div");
@@ -116,6 +133,32 @@ function addCommentElements()
     }
 }
 
+function addTurnPageElement(pageCount, forumId, blogId, pageIndex)
+{
+    const turnPageDiv = document.getElementById("turn_page_div");
+    if (pageCount <= 1)
+    {
+        return;
+    }
+    turnPageDiv.innerHTML=`<p>共${pageCount}页</p>`;
+    console.log("pageIndex:", pageIndex)
+    for(let i = 1; i <= pageCount; i++)
+    {
+        const turnPageButton = document.createElement("button");
+        turnPageButton.innerHTML = i+'';
+        turnPageButton.onclick = function ()
+        {
+            window.location.href = "blog.html?blog_id=" + blogId + "&forum_id=" + forumId + "&page_index=" + i;
+        }
+        if (i == pageIndex)
+        {
+            turnPageButton.classList.add("active");
+        }
+
+        turnPageDiv.appendChild(turnPageButton);
+    }
+}
+
 function addEventListenerOfComment()
 {
     const commentButton = document.getElementById("comment_button");
@@ -131,7 +174,7 @@ function addEventListenerOfComment()
         const blogId = params.get('blog_id');
 
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/add_comment/" + blogId);
+        xhr.open("POST", "/add_comment");
         xhr.setRequestHeader("Content-Type", "application/json");
         const commentContent = document.getElementById("comment_text").value;
 
@@ -157,14 +200,16 @@ function addEventListenerOfComment()
         {
             if (xhr.status === 200)
             {
-                if (xhr.responseText === 'true')
+                const response = JSON.parse(xhr.responseText);
+                if (response.success === true)
                     alert("评论成功");
                 else
                     alert("评论失败");
                 location.reload();
-            } else
+            }
+            else
             {
-                alert("error")
+                alert("出现故障")
             }
 
         }
@@ -177,11 +222,12 @@ function addDeleteBlogChoice(isAuthor)
     const blogId = params.get('blog_id');
     let isAdded = false;
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/is_administrator/" + blogId);
+    xhr.open("POST", "/is_administrator");
 
     const data =
         {
-            id: getCookie("userId")
+            id: getCookie("userId"),
+            blogId: blogId
         }
 
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -193,7 +239,8 @@ function addDeleteBlogChoice(isAuthor)
     {
         if (xhr.status === 200)
         {
-            const data = JSON.parse(xhr.responseText);
+            const response = JSON.parse(xhr.responseText);
+            const data = response.data;
             if (data === true)
             {
                 const delete_blog = document.getElementById("delete_blog");
@@ -261,7 +308,8 @@ function deleteBlog()
     {
         if (xhr.status === 200)
         {
-            if (xhr.responseText === "false")
+            const response = JSON.parse(xhr.responseText);
+            if (response.success === "false")
             {
                 alert("删除失败");
                 return;

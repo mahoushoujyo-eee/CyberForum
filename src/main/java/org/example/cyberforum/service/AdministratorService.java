@@ -5,6 +5,7 @@ import org.example.cyberforum.entities.Administrator;
 import org.example.cyberforum.entities.User;
 import org.example.cyberforum.mapper.AdministratorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stark.dataworks.boot.autoconfig.web.LogArgumentsAndResponse;
@@ -21,6 +22,7 @@ public class AdministratorService
     private AdministratorMapper administratorMapper;
     @Autowired
     private UserService userService;
+    @Lazy
     @Autowired
     private BlogService blogService;
     @Autowired
@@ -72,6 +74,34 @@ public class AdministratorService
     }
 
     @Transactional(rollbackFor = Exception.class)
+    public ServiceResponse<String> addAdministrator(Long forumId, Long userId)
+    {
+        ServiceResponse<String> response = new ServiceResponse<>();
+
+        if (userId == null || !forumService.ifContainsForum(forumId))
+        {
+            response.setSuccess(false);
+            response.setMessage("user id is null");
+            return response;
+        }
+
+        Administrator administrator = new Administrator();
+        administrator.setUserId(userId);
+        administrator.setForumId(forumId);
+
+        if (administratorMapper.ifContainsAdministrator(administrator))
+        {
+            response.setSuccess(false);
+            response.setMessage("user is already an administrator");
+            return response;
+        }
+
+        administratorMapper.addAdministrator(forumId, userId);
+        response.setSuccess(true);
+        return response;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> deleteAdministrator(Long forumId, Long userId, Long adminId)
     {
         if (!forumService.ifContainsForum(forumId))
@@ -98,7 +128,7 @@ public class AdministratorService
         ServiceResponse<Boolean> response = new ServiceResponse<>();
         response.setSuccess(true);
 
-        if (!blogService.ifContainsBlog(blogService.getBlogById(blogId).getData()))
+        if (!blogService.ifContainsBlogOfId(blogId))
         {
             response.setSuccess(false);
             response.setMessage("blog id is null");

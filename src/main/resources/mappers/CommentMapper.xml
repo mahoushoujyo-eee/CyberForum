@@ -14,48 +14,48 @@
         <id column="id" property="id"/>
         <result column="content" property="content"/>
         <result column="user_id" property="userId"/>
-        <result column="username" property="username"/>
+        <result column="user_name" property="username"/>
         <result column="blog_id" property="blogId"/>
         <result column="create_time" property="createTime"/>
         <result column="is_top" property="isTop"/>
     </resultMap>
 
     <insert id="addComment">
-        insert into comment(content,user_id,blog_id,create_time)
-        values(#{content},#{userId},#{blogId},#{createTime})
+        INSERT INTO comment(content,user_id,blog_id,create_time)
+        VALUES(#{content},#{userId},#{blogId},#{createTime})
     </insert>
     <update id="putTop">
-        update comment
-        set is_top = 1
-        where id = #{commentId}
+        UPDATE comment
+        SET is_top = 1
+        WHERE id = #{commentId}
     </update>
 
     <update id="cancelTop">
-        update comment
-        set is_top = 0
-        where id = #{commentId}
+        UPDATE comment
+        SET is_top = 0
+        WHERE id = #{commentId}
     </update>
 
     <delete id="deleteCommentById">
-        delete from comment
-        where id = #{id}
+        DELETE FROM comment
+        WHERE id = #{id}
     </delete>
 
     <delete id="deleteCommentByBlogIdAndUserId">
-        delete from comment
-        where blog_id = #{blogId}
-        and user_id = #{userId}
+        DELETE FROM comment
+        WHERE blog_id = #{blogId}
+        AND user_id = #{userId}
     </delete>
 
     <select id="getCommentList" resultMap="commentMap">
-        select id,content,user_id,blog_id,create_time, is_top
-        from comment
+        SELECT id,content,user_id,blog_id,create_time, is_top
+        FROM comment
     </select>
 
     <select id="getComment" resultMap="commentMap">
-        select id,content,user_id,blog_id,create_time, is_top
-        from comment
-        where id = #{id}
+        SELECT id,content,user_id,blog_id,create_time, is_top
+        FROM comment
+        WHERE id = #{id}
     </select>
 
     <select id="getCommentsByBlogId" resultMap="commentMap">

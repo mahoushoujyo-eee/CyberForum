@@ -1,6 +1,7 @@
 package org.example.cyberforum;
 
 import org.example.cyberforum.entities.Blog;
+import org.example.cyberforum.entities.Forum;
 import org.example.cyberforum.mapper.*;
 import org.example.cyberforum.service.BlogService;
 import org.junit.jupiter.api.Test;
@@ -80,22 +81,31 @@ class CyberForumApplicationTests {
     }
 
     @Test
-    void test05()
+    void testUserMapper()
     {
-        List<Blog> blogList = blogService.getBlogsByForumIdWithTop(2L);
-        for (Blog blog: blogList)
-        {
-            System.out.println(blog.getId());
-        }
-
-        System.out.println(JsonSerializer.serialize(blogList));
+        System.out.println(userMapper.ifContainsUserByUserName("eee"));
     }
 
     @Test
-    void serviceResponseTest()
+    void testCommentMapper()
     {
-//        ServiceResponse<String> serviceResponse =;
-//        PaginatedData<String> paginatedData =;
+        System.out.println(commentMapper.getCommentInfoListByBlogId(34L));
+    }
+
+    @Test
+    void testLogBlogOfForm()
+    {
+        System.out.println(blogService.getBlogsByForumIdWithTop(1L));
+    }
+
+    @Test
+    void testKeyProperties()
+    {
+        Forum forum = new Forum();
+        forum.setName("test");
+        forum.setOwnerId(1L);
+        forumMapper.addForum(forum);
+        System.out.println(forum.getId());
     }
 
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stark.dataworks.boot.autoconfig.web.LogArgumentsAndResponse;
+import stark.dataworks.boot.web.PaginatedData;
 import stark.dataworks.boot.web.ServiceResponse;
 
 import java.util.Date;
@@ -22,18 +23,18 @@ public class BlogService
     @Autowired
     private BlogMapper blogMapper;
     @Autowired
-    private UserService userService;
-    @Autowired
     private ForumService forumService;
     @Autowired
     private AdministratorService administratorService;
+
+    private static final int PAGE_SIZE = 10;
+
 
     @Transactional(rollbackFor = Exception.class)
     public void putOutNewBlog(Blog blog)
     {
         // creation time.
-        blog.setCreateTime(new Date());
-        log.info("BlogService putOutNewBlog: put out new blog: {}", blog);
+        blog.setCreationTime(new Date());
         blogMapper.addBlog(blog);
     }
 
@@ -75,9 +76,31 @@ public class BlogService
         List<BlogInfo> blogs = blogMapper.getBlogInfoByForumId(forumId);
 
         blogs.sort((blog1, blog2) -> blog2.isTop() ? 1 : -1);
-        log.info("get blogs by forum id: {} blogs: {}", forumId, blogs);
-
         return ServiceResponse.buildSuccessResponse(blogs);
+    }
+
+    public ServiceResponse<PaginatedData<BlogInfo>> getBlogsByForumIdWithTop(Long forumId, int pageIndex)
+    {
+        if (!forumService.ifContainsForum(forumId))
+            return ServiceResponse.buildErrorResponse(-100, "forum don't exist");
+
+        if (pageIndex < 1)
+            return ServiceResponse.buildErrorResponse(-100, "page index must be positive");
+
+        PaginatedData<BlogInfo> paginatedData = new PaginatedData<>();
+        List<BlogInfo> blogs = blogMapper.getBlogInfoByForumId(forumId);
+        blogs.sort((blog1, blog2) -> blog2.isTop() ? 1 : -1);
+
+        paginatedData.setData(blogs);
+        paginatedData.setCurrent(pageIndex);
+        paginatedData.setPageSize(PAGE_SIZE);
+        paginatedData.setPageCount((int) Math.ceil(blogs.size() / (float)PAGE_SIZE));
+        paginatedData.setTotal(blogs.size());
+
+        if (pageIndex > paginatedData.getPageCount())
+            return ServiceResponse.buildErrorResponse(-100, "page index out of range");
+
+        return ServiceResponse.buildSuccessResponse(paginatedData);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -100,24 +123,65 @@ public class BlogService
     }
 
     // 分页
-    public List<BlogInfo> searchBlog(String keyword)
+    public ServiceResponse<List<BlogInfo>> searchBlog(String keyword)
     {
         List<BlogInfo> blogs = blogMapper.getBlogInfoList().stream().filter(blog -> blog.getTitle().contains(keyword)).toList();
 
-        log.info("search blog: {} blogs: {}", keyword, blogs);
-        return blogs;
+        return ServiceResponse.buildSuccessResponse(blogs);
+    }
+
+    public ServiceResponse<PaginatedData<BlogInfo>> searchBlog(String keyword, int pageIndex)
+    {
+        if (pageIndex < 1)
+            return ServiceResponse.buildErrorResponse(-100, "page index must be positive");
+
+        PaginatedData<BlogInfo> paginatedData = new PaginatedData<>();
+        List<BlogInfo> blogs = blogMapper.getBlogInfoList();
+        blogs = blogs.stream().filter(blog -> blog.getTitle().contains(keyword)).toList();
+        paginatedData.setData(blogs);
+        paginatedData.setCurrent(pageIndex);
+        paginatedData.setPageSize(PAGE_SIZE);
+        paginatedData.setPageCount((int) Math.ceil(blogs.size() / (float)PAGE_SIZE));
+        paginatedData.setTotal(blogs.size());
+
+        if (pageIndex > paginatedData.getPageCount())
+            return ServiceResponse.buildErrorResponse(-100, "page index out of range");
+
+        return ServiceResponse.buildSuccessResponse(paginatedData);
     }
 
     // 分页
-    public List<BlogInfo> searchBlogOfForum(String searchText, Long forumId)
+    public ServiceResponse<List<BlogInfo>> searchBlogOfForum(String searchText, Long forumId)
     {
         if (!forumService.ifContainsForum(forumId))
-            return null;
+            return ServiceResponse.buildErrorResponse(-100, "forum not found");
 
         List<BlogInfo> blogs = blogMapper.getBlogInfoByForumId(forumId).stream().filter(blog -> blog.getTitle().contains(searchText)).toList();
 
-        log.info("search blog of forum: {} blogs: {}", searchText, blogs);
-        return blogs;
+        return ServiceResponse.buildSuccessResponse(blogs);
+    }
+
+    public ServiceResponse<PaginatedData<BlogInfo>> searchBlogOfForum(String searchText, Long forumId, int pageIndex)
+    {
+        if (!forumService.ifContainsForum(forumId))
+            return ServiceResponse.buildErrorResponse(-100, "forum not found");
+
+        if (pageIndex < 1)
+            return ServiceResponse.buildErrorResponse(-100, "page index must be positive");
+
+        PaginatedData<BlogInfo> paginatedData = new PaginatedData<>();
+        List<BlogInfo> blogs = blogMapper.getBlogInfoByForumId(forumId);
+        blogs = blogs.stream().filter(blog -> blog.getTitle().contains(searchText)).toList();
+        paginatedData.setData(blogs);
+        paginatedData.setCurrent(pageIndex);
+        paginatedData.setPageSize(PAGE_SIZE);
+        paginatedData.setPageCount((int) Math.ceil(blogs.size() / (float)PAGE_SIZE));
+        paginatedData.setTotal(blogs.size());
+
+        if (pageIndex > paginatedData.getPageCount())
+            return ServiceResponse.buildErrorResponse(-100, "page index out of range");
+
+        return ServiceResponse.buildSuccessResponse(paginatedData);
     }
 
 

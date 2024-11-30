@@ -7,9 +7,11 @@ import org.example.cyberforum.entities.Forum;
 import org.example.cyberforum.mapper.BlogMapper;
 import org.example.cyberforum.mapper.ForumMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stark.dataworks.boot.autoconfig.web.LogArgumentsAndResponse;
+import stark.dataworks.boot.web.PaginatedData;
 import stark.dataworks.boot.web.ServiceResponse;
 
 import java.util.List;
@@ -19,15 +21,16 @@ import java.util.List;
 @LogArgumentsAndResponse
 public class ForumService
 {
-
+    private static final int PAGE_SIZE = 10;
     // 论坛的创建
-
     @Autowired
     private ForumMapper forumMapper;
+    @Lazy
     @Autowired
     private BlogService blogService;
+    @Lazy
     @Autowired
-    private UserService userService;
+    private AdministratorService administratorService;
 
     // 分页
     public ServiceResponse<List<Forum>> getForumList()
@@ -43,8 +46,22 @@ public class ForumService
     }
 
     @Transactional(rollbackFor = Exception.class)
+    public ServiceResponse<Boolean> crateForum(Forum forum)
+    {
+        ServiceResponse<Boolean> addForumResponse = addForum(forum);
+        if (!addForumResponse.isSuccess())
+            return ServiceResponse.buildErrorResponse(-100, addForumResponse.getMessage());
+
+        if (!administratorService.addAdministrator(forum.getId(), forum.getOwnerId()).isSuccess())
+            return ServiceResponse.buildErrorResponse(-100, "添加创建者为管理员时出现故障");
+        return ServiceResponse.buildSuccessResponse(true);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> addForum(Forum forum)
     {
+        if (ifContainsForumByName(forum.getName()))
+            return ServiceResponse.buildErrorResponse(-100, "该论坛名已存在");
         forumMapper.addForum(forum);
         return ServiceResponse.buildSuccessResponse(true);
     }
@@ -52,19 +69,38 @@ public class ForumService
     // 分页
     public ServiceResponse<List<BlogInfo>> getBlogList(Long forumId)
     {
-        if (!blogService.ifContainsBlogOfId(forumId))
+        if (!ifContainsForum(forumId))
             return ServiceResponse.buildErrorResponse(-100, "forum not found");
 
         return blogService.getBlogsByForumIdWithTop(forumId);
     }
 
-    public ServiceResponse<List<Forum>> searchForum(String searchText)
+    public ServiceResponse<PaginatedData<BlogInfo>> getBlogList(Long forumId, int pageIndex)
     {
-        return ServiceResponse.buildSuccessResponse(forumMapper.getForumList().stream().filter(forum -> forum.getName().contains(searchText)).toList());
+        if (!ifContainsForum(forumId))
+            return ServiceResponse.buildErrorResponse(-100, "forum not found");
+
+        return blogService.getBlogsByForumIdWithTop(forumId, pageIndex);
+    }
+
+    public ServiceResponse<PaginatedData<Forum>> searchForum(String searchText, int pageIndex)
+    {
+        PaginatedData<Forum> paginatedData = new PaginatedData<>();
+        paginatedData.setData(forumMapper.getForumList().stream().filter(forum -> forum.getName().contains(searchText)).toList());
+        paginatedData.setCurrent(pageIndex);
+        paginatedData.setPageSize(PAGE_SIZE);
+        paginatedData.setPageCount((int) Math.ceil(paginatedData.getData().size() / (float)PAGE_SIZE));
+        paginatedData.setTotal(paginatedData.getData().size());
+        return ServiceResponse.buildSuccessResponse(paginatedData);
     }
 
     public boolean ifContainsForum(Long forumId)
     {
         return forumMapper.ifContainsForum(forumId);
+    }
+
+    public boolean ifContainsForumByName(String forumName)
+    {
+        return forumMapper.ifContainsForumByName(forumName);
     }
 }

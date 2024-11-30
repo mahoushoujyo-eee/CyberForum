@@ -70,7 +70,6 @@ a
     margin-right: 20%;
     margin-top: -70px;
     width: 900px;
-    min-height: 1000px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     background-color: #f1f1f1;
@@ -95,4 +94,15 @@ a
 {
     padding-left: 20px;
     padding-top: 10px;
+}
+
+.turn_page_div
+{
+    position: relative;
+    text-align: center;
+}
+
+.active
+{
+    background-color: #6c6b6b;
 }

@@ -21,7 +21,7 @@ public class UserService
 {
     @Autowired
     private UserMapper userMapper;
-    private static final Pattern pattern = Pattern.compile("^[a-zA-Z0-9]+$");
+    private static final Pattern PATTERN = Pattern.compile("^[a-zA-Z0-9]+$");
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -49,16 +49,14 @@ public class UserService
 
     public ServiceResponse<Boolean> login(User user)
     {
-        if (ifContainsUserName(user.getUserName()))
+        if (!ifContainsUserName(user.getUserName()))
             return ServiceResponse.buildErrorResponse(-100, "username not exists");
-        // SELECT COUNT(*) FROM user WHERE password = #{} AND username = #{}
         String encryptedPassword = MD5.hash(user.getPassword());
 
         return ServiceResponse.buildSuccessResponse(userMapper.ifUserNameAndEncryptedPasswordMatch(user.getUserName(), encryptedPassword));
     }
 
     @Transactional(rollbackFor = Exception.class)
-    // ResetPasswordRequest
     public ServiceResponse<Boolean> resetPassword(ResetPasswordRequest request)
     {
         String result = passwordValidMessageOf(request.getPassword());
@@ -117,7 +115,7 @@ public class UserService
     public boolean isValidPassword(String password)
     {
         // 创建 Matcher 对象
-        Matcher matcher = pattern.matcher(password);
+        Matcher matcher = PATTERN.matcher(password);
         // 使用 Matcher 的 matches 方法检查整个区域
         return matcher.matches();
     }

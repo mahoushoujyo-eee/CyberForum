@@ -2,14 +2,10 @@ window.onload = function ()
 {
     const username = getCookie('username');
     if (username !== null)
-    {
         addLogInElements(username)
-    }
     else
-    {
         addLogOutElements()
-    }
-
+    createForumEventBind();
     getLatestBlogs();
     initializeForum();
     searchEventBind();
@@ -73,8 +69,16 @@ function initializeForum()
     {
         if (xhr.status === 200)
         {
-            let data = xhr.responseText;
-            data = JSON.parse(data);
+            let response = xhr.responseText;
+            response = JSON.parse(response);
+            if (response.code !== 0)
+            {
+                alert(response.message);
+                return;
+            }
+            console.log(response);
+            let data = response.data;
+            console.log(data);
             for (let i = 0; i < data.length; i++)
             {
                 let forum = data[i];
@@ -103,7 +107,13 @@ function getLatestBlogs()
         let blogs = document.getElementById('blogs');
         if (xhr.status === 200)
         {
-            let data = JSON.parse(xhr.responseText);
+            let response = JSON.parse(xhr.responseText);
+            if (response.code !== 0)
+            {
+                alert(response.message);
+                return;
+            }
+            let data = response.data;
             console.log(data);
             for (let i = 0; i < data.length; i++)
             {
@@ -119,13 +129,13 @@ function getLatestBlogs()
                         <p>${data[i].content}</p>
                     </div>
                     <div class="blog_author">
-                        <p>${data[i].username}</p>
+                        <p>作者：${data[i].username}</p>
                     </div>
                     <div class="blog_forum">
-                        <p>${data[i].forumName}</p>
+                        <p>论坛：${data[i].forumName}</p>
                     </div>
                     <div>
-                        <p>${getTimeString(data[i].createTime)}</p>
+                        <p>发帖时间：${getTimeString(data[i].createTime)}</p>
                     </div>
                     <hr>
                     `;
@@ -173,6 +183,50 @@ function searchEventBind()
             return;
         }
         window.location.href = '/search_result.html?searchText=' + search_text + '&searchType=forum';
+    })
+}
+
+function createForumEventBind()
+{
+    const create_forum_div = document.getElementById('create_forum_div');
+    create_forum_div.addEventListener('click', function (e)
+    {
+        const userId = getCookie('userId');
+        if (userId === null)
+        {
+            alert('请先登录');
+            return;
+        }
+        let forumName = prompt('请输入论坛名称', '');
+        if (forumName === '' || forumName === null)
+            return;
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/createForum');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        const data = JSON.stringify({
+            ownerId: userId,
+            name: forumName
+        });
+        xhr.send(data);
+        xhr.onload = function ()
+        {
+            if (xhr.status === 200)
+            {
+                const response = JSON.parse(xhr.responseText);
+                if (response.success === false)
+                {
+                    alert(response.message);
+                    return;
+                }
+                alert('创建成功');
+                window.location.href = '/'
+            }
+            else
+            {
+                alert('创建失败');
+            }
+        }
     })
 }
 

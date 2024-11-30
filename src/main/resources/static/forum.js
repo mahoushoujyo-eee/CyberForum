@@ -6,6 +6,11 @@ window.onload = function()
 
     const params = new URLSearchParams(window.location.search);
     const forumId = params.get('forumId');
+    let pageIndex = params.get('pageIndex');
+
+    if(pageIndex === null || pageIndex === '')
+        pageIndex = 1;
+
 
     const username = getCookie("username");
     const userId = getCookie("userId");
@@ -27,7 +32,13 @@ window.onload = function()
     {
         if(xhr.status === 200)
         {
-            let data = JSON.parse(xhr.responseText);
+            const response = JSON.parse(xhr.responseText);
+            if (response.success === 'false' && response.message === 'forum not found')
+            {
+                alert("板块不存在");
+                location.href = "/";
+            }
+            const data = response.data;
             let forum_title = document.getElementById("forum_title");
             let title = document.getElementsByTagName("title")[0];
             console.log(data);
@@ -39,7 +50,7 @@ window.onload = function()
             }
         }
     }
-    logBlogOfForum();
+    logBlogOfForum(pageIndex);
 }
 
 function addToNavigator(element)
@@ -102,23 +113,29 @@ function addOwnerChoice()
 
 
 
-function logBlogOfForum()
+function logBlogOfForum(pageIndex)
 {
     const params = new URLSearchParams(window.location.search);
     const forumId = params.get('forumId');
 
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/forum/" + forumId + "/blog");
+    xhr.open("GET", "/forum/" + forumId + "/blog/" + pageIndex);
     xhr.send();
     xhr.onload = function()
     {
-        console.log("get response");
         if(xhr.status === 200)
         {
-            let data = JSON.parse(xhr.responseText);
-            console.log("blog data: ");
-            console.log(data);
-            for(let i = 0; i < data.length; i++)
+            const response = JSON.parse(xhr.responseText);
+            if (response.success === false && response.message === 'forum not found')
+            {
+                alert("论坛不存在");
+                return;
+            }
+            const data = response.data.data;
+            const pageCount = response.data.pageCount;
+            const pageSize = response.data.pageSize;
+            addTurnPageElement(pageCount, forumId, pageIndex)
+            for(let i = pageSize * (pageIndex - 1); i < Math.min(pageSize * pageIndex, data.length); i++)
             {
                 const blogDiv = document.createElement("div");
                 blogDiv.className = "blog_div";
@@ -135,10 +152,10 @@ function logBlogOfForum()
                             <p>${data[i].content}</p>
                         </div>
                         <div class="blog_author">
-                            <p>${data[i].username}</p>             
+                            <p>作者：${data[i].username}</p>             
                         </div>
                         <div>
-                            <p>${getTimeString(data[i].createTime)}</p>
+                            <p>发布日期：${getTimeString(data[i].createTime)}</p>
                         </div>
                         <hr>
                     `;
@@ -171,7 +188,7 @@ function ifAdministrator()
     const params = new URLSearchParams(window.location.search);
     const forumId = params.get('forumId');
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/is_administrator_by_forum_id/" + forumId);
+    xhr.open("POST", "/is_administrator_by_forum_id");
     xhr.setRequestHeader("Content-Type", "application/json");
     const data =
         {
@@ -183,7 +200,8 @@ function ifAdministrator()
     {
         if (xhr.status === 200)
         {
-            if (xhr.responseText === "true")
+            const response = JSON.parse(xhr.responseText);
+            if (response.success === true && response.data === true)
             {
                 isAdministrator = true;
             }
@@ -193,7 +211,7 @@ function ifAdministrator()
         }
         else
         {
-            alert("出现故障");
+            alert("检测管理员身份出现故障");
         }
     }
 }
@@ -229,6 +247,32 @@ function addTopData(blog, blogData)
         button.disabled = true;
         button.style.backgroundColor = "silver";
         blog.innerHTML += button.outerHTML;
+    }
+}
+
+function addTurnPageElement(pageCount, forumId, pageIndex)
+{
+    const turnPageDiv = document.getElementById("turn_page_div");
+    turnPageDiv.innerHTML=`<p>共${pageCount}页</p>`;
+    if (pageCount <= 1)
+    {
+        return;
+    }
+    console.log("pageIndex:", pageIndex)
+    for(let i = 1; i <= pageCount; i++)
+    {
+        const turnPageButton = document.createElement("button");
+        turnPageButton.innerHTML = i+'';
+        turnPageButton.onclick = function ()
+        {
+            window.location.href = "forum.html?forumId=" + forumId + "&pageIndex=" + i;
+        }
+        if (i == pageIndex)
+        {
+            turnPageButton.classList.add("active");
+        }
+
+        turnPageDiv.appendChild(turnPageButton);
     }
 }
 

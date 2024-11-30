@@ -8,9 +8,8 @@ import org.example.cyberforum.service.AdministratorService;
 import org.example.cyberforum.service.ForumService;
 import org.example.cyberforum.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import stark.dataworks.boot.web.PaginatedData;
 import stark.dataworks.boot.web.ServiceResponse;
 
 import java.util.List;
@@ -37,15 +36,27 @@ public class ForumController
         return forumService.getForumById(id);
     }
 
-    @GetMapping("/forum/{id}/blog")
-    public ServiceResponse<List<BlogInfo>> getBlogList(@PathVariable("id") Long forumId)
+//    @GetMapping("/forum/{id}/blog")
+//    public ServiceResponse<List<BlogInfo>> getBlogList(@PathVariable("id") Long forumId)
+//    {
+//        return forumService.getBlogList(forumId);
+//    }
+
+    @GetMapping("/forum/{id}/blog/{pageIndex}")
+    public ServiceResponse<PaginatedData<BlogInfo>> getBlogList(@PathVariable("id") Long forumId, @PathVariable("pageIndex") int pageIndex)
     {
-        return forumService.getBlogList(forumId);
+        return forumService.getBlogList(forumId, pageIndex);
     }
 
-    @GetMapping("search/forum/{searchText}")
-    public ServiceResponse<List<Forum>> searchForum(@PathVariable("searchText") String searchText)
+    @GetMapping("search_forum")
+    public ServiceResponse<PaginatedData<Forum>> searchForum(@RequestParam("searchText") String searchText, @RequestParam("pageIndex") int pageIndex)
     {
-        return forumService.searchForum(searchText);
+        return forumService.searchForum(searchText, pageIndex);
+    }
+
+    @PostMapping("/createForum")
+    public ServiceResponse<Boolean> createForum(@RequestBody Forum forum)
+    {
+        return forumService.crateForum(forum);
     }
 }

@@ -97,3 +97,14 @@ a
     text-align: center;
     color: #2b2b2b;
 }
+
+#turn_page_div
+{
+    position: relative;
+    text-align: center;
+}
+
+.active
+{
+    background-color: #6c6b6b;
+}

@@ -5,6 +5,7 @@ import org.example.cyberforum.entities.Comment;
 import org.example.cyberforum.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import stark.dataworks.boot.web.PaginatedData;
 import stark.dataworks.boot.web.ServiceResponse;
 
 import java.util.List;
@@ -15,8 +16,8 @@ public class CommentController
     @Autowired
     private CommentService commentService;
 
-    @PostMapping("add_comment/{id}")
-    public boolean addComment(@RequestBody Comment comment)
+    @PostMapping("add_comment")
+    public ServiceResponse<Boolean> addComment(@RequestBody Comment comment)
     {
         return commentService.addComment(comment);
     }
@@ -25,6 +26,12 @@ public class CommentController
     public ServiceResponse<List<CommentInfo>> getComments(@PathVariable("id") Long blogId)
     {
         return commentService.getCommentsByBlogIdWithTop(blogId);
+    }
+
+    @GetMapping("comment/{id}/{page_index}")
+    public ServiceResponse<PaginatedData<CommentInfo>> getComments(@PathVariable("id") Long blogId, @PathVariable("page_index") int pageIndex)
+    {
+        return commentService.getCommentsByBlogIdWithTop(blogId, pageIndex);
     }
 
     @DeleteMapping("delete_comment/{comment_id}")

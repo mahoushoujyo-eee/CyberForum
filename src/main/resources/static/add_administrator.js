@@ -27,7 +27,13 @@ window.onload = function()
     {
         if (xhr.status === 200)
         {
-            const data = JSON.parse(xhr.responseText);
+            const response = JSON.parse(xhr.responseText);
+            if (response.code !== 0)
+            {
+                alert(response.message);
+                return;
+            }
+            const data = response.data;
             const administrator_name = document.getElementById("administrator_list");
 
             administratorCount = data.length;
@@ -90,28 +96,30 @@ function BundleAddAdministratorButton()
         console.log(add_administrator_button.parentNode.children[0].children[0].value);
 
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/add_administrator/" + forumId);
+        xhr.open("POST", "/add_administrator");
         xhr.setRequestHeader("Content-Type", "application/json");
         const data =
             {
                 userName: add_administrator_name,
                 forumId: forumId
             }
+            console.log(data)
         xhr.send(JSON.stringify(data));
         xhr.onload = function ()
         {
             if (xhr.status === 200)
             {
-                if (xhr.responseText === 'true')
+                const response = JSON.parse(xhr.responseText);
+                if (response.success === true)
                 {
                     alert("添加管理员成功");
                     location.reload();
                 }
-                else if (xhr.responseText === 'false')
+                else if (response.message === 'user is already an administrator')
                 {
                     alert("管理员已存在了");
                 }
-                else if (xhr.responseText === 'null')
+                else if (response.message === 'user id is null')
                 {
                     alert("确认输入了正确的管理员用户名");
                 }
@@ -133,7 +141,7 @@ function deleteAdministrator()
 
         const userId = this.parentNode.children[0].children[0].innerHTML;
         const xhr = new XMLHttpRequest();
-        xhr.open("DELETE", "/delete_administrator/" + forumId);
+        xhr.open("DELETE", "/delete_administrator");
         xhr.setRequestHeader("Content-Type", "application/json");
         const data =
             {
@@ -145,13 +153,25 @@ function deleteAdministrator()
         {
             if (xhr.status === 200)
             {
-                if (xhr.responseText === 'false')
+                const response = JSON.parse(xhr.responseText);
+                if (response.success === false)
                 {
-                    alert("该用户或论坛不存在");
-                    return;
+                    if (response.message === 'user is not an administrator')
+                        alert("该用户不是管理员");
+                    else if (response.message === 'user don\'t exist')
+                        alert("用户不存在");
+                    else if (response.message === 'forum don\'t exist')
+                        alert("论坛不存在");
                 }
-                alert("删除管理员成功");
-                location.reload();
+                else if (response.success === true)
+                {
+                    alert("删除管理员成功");
+                    location.reload();
+                }
+                else
+                {
+                    alert("删除管理员失败");
+                }
             }
             else
             {
@@ -167,7 +187,7 @@ function ifAdministrator()
     const params = new URLSearchParams(window.location.search);
     const forumId = params.get('forumId');
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/is_administrator_by_forum_id/" + forumId);
+    xhr.open("POST", "/is_administrator_by_forum_id");
     xhr.setRequestHeader("Content-Type", "application/json");
     const data =
         {
@@ -179,9 +199,9 @@ function ifAdministrator()
     {
         if (xhr.status === 200)
         {
-            if(xhr.responseText === "true")
+            const response = JSON.parse(xhr.responseText);
+            if(response.success === true && response.data === true)
             {
-
             }
             else
             {
@@ -191,7 +211,8 @@ function ifAdministrator()
         }
         else
         {
-            alert("error");
+            alert("出现故障");
+            window.location.href = '/';
             return false;
         }
     }

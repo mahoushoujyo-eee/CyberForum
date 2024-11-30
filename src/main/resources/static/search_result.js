@@ -5,6 +5,11 @@ window.onload = function()
 
     const params = new URLSearchParams(window.location.search);
     const searchText = params.get('searchText');
+    const forumId = params.get('forumId');
+    let pageIndex = params.get('pageIndex');
+
+    if (pageIndex === null)
+        pageIndex = 1;
 
     if (searchText === null || searchText === "")
         location.href = "/";
@@ -28,18 +33,17 @@ window.onload = function()
 
     if (searchType === 'forum')
     {
-        xhr.open("GET", "/search/forum/" + searchText);
+        xhr.open("GET", "/search_forum?searchText=" + searchText + "&pageIndex=" + pageIndex);
         xhr.send();
     }
     else if (searchType === 'blog')
     {
-        xhr.open("GET", "/search_blog/" + searchText);
+        xhr.open("GET", "/search_blog?searchText=" + searchText + "&pageIndex=" + pageIndex);
         xhr.send();
     }
     else if (searchType === 'blogOfForum')
     {
-        const forumId = params.get('forumId');
-        xhr.open("GET", "/search_blog_of_forum?searchText=" + searchText + "&" + "forumId=" + forumId);
+        xhr.open("GET", "/search_blog_of_forum?searchText=" + searchText + "&" + "forumId=" + forumId + "&pageIndex=" + pageIndex);
         xhr.send();
     }
     else
@@ -53,9 +57,13 @@ window.onload = function()
     {
         if (xhr.status === 200)
         {
-            const results = JSON.parse(xhr.responseText);
+            const response = JSON.parse(xhr.responseText);
+            const results = response.data.data;
+            const pageSize = response.data.pageSize;
+
             document.getElementById("search_result_num").innerHTML = results.length;
-            showSearchResult(searchType, results);
+            addTurnPageElement(response.data.pageCount, pageIndex, searchText, searchType, forumId);
+            showSearchResult(searchType, results, pageIndex, pageSize);
         }
         else
         {
@@ -66,10 +74,10 @@ window.onload = function()
     searchEventBind();
 }
 
-function showSearchResult(searchType, results)
+function showSearchResult(searchType, results, pageIndex, pageSize)
 {
     const mainContentBox = document.getElementById("main_content_box");
-    for (let i = 0; i < results.length; i++)
+    for (let i = pageSize * (pageIndex - 1); i < Math.min(results.length, pageSize * pageIndex); i++)
     {
         const result = results[i];
 
@@ -99,10 +107,10 @@ function getBlogHTML(blog)
             <p>${blog.content}</p>
         </div>
         <div class="blog_username_div">
-            <p>${blog.username}</p>
+            <p>作者：${blog.username}</p>
         </div>
         <div class="blog_forumname_div">
-        <p>${blog.forumName}</p>
+        <p>论坛名：${blog.forumName}</p>
         </div>
     </div>
     <hr>
@@ -139,6 +147,32 @@ function searchEventBind()
         const searchText = document.getElementById("search_input").value;
         location.href = "/search_result.html?searchText=" + searchText + "&searchType=blog";
     });
+}
+
+function addTurnPageElement(pageCount, pageIndex, searchText, searchType, forumId)
+{
+    const turnPageDiv = document.getElementById("turn_page_div");
+    turnPageDiv.innerHTML=`<p>共${pageCount}页</p>`;
+    if (pageCount <= 1)
+    {
+        return;
+    }
+    console.log("pageIndex:", pageIndex)
+    for(let i = 1; i <= pageCount; i++)
+    {
+        const turnPageButton = document.createElement("button");
+        turnPageButton.innerHTML = i+'';
+        turnPageButton.onclick = function ()
+        {
+            window.location.href = "search_result.html?searchText=" + searchText + "&forumId=" + forumId + "&searchType=" + searchType + "&pageIndex=" + i;
+        }
+        if (i == pageIndex)
+        {
+            turnPageButton.classList.add("active");
+        }
+
+        turnPageDiv.appendChild(turnPageButton);
+    }
 }
 
 function getCookie(name)

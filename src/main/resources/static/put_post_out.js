@@ -62,9 +62,11 @@ window.onload = function()
         {
             if(xhr.status === 200)
             {
-                if (xhr.responseText === "false")
+                const response = JSON.parse(xhr.responseText);
+                if(response.success === false)
                 {
-
+                    alert(response.message);
+                    return;
                 }
                 alert("发帖成功");
                 window.location.href = "/forum.html?forumId=" + forumId;

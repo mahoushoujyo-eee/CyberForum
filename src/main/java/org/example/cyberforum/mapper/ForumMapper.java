@@ -15,4 +15,6 @@ public interface ForumMapper
     Forum getForumById(Long id);
 
     boolean ifContainsForum(Long id);
+
+    boolean ifContainsForumByName(String forumName);
 }

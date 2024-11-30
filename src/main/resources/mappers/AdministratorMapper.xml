@@ -15,14 +15,14 @@
     </resultMap>
 
     <insert id="addAdministrator">
-        insert into administrator(forum_id,administrator_id)
-        values(#{forumId},#{userId})
+        INSERT INTO administrator(forum_id,administrator_id)
+        VALUES (#{forumId},#{userId})
     </insert>
 
     <delete id="deleteAdministrator">
-        delete from administrator
-        where administrator_id = #{userId}
-        and forum_id = #{forumId}
+        DELETE FROM administrator
+        WHERE administrator_id = #{userId}
+        AND forum_id = #{forumId}
     </delete>
 
     <select id="getAdministratorByForumId" resultMap="UserMap">

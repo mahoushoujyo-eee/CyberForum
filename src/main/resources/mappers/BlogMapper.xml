@@ -7,7 +7,7 @@
         <result column="content" property="content"/>
         <result column="user_id" property="userId"/>
         <result column="forum_id" property="forumId"/>
-        <result column="create_time" property="createTime"/>
+        <result column="create_time" property="creationTime"/>
         <result column="is_top" property="isTop"/>
     </resultMap>
 
@@ -17,7 +17,7 @@
         <result column="content" property="content"/>
         <result column="id" property="id"/>
         <result column="user_id" property="userId"/>
-        <result column="username" property="username"/>
+        <result column="user_name" property="username"/>
         <result column="forum_id" property="forumId"/>
         <result column="forum_name" property="forumName"/>
         <result column="create_time" property="createTime"/>
@@ -25,38 +25,38 @@
     </resultMap>
 
     <insert id="addBlog">
-        insert into blog(title,content,user_id,forum_id,create_time)
-        values(#{title},#{content},#{userId},#{forumId},#{createTime})
+        INSERT INTO blog(title,content,user_id,forum_id,create_time)
+        VALUES(#{title},#{content},#{userId},#{forumId},#{creationTime})
     </insert>
 
     <delete id="deleteBlogById">
-        delete from blog
-        where id = #{id}
+        DELETE FROM blog
+        WHERE id = #{id}
     </delete>
 
     <update id="cancelTop">
-        update blog
-        set is_top = 0
-        where id = #{id}
+        UPDATE blog
+        SET is_top = 0
+        WHERE id = #{id}
     </update>
 
     <update id="putTop">
-        update blog
-        set is_top = 1
-        where id = #{id}
+        UPDATE blog
+        SET is_top = 1
+        WHERE id = #{id}
     </update>
 
     <select id="getBlogById" resultMap="BlogMap">
-        select id,title,content,user_id,forum_id,create_time, is_top
-        from blog
-        where id = #{id}
+        SELECT id,title,content,user_id,forum_id,create_time, is_top
+        FROM blog
+        WHERE id = #{id}
     </select>
 
     <select id="getBlogsByForumId" resultMap="BlogMap">
-        select id,title,content,user_id,forum_id,create_time, is_top
-        from blog
-        where forum_id = #{id}
-        order by create_time
+        SELECT id,title,content,user_id,forum_id,create_time, is_top
+        FROM blog
+        WHERE forum_id = #{id}
+        ORDER BY create_time
     </select>
 
     <select id="getBlogList" resultMap="BlogMap">
@@ -84,7 +84,9 @@
         ON b.forum_id = f.id
         LEFT JOIN user u
         ON b.user_id = u.id
+        WHERE b.id = #{id}
     </select>
+
     <select id="getLatestBlogInfoList" resultMap="BlogInfoMap">
         SELECT b.id, b.title, b.content, b.user_id, u.user_name, b.forum_id, f.name forum_name, b.create_time, b.is_top
         FROM blog b

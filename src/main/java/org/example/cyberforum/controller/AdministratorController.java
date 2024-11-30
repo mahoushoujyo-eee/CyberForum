@@ -2,7 +2,7 @@ package org.example.cyberforum.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.cyberforum.dto.AdministratorInfo;
-import org.example.cyberforum.entities.Administrator;
+import org.example.cyberforum.dto.IfAdministratorRequest;
 import org.example.cyberforum.entities.User;
 import org.example.cyberforum.service.AdministratorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,26 +35,21 @@ public class  AdministratorController
 
     // endregion functions for ...
 
-    @DeleteMapping("/delete_administrator/{forum_id}")
-    public ServiceResponse<Boolean> deleteAdministrator(@RequestBody AdministratorInfo administrator, @CookieValue("user_id") Long adminId)
+    @DeleteMapping("/delete_administrator")
+    public ServiceResponse<Boolean> deleteAdministrator(@RequestBody AdministratorInfo administrator, @CookieValue("userId") Long adminId)
     {
         return administratorService.deleteAdministrator(administrator.getForumId(), administrator.getUserId(), adminId);
     }
 
-    @RequestMapping("/is_administrator/{blog_id}")
-    public ServiceResponse<Boolean> ifAdministratorFromBlog(@PathVariable("blog_id") Long blogId, @RequestBody User user)
+    @PostMapping("/is_administrator")
+    public ServiceResponse<Boolean> ifAdministratorFromBlog(@RequestBody IfAdministratorRequest ifAdministratorRequest)
     {
-        ServiceResponse<Boolean> result = administratorService.ifAdministratorFromBlog(blogId, user.getId());
-        log.info("result = {}", result);
-        return result;
+        return administratorService.ifAdministratorFromBlog(ifAdministratorRequest.getBlogId(), ifAdministratorRequest.getId());
     }
 
-    @PostMapping("/is_administrator_by_forum_id/{forum_id}")
+    @PostMapping("/is_administrator_by_forum_id")
     public ServiceResponse<Boolean> ifAdministratorFromForum(@RequestBody AdministratorInfo administrator)
     {
-        log.info("administrator = {}", administrator);
-        ServiceResponse<Boolean> result = administratorService.ifAdministratorFromForum(administrator.getUserId(), administrator.getForumId());
-        log.info("result = {}", result);
-        return result;
+        return administratorService.ifAdministratorFromForum(administrator.getUserId(), administrator.getForumId());
     }
 }
