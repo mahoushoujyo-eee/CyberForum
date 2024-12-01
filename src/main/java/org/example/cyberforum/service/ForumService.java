@@ -22,7 +22,6 @@ import java.util.List;
 public class ForumService
 {
     private static final int PAGE_SIZE = 10;
-    // 论坛的创建
     @Autowired
     private ForumMapper forumMapper;
     @Lazy
@@ -32,7 +31,6 @@ public class ForumService
     @Autowired
     private AdministratorService administratorService;
 
-    // 分页
     public ServiceResponse<List<Forum>> getForumList()
     {
         return ServiceResponse.buildSuccessResponse(forumMapper.getForumList());
@@ -64,15 +62,6 @@ public class ForumService
             return ServiceResponse.buildErrorResponse(-100, "该论坛名已存在");
         forumMapper.addForum(forum);
         return ServiceResponse.buildSuccessResponse(true);
-    }
-
-    // 分页
-    public ServiceResponse<List<BlogInfo>> getBlogList(Long forumId)
-    {
-        if (!ifContainsForum(forumId))
-            return ServiceResponse.buildErrorResponse(-100, "forum not found");
-
-        return blogService.getBlogsByForumIdWithTop(forumId);
     }
 
     public ServiceResponse<PaginatedData<BlogInfo>> getBlogList(Long forumId, int pageIndex)

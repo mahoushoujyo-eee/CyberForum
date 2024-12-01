@@ -21,7 +21,6 @@ public class UserController
     @PostMapping("/register")
     public ServiceResponse<Boolean> register(@RequestBody User user)
     {
-        log.info("register user:" + JSON.toJSONString(user));
         return userService.addUser(user);
     }
 
@@ -31,10 +30,8 @@ public class UserController
         ServiceResponse<Boolean> result = userService.login(user);
         if (result.isSuccess() && result.getData())
         {
-            log.info("login success: {}{}", user.getUserName(), userService.getUserIdByUserName(user.getUserName()));
             response.addCookie(new Cookie("username", user.getUserName()));
             response.addCookie(new Cookie("userId", userService.getUserIdByUserName(user.getUserName()).getData().toString()));
-            log.info("add cookie user id: {}", userService.getUserIdByUserName(user.getUserName()).getData());
         }
         return result;
     }
@@ -42,7 +39,6 @@ public class UserController
     @PostMapping("/find_password")
     public ServiceResponse<Boolean> findPassword(@RequestBody ResetPasswordRequest user)
     {
-        log.info("find password user:" + JSON.toJSONString(user));
         return userService.resetPassword(user);
     }
 }

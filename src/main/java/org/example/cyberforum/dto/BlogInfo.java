@@ -14,6 +14,6 @@ public class BlogInfo
     private String username;
     private Long forumId;
     private String forumName;
-    private Date createTime;
+    private Date creationTime;
     private boolean isTop;
 }

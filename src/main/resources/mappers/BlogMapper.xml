@@ -20,7 +20,7 @@
         <result column="user_name" property="username"/>
         <result column="forum_id" property="forumId"/>
         <result column="forum_name" property="forumName"/>
-        <result column="create_time" property="createTime"/>
+        <result column="create_time" property="creationTime"/>
         <result column="is_top" property="isTop"/>
     </resultMap>
 

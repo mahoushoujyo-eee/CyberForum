@@ -34,10 +34,7 @@ public class AdministratorService
         response.setSuccess(true);
 
         if (forumId == null || !forumService.ifContainsForum(forumId))
-        {
-            log.info("forum id{} is null or not exists", forumId);
             response.setSuccess(false);
-        }
 
         response.setData(administratorMapper.getAdministratorByForumId(forumId));
         return response;

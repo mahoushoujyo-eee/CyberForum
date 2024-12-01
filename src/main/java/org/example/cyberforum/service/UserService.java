@@ -23,7 +23,6 @@ public class UserService
     private UserMapper userMapper;
     private static final Pattern PATTERN = Pattern.compile("^[a-zA-Z0-9]+$");
 
-
     @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> addUser(User user)
     {
@@ -78,13 +77,6 @@ public class UserService
         return ServiceResponse.buildSuccessResponse(userMapper.getUserIdByUserName(userName));
     }
 
-    public ServiceResponse<User> getUserById(Long userId)
-    {
-        if (!ifContainsUser(userId))
-            return ServiceResponse.buildErrorResponse(-100, "user not exists");
-        return ServiceResponse.buildSuccessResponse(userMapper.getUserById(userId));
-    }
-
     public boolean ifContainsUser(Long userId)
     {
         return userMapper.getUserById(userId) != null;
@@ -92,7 +84,6 @@ public class UserService
 
     public boolean ifContainsUserName(String userName)
     {
-        // SELECT COUNT(*) FROM user WHERE username = #{userName}
         return userMapper.ifContainsUserByUserName(userName);
     }
 

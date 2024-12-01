@@ -40,7 +40,7 @@ public class BlogController
     }
 
     @GetMapping("/blog/{id}")
-    public ServiceResponse<BlogInfo> getBlogById(@PathVariable Long id)
+    public ServiceResponse<BlogInfo> getBlogById(@PathVariable("id") Long id)
     {
         return blogService.getBlogById(id);
     }
@@ -74,12 +74,6 @@ public class BlogController
     {
         return blogService.searchBlog(searchText, pageIndex);
     }
-
-//    @GetMapping("/search_blog_of_forum")
-//    public ServiceResponse<List<BlogInfo>> searchBlogOfForum(@RequestParam("searchText") String searchText, @RequestParam("forumId") Long forumId)
-//    {
-//        return blogService.searchBlogOfForum(searchText, forumId);
-//    }
 
     @GetMapping("/search_blog_of_forum")
     public ServiceResponse<PaginatedData<BlogInfo>> searchBlogOfForum(@RequestParam("searchText") String searchText, @RequestParam("forumId") Long forumId, @RequestParam("pageIndex") int pageIndex)

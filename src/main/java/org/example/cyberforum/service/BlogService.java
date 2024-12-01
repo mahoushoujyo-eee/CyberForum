@@ -19,7 +19,6 @@ import java.util.List;
 @LogArgumentsAndResponse
 public class BlogService
 {
-
     @Autowired
     private BlogMapper blogMapper;
     @Autowired
@@ -33,7 +32,6 @@ public class BlogService
     @Transactional(rollbackFor = Exception.class)
     public void putOutNewBlog(Blog blog)
     {
-        // creation time.
         blog.setCreationTime(new Date());
         blogMapper.addBlog(blog);
     }
@@ -47,7 +45,6 @@ public class BlogService
     {
         if (!ifContainsBlogOfId(id))
             return ServiceResponse.buildErrorResponse(-100,"blog not found");
-        // SELECT FROM blog LEFT JOIN user ON ... LEFT JOIN forum ON ...
 
         return ServiceResponse.buildSuccessResponse(blogMapper.getBlogInfoById(id));
     }
@@ -150,17 +147,6 @@ public class BlogService
         return ServiceResponse.buildSuccessResponse(paginatedData);
     }
 
-    // 分页
-    public ServiceResponse<List<BlogInfo>> searchBlogOfForum(String searchText, Long forumId)
-    {
-        if (!forumService.ifContainsForum(forumId))
-            return ServiceResponse.buildErrorResponse(-100, "forum not found");
-
-        List<BlogInfo> blogs = blogMapper.getBlogInfoByForumId(forumId).stream().filter(blog -> blog.getTitle().contains(searchText)).toList();
-
-        return ServiceResponse.buildSuccessResponse(blogs);
-    }
-
     public ServiceResponse<PaginatedData<BlogInfo>> searchBlogOfForum(String searchText, Long forumId, int pageIndex)
     {
         if (!forumService.ifContainsForum(forumId))
@@ -182,22 +168,6 @@ public class BlogService
             return ServiceResponse.buildErrorResponse(-100, "page index out of range");
 
         return ServiceResponse.buildSuccessResponse(paginatedData);
-    }
-
-
-    public boolean ifContainsBlog(Blog blog)
-    {
-        return blogMapper.ifContainsBlog(blog);
-    }
-
-    public boolean ifContainsBlog(BlogInfo blogInfo)
-    {
-        Blog blog = new Blog();
-        blog.setTitle(blogInfo.getTitle());
-        blog.setContent(blogInfo.getContent());
-        blog.setUserId(blogInfo.getUserId());
-        blog.setForumId(blogInfo.getForumId());
-        return blogMapper.ifContainsBlog(blog);
     }
 
     public boolean ifContainsBlogOfId(Long blogId)

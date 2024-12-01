@@ -12,6 +12,6 @@ public class CommentInfo
     private Long userId;
     private String username;
     private Long blogId;
-    private Date createTime;
+    private Date creationTime;
     private boolean isTop;
 }

@@ -135,7 +135,7 @@ function getLatestBlogs()
                         <p>论坛：${data[i].forumName}</p>
                     </div>
                     <div>
-                        <p>发帖时间：${getTimeString(data[i].createTime)}</p>
+                        <p>发帖时间：${getTimeString(data[i].creationTime)}</p>
                     </div>
                     <hr>
                     `;

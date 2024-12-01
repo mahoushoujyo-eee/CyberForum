@@ -17,8 +17,10 @@ public class CommentController
     private CommentService commentService;
 
     @PostMapping("add_comment")
-    public ServiceResponse<Boolean> addComment(@RequestBody Comment comment)
+    public ServiceResponse<Boolean> addComment(@RequestBody Comment comment, @CookieValue("userId") Long userId)
     {
+        if (userId == null)
+            return ServiceResponse.buildErrorResponse(-100, "user not login");
         return commentService.addComment(comment);
     }
 
@@ -35,20 +37,29 @@ public class CommentController
     }
 
     @DeleteMapping("delete_comment/{comment_id}")
-    public ServiceResponse<Boolean> deleteCommentById(@PathVariable("comment_id") Long commentId)
+    public ServiceResponse<Boolean> deleteCommentById(@PathVariable("comment_id") Long commentId, @CookieValue("userId") Long userId)
     {
+        if (userId == null)
+            return ServiceResponse.buildErrorResponse(-100, "user not login");
+
         return commentService.deleteCommentById(commentId);
     }
 
     @PutMapping("put_comment_top/{comment_id}")
-    public ServiceResponse<Boolean> putTop(@PathVariable("comment_id") Long commentId)
+    public ServiceResponse<Boolean> putTop(@PathVariable("comment_id") Long commentId, @CookieValue("userId") Long userId)
     {
+        if (userId == null)
+            return ServiceResponse.buildErrorResponse(-100, "user not login");
+
         return commentService.putTop(commentId);
     }
 
     @PutMapping("cancel_comment_top/{comment_id}")
-    public ServiceResponse<Boolean> cancelTop(@PathVariable("comment_id") Long commentId)
+    public ServiceResponse<Boolean> cancelTop(@PathVariable("comment_id") Long commentId, @CookieValue("userId") Long userId)
     {
+        if (userId == null)
+            return ServiceResponse.buildErrorResponse(-100, "user not login");
+
         return commentService.cancelTop(commentId);
     }
 }

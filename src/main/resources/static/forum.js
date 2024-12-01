@@ -155,7 +155,7 @@ function logBlogOfForum(pageIndex)
                             <p>作者：${data[i].username}</p>             
                         </div>
                         <div>
-                            <p>发布日期：${getTimeString(data[i].createTime)}</p>
+                            <p>发布日期：${getTimeString(data[i].creationTime)}</p>
                         </div>
                         <hr>
                     `;

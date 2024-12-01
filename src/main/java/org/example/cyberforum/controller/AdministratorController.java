@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 public class  AdministratorController
 {
-
     @Autowired
     private AdministratorService administratorService;
 

@@ -30,8 +30,6 @@ public class CommentService
 
     private static final int PAGE_SIZE = 10;
 
-
-
     @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> addComment(Comment comment)
     {
@@ -42,7 +40,7 @@ public class CommentService
         else if (!blogService.ifContainsBlogOfId(comment.getBlogId()))
             return ServiceResponse.buildErrorResponse(-100, "blog not found");
 
-        comment.setCreateTime(new Date());
+        comment.setCreationTime(new Date());
         log.info("CommentService addComment: add comment: {}", comment);
         commentMapper.addComment(comment);
         return ServiceResponse.buildSuccessResponse(true);
@@ -56,7 +54,6 @@ public class CommentService
         return ServiceResponse.buildSuccessResponse(comments);
     }
 
-    // 分页
     public ServiceResponse<List<CommentInfo>> getCommentsByBlogIdWithTop(Long blogId)
     {
         if (!blogService.ifContainsBlogOfId(blogId))

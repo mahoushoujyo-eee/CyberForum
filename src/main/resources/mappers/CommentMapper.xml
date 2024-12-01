@@ -6,7 +6,7 @@
         <result column="content" property="content"/>
         <result column="user_id" property="userId"/>
         <result column="blog_id" property="blogId"/>
-        <result column="create_time" property="createTime"/>
+        <result column="create_time" property="creationTime"/>
         <result column="is_top" property="isTop"/>
     </resultMap>
 
@@ -16,13 +16,13 @@
         <result column="user_id" property="userId"/>
         <result column="user_name" property="username"/>
         <result column="blog_id" property="blogId"/>
-        <result column="create_time" property="createTime"/>
+        <result column="create_time" property="creationTime"/>
         <result column="is_top" property="isTop"/>
     </resultMap>
 
     <insert id="addComment">
         INSERT INTO comment(content,user_id,blog_id,create_time)
-        VALUES(#{content},#{userId},#{blogId},#{createTime})
+        VALUES(#{content},#{userId},#{blogId},#{creationTime})
     </insert>
     <update id="putTop">
         UPDATE comment

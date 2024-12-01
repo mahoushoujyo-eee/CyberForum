@@ -57,7 +57,7 @@ class CyberForumApplicationTests {
         blog.setForumId(1L);
         blog.setTitle("test");
         blog.setContent("test");
-        blog.setCreateTime(new Date());
+        blog.setCreationTime(new Date());
         System.out.println(blog);
         blogMapper.addBlog(blog);
     }
