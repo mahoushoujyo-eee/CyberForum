@@ -31,7 +31,7 @@ window.onload = function ()
             if (xhr.status === 200)
             {
                 const response = JSON.parse(xhr.responseText);
-                if (response.success === "true")
+                if (response.success === true)
                 {
                     alert("修改密码成功");
                     window.location.href = "/logIn.html";

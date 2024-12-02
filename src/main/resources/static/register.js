@@ -77,12 +77,12 @@ window.onload = function()
                 }
                 else
                 {
-                    if (response.message === 'username_exist')
+                    if (response.message === 'username exists')
                         alert('用户名已存在');
                     else if (response.message === 'invalid email')
                         alert('邮箱格式不正确');
                     else
-                        alert('注册出现故障');
+                        alert(response.message);
                 }
             }
             else

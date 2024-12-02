@@ -26,14 +26,14 @@ window.onload = function()
             if(xhr.status === 200)
             {
                 let response = JSON.parse(xhr.responseText);
-                if (response.success === 'false')
+                if (response.success === false)
                 {
                     alert('用户名与密码不匹配');
                     return;
                 }
                 else
                 {
-                    if (response.data === 'false')
+                    if (response.data === false)
                     {
                         alert('用户名和密码不匹配');
                         return;
