@@ -26,12 +26,13 @@ public class BlogService
     @Autowired
     private AdministratorService administratorService;
 
+    // PageSize不能在后端写死，必须是前端传过来的
     private static final int PAGE_SIZE = 10;
-
 
     @Transactional(rollbackFor = Exception.class)
     public void putOutNewBlog(Blog blog)
     {
+        // DEFAULT NOW()
         blog.setCreationTime(new Date());
         blogMapper.addBlog(blog);
     }
@@ -91,7 +92,7 @@ public class BlogService
         paginatedData.setData(blogs);
         paginatedData.setCurrent(pageIndex);
         paginatedData.setPageSize(PAGE_SIZE);
-        paginatedData.setPageCount((int) Math.ceil(blogs.size() / (float)PAGE_SIZE));
+        paginatedData.setPageCount((int) Math.ceil(blogs.size() / (double)PAGE_SIZE));
         paginatedData.setTotal(blogs.size());
 
         if (pageIndex > paginatedData.getPageCount())
@@ -170,6 +171,7 @@ public class BlogService
         return ServiceResponse.buildSuccessResponse(paginatedData);
     }
 
+    // 如果只是判断是否存在，应该用count
     public boolean ifContainsBlogOfId(Long blogId)
     {
         return blogMapper.getBlogById(blogId) != null;

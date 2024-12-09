@@ -28,7 +28,7 @@ public class CommentService
     @Autowired
     private BlogService blogService;
 
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 10; //
 
     @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> addComment(Comment comment)
@@ -40,8 +40,8 @@ public class CommentService
         else if (!blogService.ifContainsBlogOfId(comment.getBlogId()))
             return ServiceResponse.buildErrorResponse(-100, "blog not found");
 
-        comment.setCreationTime(new Date());
-        log.info("CommentService addComment: add comment: {}", comment);
+        comment.setCreationTime(new Date()); //
+        log.info("CommentService addComment: add comment: {}", comment); // JSON.
         commentMapper.addComment(comment);
         return ServiceResponse.buildSuccessResponse(true);
     }
@@ -60,7 +60,7 @@ public class CommentService
             return ServiceResponse.buildErrorResponse(-100, "blog not found");
 
         List<CommentInfo> comments = commentMapper.getCommentInfoListByBlogId(blogId);
-        comments.sort((comment1, comment2) -> comment2.isTop() ? 1 : -1);
+        comments.sort((comment1, comment2) -> comment2.isTop() ? 1 : -1); //
         return ServiceResponse.buildSuccessResponse(comments);
     }
 

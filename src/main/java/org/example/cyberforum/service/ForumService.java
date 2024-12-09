@@ -31,6 +31,7 @@ public class ForumService
     @Autowired
     private AdministratorService administratorService;
 
+    // 分页
     public ServiceResponse<List<Forum>> getForumList()
     {
         return ServiceResponse.buildSuccessResponse(forumMapper.getForumList());
@@ -74,6 +75,7 @@ public class ForumService
 
     public ServiceResponse<PaginatedData<Forum>> searchForum(String searchText, int pageIndex)
     {
+        // 分页的set方法，如果要用到，可以写个build方法，如果不需要，可以简化
         PaginatedData<Forum> paginatedData = new PaginatedData<>();
         paginatedData.setData(forumMapper.getForumList().stream().filter(forum -> forum.getName().contains(searchText)).toList());
         paginatedData.setCurrent(pageIndex);

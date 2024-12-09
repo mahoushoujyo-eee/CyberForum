@@ -33,6 +33,7 @@ public class UserService
         if (ifContainsUserName(userName))
             return ServiceResponse.buildErrorResponse(-100, "username exists");
 
+        // 如果没有问题则返回null，有问题则返回错误信息
         String result = passwordValidMessageOf(password);
         if (!result.equals("true"))
             return ServiceResponse.buildErrorResponse(-100, result);
@@ -111,6 +112,8 @@ public class UserService
         return matcher.matches();
     }
 
+    // 参考这里的常用正则表达式
+    // https://www.jyshare.com/front-end/854/
     public boolean isEmailValid(String email)
     {
         return email.contains("@");

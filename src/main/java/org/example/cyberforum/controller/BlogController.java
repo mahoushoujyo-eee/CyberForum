@@ -17,6 +17,7 @@ import java.util.List;
 @RestController
 public class BlogController
 {
+    // 一般Controller里只放1个Service
     @Autowired
     private BlogService blogService;
     @Lazy
