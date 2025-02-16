@@ -4,9 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.cyberforum.dto.BlogInfo;
 import org.example.cyberforum.entities.Blog;
 import org.example.cyberforum.service.BlogService;
-import org.example.cyberforum.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 import stark.dataworks.boot.web.PaginatedData;
 import stark.dataworks.boot.web.ServiceResponse;
@@ -20,14 +18,11 @@ public class BlogController
     // 一般Controller里只放1个Service
     @Autowired
     private BlogService blogService;
-    @Lazy
-    @Autowired
-    private UserService userService;
 
     @PostMapping("/put_blog")
     public ServiceResponse<Boolean> putOutNewBlog(@RequestBody Blog blog, @CookieValue("userId") Long userId)
     {
-        if (!userService.ifContainsUser(userId))
+        if (!blogService.containsUser(userId))
             return ServiceResponse.buildErrorResponse(-100, "用户不存在");
 
         blogService.putOutNewBlog(blog);

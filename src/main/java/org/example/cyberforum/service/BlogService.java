@@ -11,7 +11,6 @@ import stark.dataworks.boot.autoconfig.web.LogArgumentsAndResponse;
 import stark.dataworks.boot.web.PaginatedData;
 import stark.dataworks.boot.web.ServiceResponse;
 
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -25,6 +24,8 @@ public class BlogService
     private ForumService forumService;
     @Autowired
     private AdministratorService administratorService;
+    @Autowired
+    private UserService userService;
 
     // PageSize不能在后端写死，必须是前端传过来的
     private static final int PAGE_SIZE = 10;
@@ -33,7 +34,6 @@ public class BlogService
     public void putOutNewBlog(Blog blog)
     {
         // DEFAULT NOW()
-        blog.setCreationTime(new Date());
         blogMapper.addBlog(blog);
     }
 
@@ -44,7 +44,7 @@ public class BlogService
 
     public ServiceResponse<BlogInfo> getBlogById(Long id)
     {
-        if (!ifContainsBlogOfId(id))
+        if (!containsBlogOfId(id))
             return ServiceResponse.buildErrorResponse(-100,"blog not found");
 
         return ServiceResponse.buildSuccessResponse(blogMapper.getBlogInfoById(id));
@@ -54,7 +54,7 @@ public class BlogService
     @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> deleteBlogById(Long id)
     {
-        if (!ifContainsBlogOfId(id))
+        if (!containsBlogOfId(id))
             return ServiceResponse.buildErrorResponse(-100,"blog not found");
 
         blogMapper.deleteBlogById(id);
@@ -68,32 +68,31 @@ public class BlogService
 
     public ServiceResponse<List<BlogInfo>> getBlogsByForumIdWithTop(Long forumId)
     {
-        if (!forumService.ifContainsForum(forumId))
+        if (!forumService.containsForum(forumId))
             return ServiceResponse.buildErrorResponse(-100, "forum don't exist");
 
-        List<BlogInfo> blogs = blogMapper.getBlogInfoByForumId(forumId);
+        List<BlogInfo> blogs = blogMapper.getBlogInfoByForumIdWithTop(forumId);
 
-        blogs.sort((blog1, blog2) -> blog2.isTop() ? 1 : -1);
         return ServiceResponse.buildSuccessResponse(blogs);
     }
 
-    public ServiceResponse<PaginatedData<BlogInfo>> getBlogsByForumIdWithTop(Long forumId, int pageIndex)
+    public ServiceResponse<PaginatedData<BlogInfo>> getBlogsByForumIdWithTop(Long forumId, int pageIndex, int pageSize)
     {
-        if (!forumService.ifContainsForum(forumId))
+        if (!forumService.containsForum(forumId))
             return ServiceResponse.buildErrorResponse(-100, "forum don't exist");
 
         if (pageIndex < 1)
             return ServiceResponse.buildErrorResponse(-100, "page index must be positive");
 
         PaginatedData<BlogInfo> paginatedData = new PaginatedData<>();
-        List<BlogInfo> blogs = blogMapper.getBlogInfoByForumId(forumId);
-        blogs.sort((blog1, blog2) -> blog2.isTop() ? 1 : -1);
+        List<BlogInfo> blogs = blogMapper.getPaginatedBlogInfoByForumIdWithTop(forumId, (pageIndex-1)*pageSize, pageSize);
+        Long blogsCount = blogMapper.getBlogsCount(forumId);
 
         paginatedData.setData(blogs);
         paginatedData.setCurrent(pageIndex);
-        paginatedData.setPageSize(PAGE_SIZE);
-        paginatedData.setPageCount((int) Math.ceil(blogs.size() / (double)PAGE_SIZE));
-        paginatedData.setTotal(blogs.size());
+        paginatedData.setPageSize(pageSize);
+        paginatedData.setPageCount((int) Math.ceil(blogsCount / (float)pageSize));
+        paginatedData.setTotal(blogsCount);
 
         if (pageIndex > paginatedData.getPageCount())
             return ServiceResponse.buildErrorResponse(-100, "page index out of range");
@@ -104,7 +103,8 @@ public class BlogService
     @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> cancelTop(Long blogId, Long userId)
     {
-        if (!administratorService.ifAdministratorFromBlog(blogId, userId).getData())
+        Long forumId = getForumIdByBlogId(blogId);
+        if (!administratorService.ifAdministrator(forumId, userId).getData())
             return ServiceResponse.buildErrorResponse(-100, "you are not an administrator");
         blogMapper.cancelTop(blogId);
         return ServiceResponse.buildSuccessResponse(true);
@@ -113,7 +113,7 @@ public class BlogService
     @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> putTop(Long blogId)
     {
-        if (!ifContainsBlogOfId(blogId))
+        if (!containsBlogOfId(blogId))
             return ServiceResponse.buildErrorResponse(-100, "blog not found");
 
         blogMapper.putTop(blogId);
@@ -150,7 +150,7 @@ public class BlogService
 
     public ServiceResponse<PaginatedData<BlogInfo>> searchBlogOfForum(String searchText, Long forumId, int pageIndex)
     {
-        if (!forumService.ifContainsForum(forumId))
+        if (!forumService.containsForum(forumId))
             return ServiceResponse.buildErrorResponse(-100, "forum not found");
 
         if (pageIndex < 1)
@@ -171,9 +171,14 @@ public class BlogService
         return ServiceResponse.buildSuccessResponse(paginatedData);
     }
 
-    // 如果只是判断是否存在，应该用count
-    public boolean ifContainsBlogOfId(Long blogId)
+    public boolean containsUser(Long userId)
     {
-        return blogMapper.getBlogById(blogId) != null;
+        return userService.containsUser(userId);
+    }
+
+    // 如果只是判断是否存在，应该用count
+    public boolean containsBlogOfId(Long blogId)
+    {
+        return blogMapper.containsBlogOfId(blogId);
     }
 }

@@ -21,6 +21,7 @@ public class CommentController
     {
         if (userId == null)
             return ServiceResponse.buildErrorResponse(-100, "user not login");
+        comment.setUserId(userId);
         return commentService.addComment(comment);
     }
 
@@ -30,10 +31,10 @@ public class CommentController
         return commentService.getCommentsByBlogIdWithTop(blogId);
     }
 
-    @GetMapping("comment/{id}/{page_index}")
-    public ServiceResponse<PaginatedData<CommentInfo>> getComments(@PathVariable("id") Long blogId, @PathVariable("page_index") int pageIndex)
+    @GetMapping("comment/{id}/{page_size}/{page_index}")
+    public ServiceResponse<PaginatedData<CommentInfo>> getComments(@PathVariable("id") Long blogId, @PathVariable("page_index") int pageIndex, @PathVariable("page_size") int pageSize)
     {
-        return commentService.getCommentsByBlogIdWithTop(blogId, pageIndex);
+        return commentService.getCommentsByBlogIdWithTop(blogId, pageIndex, pageSize);
     }
 
     @DeleteMapping("delete_comment/{comment_id}")

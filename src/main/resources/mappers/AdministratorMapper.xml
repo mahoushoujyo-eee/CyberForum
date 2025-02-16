@@ -36,7 +36,7 @@
         FROM administrator
     </select>
 
-    <select id="ifContainsAdministrator" resultType="java.lang.Boolean">
+    <select id="containsAdministrator" resultType="java.lang.Boolean">
         SELECT COUNT(1) > 0
         FROM administrator
         WHERE forum_id = #{forumId}

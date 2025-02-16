@@ -7,7 +7,7 @@ window.onload = function ()
         addLogOutElements()
     createForumEventBind();
     getLatestBlogs();
-    initializeForum();
+    initializeForum(1);
     searchEventBind();
 }
 
@@ -59,10 +59,10 @@ function addLogOutElements()
         `;
 }
 
-function initializeForum()
+function initializeForum(pageIndex)
 {
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', '/initialize_forum');
+    xhr.open('GET', '/initialize_forum/' + pageIndex);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send();
     xhr.onload = function ()
@@ -77,7 +77,7 @@ function initializeForum()
                 return;
             }
             console.log(response);
-            let data = response.data;
+            let data = response.data.data;
             console.log(data);
             for (let i = 0; i < data.length; i++)
             {
@@ -228,6 +228,32 @@ function createForumEventBind()
             }
         }
     })
+}
+
+function addTurnPageElement(pageCount, forumId, blogId, pageIndex)
+{
+    const turnPageDiv = document.getElementById("turn_page_div");
+    if (pageCount <= 1)
+    {
+        return;
+    }
+    turnPageDiv.innerHTML=`<p>共${pageCount}页</p>`;
+    console.log("pageIndex:", pageIndex)
+    for(let i = 1; i <= pageCount; i++)
+    {
+        const turnPageButton = document.createElement("button");
+        turnPageButton.innerHTML = i+'';
+        turnPageButton.onclick = function ()
+        {
+            initializeForum(i);
+        }
+        if (i == pageIndex)
+        {
+            turnPageButton.classList.add("active");
+        }
+
+        turnPageDiv.appendChild(turnPageButton);
+    }
 }
 
 function getTimeString(date)

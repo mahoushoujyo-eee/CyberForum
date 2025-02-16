@@ -50,7 +50,7 @@
         WHERE id = #{id}
     </select>
 
-    <select id="ifContainsUser" resultType="java.lang.Boolean">
+    <select id="containsUser" resultType="java.lang.Boolean">
         SELECT COUNT(1) > 0
         FROM user
         WHERE user_name = #{userName}
@@ -70,7 +70,7 @@
         AND email = #{email}
     </select>
 
-    <select id="ifContainsUserByUserName" resultType="java.lang.Boolean">
+    <select id="containsUserByUserName" resultType="java.lang.Boolean">
         SELECT COUNT(1) > 0
         FROM user
         WHERE user_name = #{userName}

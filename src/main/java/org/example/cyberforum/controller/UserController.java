@@ -30,7 +30,7 @@ public class UserController
         ServiceResponse<Boolean> result = userService.login(user);
         if (result.isSuccess() && result.getData())
         {
-            response.addCookie(new Cookie("username", user.getUserName()));
+                response.addCookie(new Cookie("username", user.getUserName()));
             response.addCookie(new Cookie("userId", userService.getUserIdByUserName(user.getUserName()).getData().toString()));
         }
         return result;

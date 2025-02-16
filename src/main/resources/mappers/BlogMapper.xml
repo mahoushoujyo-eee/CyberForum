@@ -71,7 +71,7 @@
         LIMIT 10
     </select>
 
-    <select id="ifContainsBlog" resultType="java.lang.Boolean">
+    <select id="containsBlog" resultType="java.lang.Boolean">
         SELECT count(1) > 0
         FROM blog
         WHERE id = #{id}
@@ -115,5 +115,40 @@
         ON b.forum_id = f.id
         LEFT JOIN user u
         ON b.user_id = u.id
+    </select>
+
+    <select id="containsBlogOfId" resultType="java.lang.Boolean">
+        SELECT COUNT(*)
+        FROM blog
+        WHERE id = #{id}
+    </select>
+
+    <select id="getBlogInfoByForumIdWithTop" resultMap="BlogInfoMap">
+        SELECT b.id, b.title, b.content, b.user_id, u.user_name, b.forum_id, f.name forum_name, b.create_time, b.is_top
+        FROM blog b
+        LEFT JOIN forum f
+        ON b.forum_id = f.id
+        LEFT JOIN user u
+        ON b.user_id = u.id
+        WHERE b.forum_id = #{id}
+        ORDER BY b.is_top DESC
+    </select>
+
+    <select id="getPaginatedBlogInfoByForumIdWithTop" resultMap="BlogInfoMap">
+        SELECT b.id, b.title, b.content, b.user_id, u.user_name, b.forum_id, f.name forum_name, b.create_time, b.is_top
+        FROM blog b
+        LEFT JOIN forum f
+        ON b.forum_id = f.id
+        LEFT JOIN user u
+        ON b.user_id = u.id
+        WHERE b.forum_id = #{id}
+        ORDER BY b.is_top DESC
+        LIMIT #{startIndex}, #{pageSize}
+    </select>
+
+    <select id="getBlogsCount" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM blog
+        WHERE forum_id = #{id}
     </select>
 </mapper>

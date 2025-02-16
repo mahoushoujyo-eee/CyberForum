@@ -119,7 +119,8 @@ function logBlogOfForum(pageIndex)
     const forumId = params.get('forumId');
 
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/forum/" + forumId + "/blog/" + pageIndex);
+    let pageSize = 10;
+    xhr.open("GET", "/forum/" + forumId + "/blog/" + pageSize + '/' + pageIndex);
     xhr.send();
     xhr.onload = function()
     {
@@ -135,7 +136,7 @@ function logBlogOfForum(pageIndex)
             const pageCount = response.data.pageCount;
             const pageSize = response.data.pageSize;
             addTurnPageElement(pageCount, forumId, pageIndex)
-            for(let i = pageSize * (pageIndex - 1); i < Math.min(pageSize * pageIndex, data.length); i++)
+            for(let i = 0; i < Math.min(pageSize, data.length); i++)
             {
                 const blogDiv = document.createElement("div");
                 blogDiv.className = "blog_div";

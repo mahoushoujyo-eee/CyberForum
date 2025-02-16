@@ -17,10 +17,10 @@ public class ForumController
     @Autowired
     private ForumService forumService;
 
-    @GetMapping("/initialize_forum")
-    public ServiceResponse<List<Forum>> getForumList()
+    @GetMapping("/initialize_forum/{pageIndex}")
+    public ServiceResponse<PaginatedData<Forum>> getForumList(@PathVariable("pageIndex") int pageIndex)
     {
-        return forumService.getForumList();
+        return forumService.getForumList(pageIndex);
     }
 
     @GetMapping("/forum/{id}")
@@ -29,10 +29,10 @@ public class ForumController
         return forumService.getForumById(id);
     }
 
-    @GetMapping("/forum/{id}/blog/{pageIndex}")
-    public ServiceResponse<PaginatedData<BlogInfo>> getBlogList(@PathVariable("id") Long forumId, @PathVariable("pageIndex") int pageIndex)
+    @GetMapping("/forum/{id}/blog/{pageSize}/{pageIndex}")
+    public ServiceResponse<PaginatedData<BlogInfo>> getBlogList(@PathVariable("id") Long forumId, @PathVariable("pageIndex") int pageIndex, @PathVariable("pageSize") int pageSize)
     {
-        return forumService.getBlogList(forumId, pageIndex);
+        return forumService.getBlogList(forumId, pageIndex, pageSize);
     }
 
     @GetMapping("search_forum")

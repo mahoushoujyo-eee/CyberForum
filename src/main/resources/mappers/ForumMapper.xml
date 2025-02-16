@@ -26,16 +26,27 @@
         WHERE id = #{id}
     </select>
 
-    <select id="ifContainsForum" resultType="java.lang.Boolean">
+    <select id="containsForum" resultType="java.lang.Boolean">
         SELECT COUNT(1) > 0
         FROM forum
         WHERE id = #{id}
     </select>
 
-    <select id="ifContainsForumByName" resultType="java.lang.Boolean">
+    <select id="containsForumByName" resultType="java.lang.Boolean">
         SELECT COUNT(1) > 0
         FROM forum
         WHERE name = #{forumName}
+    </select>
+
+    <select id="getForumCount" resultType="java.lang.Long">
+        SELECT COUNT(1)
+        FROM forum
+    </select>
+
+    <select id="getPaginatedForumList" resultMap="ForumMap">
+        SELECT id, name, owner_id
+        FROM forum
+        LIMIT #{startIndex}, #{pageSize}
     </select>
 
 </mapper>

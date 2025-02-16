@@ -2,9 +2,7 @@ package org.example.cyberforum.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.cyberforum.dto.BlogInfo;
-import org.example.cyberforum.entities.Blog;
 import org.example.cyberforum.entities.Forum;
-import org.example.cyberforum.mapper.BlogMapper;
 import org.example.cyberforum.mapper.ForumMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -32,14 +30,18 @@ public class ForumService
     private AdministratorService administratorService;
 
     // 分页
-    public ServiceResponse<List<Forum>> getForumList()
+    public ServiceResponse<PaginatedData<Forum>> getForumList(int pageIndex)
     {
-        return ServiceResponse.buildSuccessResponse(forumMapper.getForumList());
+        PaginatedData<Forum> paginatedData = new PaginatedData<>();
+        paginatedData.setData(forumMapper.getPaginatedForumList((pageIndex-1)*PAGE_SIZE, PAGE_SIZE));
+        paginatedData.setCurrent(pageIndex);
+        paginatedData.setPageSize(PAGE_SIZE);
+        return ServiceResponse.buildSuccessResponse(paginatedData);
     }
 
     public ServiceResponse<Forum> getForumById(Long id)
     {
-        if (!ifContainsForum(id))
+        if (!containsForum(id))
             return ServiceResponse.buildErrorResponse(-100, "forum not found");
         return ServiceResponse.buildSuccessResponse(forumMapper.getForumById(id));
     }
@@ -59,18 +61,18 @@ public class ForumService
     @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> addForum(Forum forum)
     {
-        if (ifContainsForumByName(forum.getName()))
+        if (containsForumByName(forum.getName()))
             return ServiceResponse.buildErrorResponse(-100, "该论坛名已存在");
         forumMapper.addForum(forum);
         return ServiceResponse.buildSuccessResponse(true);
     }
 
-    public ServiceResponse<PaginatedData<BlogInfo>> getBlogList(Long forumId, int pageIndex)
+    public ServiceResponse<PaginatedData<BlogInfo>> getBlogList(Long forumId, int pageIndex, int pageSize)
     {
-        if (!ifContainsForum(forumId))
+        if (!containsForum(forumId))
             return ServiceResponse.buildErrorResponse(-100, "forum not found");
 
-        return blogService.getBlogsByForumIdWithTop(forumId, pageIndex);
+        return blogService.getBlogsByForumIdWithTop(forumId, pageIndex, pageSize);
     }
 
     public ServiceResponse<PaginatedData<Forum>> searchForum(String searchText, int pageIndex)
@@ -85,13 +87,13 @@ public class ForumService
         return ServiceResponse.buildSuccessResponse(paginatedData);
     }
 
-    public boolean ifContainsForum(Long forumId)
+    public boolean containsForum(Long forumId)
     {
-        return forumMapper.ifContainsForum(forumId);
+        return forumMapper.containsForum(forumId);
     }
 
-    public boolean ifContainsForumByName(String forumName)
+    public boolean containsForumByName(String forumName)
     {
-        return forumMapper.ifContainsForumByName(forumName);
+        return forumMapper.containsForumByName(forumName);
     }
 }

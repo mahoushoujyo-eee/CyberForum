@@ -11,7 +11,6 @@ import stark.dataworks.boot.autoconfig.web.LogArgumentsAndResponse;
 import stark.dataworks.boot.web.PaginatedData;
 import stark.dataworks.boot.web.ServiceResponse;
 
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -35,12 +34,11 @@ public class CommentService
     {
         if (comment.getContent().isBlank())
             return ServiceResponse.buildErrorResponse(-100, "comment content is blank");
-        else if (!userService.ifContainsUser(comment.getUserId()))
+        else if (!userService.containsUser(comment.getUserId()))
             return ServiceResponse.buildErrorResponse(-100, "user not found");
-        else if (!blogService.ifContainsBlogOfId(comment.getBlogId()))
+        else if (!blogService.containsBlogOfId(comment.getBlogId()))
             return ServiceResponse.buildErrorResponse(-100, "blog not found");
 
-        comment.setCreationTime(new Date()); //
         log.info("CommentService addComment: add comment: {}", comment); // JSON.
         commentMapper.addComment(comment);
         return ServiceResponse.buildSuccessResponse(true);
@@ -48,7 +46,7 @@ public class CommentService
 
     public ServiceResponse<List<CommentInfo>> getCommentsByBlogId(Long blogId)
     {
-        if (!blogService.ifContainsBlogOfId(blogId))
+        if (!blogService.containsBlogOfId(blogId))
             return ServiceResponse.buildErrorResponse(-100, "blog not found");
         List<CommentInfo> comments = commentMapper.getCommentInfoListByBlogId(blogId);
         return ServiceResponse.buildSuccessResponse(comments);
@@ -56,31 +54,30 @@ public class CommentService
 
     public ServiceResponse<List<CommentInfo>> getCommentsByBlogIdWithTop(Long blogId)
     {
-        if (!blogService.ifContainsBlogOfId(blogId))
+        if (!blogService.containsBlogOfId(blogId))
             return ServiceResponse.buildErrorResponse(-100, "blog not found");
 
-        List<CommentInfo> comments = commentMapper.getCommentInfoListByBlogId(blogId);
-        comments.sort((comment1, comment2) -> comment2.isTop() ? 1 : -1); //
+        List<CommentInfo> comments = commentMapper.getCommentInfoListByBlogIdWithTop(blogId);
         return ServiceResponse.buildSuccessResponse(comments);
     }
 
-    public ServiceResponse<PaginatedData<CommentInfo>> getCommentsByBlogIdWithTop(Long blogId, int pageIndex)
+    public ServiceResponse<PaginatedData<CommentInfo>> getCommentsByBlogIdWithTop(Long blogId, int pageIndex, int pageSize)
     {
-        if (!blogService.ifContainsBlogOfId(blogId))
+        if (!blogService.containsBlogOfId(blogId))
             return ServiceResponse.buildErrorResponse(-100, "blog not found");
 
         if (pageIndex < 1)
             return ServiceResponse.buildErrorResponse(-100, "page index cannot be negative");
 
-        List<CommentInfo> comments = commentMapper.getCommentInfoListByBlogId(blogId);
-        comments.sort((comment1, comment2) -> comment2.isTop() ? 1 : -1);
+        List<CommentInfo> comments = commentMapper.getPaginatedCommentInfoListByBlogIdWithTop(blogId, (pageIndex - 1) * PAGE_SIZE, PAGE_SIZE);
+        Long commentCount = commentMapper.getCommentCount(blogId);
 
         PaginatedData<CommentInfo> paginatedData = new PaginatedData<>();
         paginatedData.setData(comments);
         paginatedData.setCurrent(pageIndex);
-        paginatedData.setPageSize(PAGE_SIZE);
-        paginatedData.setPageCount((int) Math.ceil(comments.size() / (float)PAGE_SIZE));
-        paginatedData.setTotal(comments.size());
+        paginatedData.setPageSize(pageSize);
+        paginatedData.setPageCount((int) Math.ceil(commentCount / (float)pageSize));
+        paginatedData.setTotal(commentCount);
 
         if (pageIndex > paginatedData.getPageCount())
             return ServiceResponse.buildErrorResponse(-100, "page index out of range");
@@ -91,7 +88,7 @@ public class CommentService
     @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> deleteCommentById(Long commentId)
     {
-        if (!commentMapper.ifContainsComment(commentId))
+        if (!commentMapper.containsComment(commentId))
             return ServiceResponse.buildErrorResponse(-100, "comment not found");
         commentMapper.deleteCommentById(commentId);
         return ServiceResponse.buildSuccessResponse(true);
@@ -100,7 +97,7 @@ public class CommentService
     @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> putTop(Long commentId)
     {
-        if (!commentMapper.ifContainsComment(commentId))
+        if (!commentMapper.containsComment(commentId))
             return ServiceResponse.buildErrorResponse(-100, "comment not found");
         commentMapper.putTop(commentId);
         return ServiceResponse.buildSuccessResponse(true);
@@ -109,7 +106,7 @@ public class CommentService
     @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> cancelTop(Long commentId)
     {
-        if (!commentMapper.ifContainsComment(commentId))
+        if (!commentMapper.containsComment(commentId))
             return ServiceResponse.buildErrorResponse(-100, "comment not found");
         commentMapper.cancelTop(commentId);
         return ServiceResponse.buildSuccessResponse(true);

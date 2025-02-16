@@ -30,7 +30,7 @@ public class UserService
         String password = user.getPassword();
         String userEmail = user.getEmail();
 
-        if (ifContainsUserName(userName))
+        if (containsUserName(userName))
             return ServiceResponse.buildErrorResponse(-100, "username exists");
 
         // 如果没有问题则返回null，有问题则返回错误信息
@@ -49,7 +49,7 @@ public class UserService
 
     public ServiceResponse<Boolean> login(User user)
     {
-        if (!ifContainsUserName(user.getUserName()))
+        if (!containsUserName(user.getUserName()))
             return ServiceResponse.buildErrorResponse(-100, "username not exists");
         String encryptedPassword = MD5.hash(user.getPassword());
 
@@ -73,33 +73,33 @@ public class UserService
 
     public ServiceResponse<Long> getUserIdByUserName(String userName)
     {
-        if (!ifContainsUserName(userName))
+        if (!containsUserName(userName))
             return ServiceResponse.buildErrorResponse(-100, "username not exists");
         return ServiceResponse.buildSuccessResponse(userMapper.getUserIdByUserName(userName));
     }
 
-    public boolean ifContainsUser(Long userId)
+    public boolean containsUser(Long userId)
     {
         return userMapper.getUserById(userId) != null;
     }
 
-    public boolean ifContainsUserName(String userName)
+    public boolean containsUserName(String userName)
     {
-        return userMapper.ifContainsUserByUserName(userName);
+        return userMapper.containsUserByUserName(userName);
     }
 
     public String passwordValidMessageOf(String password)
     {
         if (password.trim().isBlank())
-            return "null";
+            return "password is null";
         else if (password.length() < 8)
-            return "short";
+            return "length of password is too short";
         else if (password.length() > 16)
-            return "long";
+            return "length of password is too long";
         else if (password.contains(" "))
-            return "space";
+            return "password contains space";
         else if (!isValidPassword(password))
-            return "invalid";
+            return "password contains invalid character";
         else
             return "true";
     }
@@ -116,6 +116,6 @@ public class UserService
     // https://www.jyshare.com/front-end/854/
     public boolean isEmailValid(String email)
     {
-        return email.contains("@");
+        return email.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$");
     }
 }

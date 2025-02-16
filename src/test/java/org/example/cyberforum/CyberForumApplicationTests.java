@@ -79,7 +79,7 @@ class CyberForumApplicationTests
     @Test
     void testUserMapper()
     {
-        System.out.println(userMapper.ifContainsUserByUserName("eee"));
+        System.out.println(userMapper.containsUserByUserName("eee"));
     }
 
     @Test

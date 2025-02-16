@@ -27,7 +27,7 @@ public class  AdministratorController
     }
 
     @PostMapping("/add_administrator")
-    public ServiceResponse<String> addAdministrator(@RequestBody AdministratorInfo administrator)
+    public ServiceResponse<Boolean> addAdministrator(@RequestBody AdministratorInfo administrator)
     {
         return administratorService.addAdministrator(administrator.getForumId(), administrator.getUserName());
     }
@@ -43,12 +43,12 @@ public class  AdministratorController
     @PostMapping("/is_administrator")
     public ServiceResponse<Boolean> ifAdministratorFromBlog(@RequestBody IfAdministratorRequest ifAdministratorRequest)
     {
-        return administratorService.ifAdministratorFromBlog(ifAdministratorRequest.getBlogId(), ifAdministratorRequest.getId());
+        return administratorService.ifAdministratorOfBlog(ifAdministratorRequest.getBlogId(), ifAdministratorRequest.getId());
     }
 
     @PostMapping("/is_administrator_by_forum_id")
     public ServiceResponse<Boolean> ifAdministratorFromForum(@RequestBody AdministratorInfo administrator)
     {
-        return administratorService.ifAdministratorFromForum(administrator.getUserId(), administrator.getForumId());
+        return administratorService.ifAdministrator(administrator.getUserId(), administrator.getForumId());
     }
 }

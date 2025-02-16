@@ -11,10 +11,13 @@ public interface ForumMapper
     void addForum(Forum forum);
 
     List<Forum> getForumList();
+    List<Forum> getPaginatedForumList(int startIndex, int pageSize);
 
     Forum getForumById(Long id);
 
-    boolean ifContainsForum(Long id);
+    boolean containsForum(Long id);
 
-    boolean ifContainsForumByName(String forumName);
+    boolean containsForumByName(String forumName);
+
+    Long getForumCount();
 }

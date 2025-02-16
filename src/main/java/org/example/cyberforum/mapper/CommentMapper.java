@@ -17,6 +17,8 @@ public interface CommentMapper
 
     List<CommentInfo> getCommentInfoList();
     List<CommentInfo> getCommentInfoListByBlogId(Long blogId);
+    List<CommentInfo> getCommentInfoListByBlogIdWithTop(Long blogId);
+    List<CommentInfo> getPaginatedCommentInfoListByBlogIdWithTop(Long blogId, int startIndex, int pageSize);
 
     void deleteCommentByBlogIdAndUserId(Long userId, Long blogId);
 
@@ -24,5 +26,7 @@ public interface CommentMapper
 
     void cancelTop(Long commentId);
 
-    boolean ifContainsComment(Long commentId);
+    boolean containsComment(Long commentId);
+
+    Long getCommentCount(Long blogId);
 }

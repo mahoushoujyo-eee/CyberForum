@@ -17,5 +17,5 @@ public interface AdministratorMapper
 
     List<Administrator> getAdministrators();
 
-    boolean ifContainsAdministrator(Administrator administrator);
+    boolean containsAdministrator(Long forumId, Long userId);
 }

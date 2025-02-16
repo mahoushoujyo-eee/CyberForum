@@ -34,16 +34,16 @@ window.onload = function()
 
         switch (result)
         {
-            case 'space':
+            case 'password contains space':
                 alert('密码中不能包含空格');
                 return;
-            case 'short':
+            case 'length of password is too short':
                 alert('密码长度不能小于8');
                 return;
-            case 'long':
+            case 'length of password is too long':
                 alert('密码长度不能大于16');
                 return;
-            case 'invalid':
+            case 'password contains invalid character':
                 alert('密码中只能包含字母和数字');
                 return;
         }

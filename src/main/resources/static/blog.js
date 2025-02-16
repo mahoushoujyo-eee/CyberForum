@@ -79,7 +79,8 @@ function addCommentElements(pageIndex)
     const params = new URLSearchParams(window.location.search);
     const blogId = params.get('blog_id');
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/comment/" + blogId + '/' + pageIndex);
+    let pageSize = 10;
+    xhr.open("GET", "/comment/" + blogId + '/' + pageSize + '/' + pageIndex);
     xhr.send();
     xhr.onload = function ()
     {
@@ -99,7 +100,9 @@ function addCommentElements(pageIndex)
 
             addTurnPageElement(response.data.pageCount, params.get('forum_id'), blogId, pageIndex)
 
-            for (let i = pageSize * (pageIndex - 1); i < Math.min(comments.length, pageSize * pageIndex); i++)
+            console.log("pageSize:", pageSize)
+            console.log("commentLength:", comments.length)
+            for (let i = 0; i < Math.min(comments.length, pageSize); i++)
             {
                 const comment = comments[i];
                 const comment_element = document.createElement("div");

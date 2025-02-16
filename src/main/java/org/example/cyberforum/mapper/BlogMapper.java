@@ -4,7 +4,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.example.cyberforum.dto.BlogInfo;
 import org.example.cyberforum.entities.Blog;
 
-import java.util.Collection;
 import java.util.List;
 
 @Mapper
@@ -19,6 +18,8 @@ public interface BlogMapper
 
     List<Blog> getBlogsByForumId(Long id);
     List<BlogInfo> getBlogInfoByForumId(Long id);
+    List<BlogInfo> getBlogInfoByForumIdWithTop(Long id);
+    List<BlogInfo> getPaginatedBlogInfoByForumIdWithTop(Long id, int startIndex, int pageSize);
 
     void deleteBlogById(Long id);
 
@@ -30,7 +31,10 @@ public interface BlogMapper
 
     List<BlogInfo> getLatestBlogInfoList();
 
-    boolean ifContainsBlog(Blog blog);
+    boolean containsBlog(Blog blog);
+    boolean containsBlogOfId(Long id);
 
     List<BlogInfo> getBlogInfoList();
+
+    Long getBlogsCount(Long forumId);
 }

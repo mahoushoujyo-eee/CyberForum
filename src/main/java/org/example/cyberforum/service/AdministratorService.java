@@ -1,7 +1,6 @@
 package org.example.cyberforum.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.cyberforum.entities.Administrator;
 import org.example.cyberforum.entities.User;
 import org.example.cyberforum.mapper.AdministratorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,130 +33,80 @@ public class AdministratorService
     public ServiceResponse<List<User>> getAdministratorByForumId(Long forumId)
     {
         // 统一改成ServiceResponse.buildSuccessResponse/buildErrorResponse();
-        ServiceResponse<List<User>> response = new ServiceResponse<>();
-        response.setSuccess(true);
+        if (forumId == null || !forumService.containsForum(forumId))
+            ServiceResponse.buildErrorResponse(-100, "forum id is null");
 
-        if (forumId == null || !forumService.ifContainsForum(forumId))
-            response.setSuccess(false);
-
-        response.setData(administratorMapper.getAdministratorByForumId(forumId));
-        return response;
+        return ServiceResponse.buildSuccessResponse(administratorMapper.getAdministratorByForumId(forumId));
     }
 
     // Should be <Boolean>
     @Transactional(rollbackFor = Exception.class)
-    public ServiceResponse<String> addAdministrator(Long forumId, String username)
+    public ServiceResponse<Boolean> addAdministrator(Long forumId, String username)
     {
-        ServiceResponse<String> response = new ServiceResponse<>();
-
         Long userId = userService.getUserIdByUserName(username).getData();
 
-        if (userId == null || !forumService.ifContainsForum(forumId))
+        if (userId == null || !forumService.containsForum(forumId))
             return ServiceResponse.buildErrorResponse(-1, "user id is null");
 
-        Administrator administrator = new Administrator();
-        administrator.setUserId(userId);
-        administrator.setForumId(forumId);
-
-        if (administratorMapper.ifContainsAdministrator(administrator))
-        {
-            response.setSuccess(false);
-            response.setMessage("user is already an administrator");
-            return response;
-        }
+        if (administratorMapper.containsAdministrator(forumId, userId))
+            return ServiceResponse.buildErrorResponse(-1, "user is already an administrator");
 
         administratorMapper.addAdministrator(forumId, userId);
-        response.setSuccess(true);
-        return response;
+        return ServiceResponse.buildSuccessResponse(true);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public ServiceResponse<String> addAdministrator(Long forumId, Long userId)
+    public ServiceResponse<Boolean> addAdministrator(Long forumId, Long userId)
     {
-        ServiceResponse<String> response = new ServiceResponse<>();
-
-        if (userId == null || !forumService.ifContainsForum(forumId))
+        if (userId == null || !forumService.containsForum(forumId))
             return ServiceResponse.buildErrorResponse(-1, "user id is null");
 
-        Administrator administrator = new Administrator();
-        administrator.setUserId(userId);
-        administrator.setForumId(forumId);
-
-        if (administratorMapper.ifContainsAdministrator(administrator))
-        {
-            response.setSuccess(false);
-            response.setMessage("The user is already an administrator");
-            return response;
-        }
+        if (administratorMapper.containsAdministrator(forumId, userId))
+            return ServiceResponse.buildErrorResponse(-100, "The user is already an administrator");
 
         administratorMapper.addAdministrator(forumId, userId);
-        response.setSuccess(true);
-        return response;
+        return ServiceResponse.buildSuccessResponse(true);
     }
 
     // adminId是不需要的，用forumId+userId就已经够了，在表里能查到就说明是管理员，查不到就不是。
+    //是为了检测当前用户是否为管理员，另一id为删除管理员的id
     @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> deleteAdministrator(Long forumId, Long userId, Long adminId)
     {
-        if (!forumService.ifContainsForum(forumId))
+        if (!forumService.containsForum(forumId))
             return ServiceResponse.buildErrorResponse(-100, "forum don't exist");
 
-        if (!userService.ifContainsUser(userId))
+        if (!userService.containsUser(userId))
             return ServiceResponse.buildErrorResponse(-100, "user don't exist");
 
         // 检查是否是该论坛的管理员
         // 没必要加fromXxx
-        if (!ifAdministratorFromForum(adminId, forumId).getData())
-        {
-            ServiceResponse<Boolean> response = new ServiceResponse<>();
-            response.setSuccess(false);
-            response.setMessage("user is not an administrator");
-            return response;
-        }
+        if (!ifAdministrator(adminId, forumId).getData())
+            return ServiceResponse.buildErrorResponse(-100, "user is not an administrator");
 
         administratorMapper.deleteAdministrator(forumId, userId);
         return ServiceResponse.buildSuccessResponse(true);
     }
 
-    public ServiceResponse<Boolean> ifAdministratorFromBlog(Long blogId, Long userId)
+    public ServiceResponse<Boolean> ifAdministratorOfBlog(Long blogId, Long userId)
     {
-        ServiceResponse<Boolean> response = new ServiceResponse<>();
-        response.setSuccess(true);
+        if (!blogService.containsBlogOfId(blogId))
+            return ServiceResponse.buildErrorResponse(-100, "blog id is null");
 
-        if (!blogService.ifContainsBlogOfId(blogId))
-        {
-            response.setSuccess(false);
-            response.setMessage("blog id is null");
-            return response;
-        }
-
-        if(!userService.ifContainsUser(userId))
-        {
-            response.setSuccess(false);
-            response.setMessage("user id is null");
-            return response;
-        }
-        Administrator administrator = new Administrator();
-        administrator.setUserId(userId);
-        administrator.setForumId(blogService.getForumIdByBlogId(blogId));
+        Long forumId = blogService.getForumIdByBlogId(blogId);
 
         // XxxQueryParam 或者 直接参数展开
-        response.setData(administratorMapper.ifContainsAdministrator(administrator));
-        return response;
+        return ifAdministrator(userId, forumId);
     }
 
-    public ServiceResponse<Boolean> ifAdministratorFromForum(Long userId, Long forumId)
+    public ServiceResponse<Boolean> ifAdministrator(Long userId, Long forumId)
     {
-        if(!userService.ifContainsUser(userId))
+        if(!userService.containsUser(userId))
             return ServiceResponse.buildErrorResponse(-100, "user don't exist");
 
-        if (!forumService.ifContainsForum(forumId))
+        if (!forumService.containsForum(forumId))
             return ServiceResponse.buildErrorResponse(-100, "forum don't exist");
 
-        Administrator administrator = new Administrator();
-        administrator.setUserId(userId);
-        administrator.setForumId(forumId);
-
-        return ServiceResponse.buildSuccessResponse(administratorMapper.ifContainsAdministrator(administrator));
+        return ServiceResponse.buildSuccessResponse(administratorMapper.containsAdministrator(forumId, userId));
     }
 }

@@ -65,7 +65,7 @@
         ORDER BY create_time
     </select>
 
-    <select id="ifContainsComment" resultType="java.lang.Boolean">
+    <select id="containsComment" resultType="java.lang.Boolean">
         SELECT COUNT(1) > 0
         FROM comment
         WHERE id = #{commentId}
@@ -84,5 +84,30 @@
         LEFT JOIN user u
         ON c.user_id = u.id
         WHERE c.blog_id = #{blogId}
+    </select>
+
+    <select id="getCommentInfoListByBlogIdWithTop" resultMap="CommentInfoMap">
+        SELECT c.id,c.content,c.user_id,c.blog_id,c.create_time,c.is_top,u.user_name
+        FROM comment c
+        LEFT JOIN user u
+        ON c.user_id = u.id
+        WHERE c.blog_id = #{blogId}
+        ORDER BY c.is_top DESC
+    </select>
+
+    <select id="getPaginatedCommentInfoListByBlogIdWithTop" resultMap="CommentInfoMap">
+        SELECT c.id,c.content,c.user_id,c.blog_id,c.create_time,c.is_top,u.user_name
+        FROM comment c
+        LEFT JOIN user u
+        ON c.user_id = u.id
+        WHERE c.blog_id = #{blogId}
+        ORDER BY c.is_top DESC
+        LIMIT #{startIndex},#{pageSize}
+    </select>
+
+    <select id="getCommentCount" resultType="java.lang.Long">
+        SELECT COUNT(1)
+        FROM comment
+        WHERE blog_id = #{blogId}
     </select>
 </mapper>
